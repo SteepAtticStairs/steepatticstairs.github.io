@@ -3,23 +3,24 @@
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+        <title>replit</title>
+        <link href="style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
+        <script>
+        var theurl = window.prompt("Youtube URL: ");
+        // console.log("The URL you entered is: " + theurl);
+        </script>
 
-    <p>
-        <form>
-            <label for="theurl">Youtube URL:</label><br>
-            <input type="text" id="theurl" name="theurl"><br>
-            <input type="submit" value="Ok">
-        </form>
-    </p>
-
-        <iframe 
+        <iframe id="showskill"
             style="width:800px;height:250px;border:0;overflow:hidden;" 
-            scrolling="no" src="https://loader.to/api/card/?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+            scrolling="no" src="">
         </iframe>
         
-        <p><a href="https://replit.com/@Pufferfishe/YoutubeDownloader">replit code</a></p>
-        <p><a href="https://youtubedownloader.pufferfishe.repl.co">replit website</a></p>
+        <script>
+            document.getElementById("showskill").src =
+                "https://loader.to/api/card/?url="+ theurl;
+        </script>
+
     </body>
 </html>
