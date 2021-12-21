@@ -1,26 +1,39 @@
 <!DOCTYPE html>
 <html>
-    <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-        <title>replit</title>
-        <link href="style.css" rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <script>
-        var theurl = window.prompt("Youtube URL: ");
-        // console.log("The URL you entered is: " + theurl);
-        </script>
-
-        <iframe id="showskill"
-            style="width:800px;height:250px;border:0;overflow:hidden;" 
-            scrolling="no" src="">
-        </iframe>
+<head>
+    <style>
         
-        <script>
-            document.getElementById("showskill").src =
-                "https://loader.to/api/card/?url="+ theurl;
-        </script>
+    </style>
+</head>
+<body>
+        
+    <p><form>
+        <label for="theurl">Youtube URL:</label><br>
+        <input type="text" id="theurl" name="theurl"><br>
+        <input type="submit" value="Ok">
+    </form></p>
 
-    </body>
+    <iframe 
+        style="width:800px;height:250px;border:0;overflow:hidden;" 
+        scrolling="no" src="https://loader.to/api/card/?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+    </iframe>
+        
+    <!-- <p><a href="https://replit.com/@Pufferfishe/YoutubeDownloader">replit code</a></p>
+    <p><a href="https://youtubedownloader.pufferfishe.repl.co">replit website</a></p> -->
+
+    <script type="text/javascript">
+        // Listen for the "submit" event on the form
+        document.querySelector('form').addEventListener('submit', event => {
+
+        // Stop the form from refreshing the page
+        event.preventDefault() 
+
+        // Get the YouTube URL from the input
+        const youtubeUrl = document.querySelector('[name="theurl"]').value
+
+        // Set the "src" attribute on the iframe using the YouTube URL
+        document.querySelector('iframe').setAttribute('src', 'https://loader.to/api/card/?url=' + youtubeUrl)
+})
+    </script>
+</body>
 </html>
