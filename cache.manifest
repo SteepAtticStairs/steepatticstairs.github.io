@@ -1,0 +1,19 @@
+CACHE MANIFEST
+# version 2012.8.9
+ 
+CACHE:
+bignate/2011/index.html
+bignate/2011/5/index.html
+bignate/2011/6/index.html
+bignate/2011/7/index.html
+bignate/2011/8/index.html
+bignate/2011/9/index.html
+bignate/2011/10/index.html
+bignate/2011/11/index.html
+bignate/2011/12/index.html
+
+NETWORK:
+*
+
+FALLBACK:
+
