@@ -4,7 +4,30 @@
 </head>
 
 <body>
+
+    <p><form>
+        <label for="id">DaddyLive stream ID:</label><br>
+        <input type="text" id="id" name="id"><br>
+        <input type="submit" value="Ok">
+    </form></p>
+
     <iframe src="https://rkc.primetubsub.xyz/premiumtv/daddylive.php?id=44" width="100%" height="100%" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay;" allowtransparency="true" id="thatframe"> </iframe>
+
+    <script type="text/javascript">
+        // Listen for the "submit" event on the form
+        document.querySelector('form').addEventListener('submit', event => {
+
+        // Stop the form from refreshing the page
+        event.preventDefault() 
+
+        // Get the YouTube URL from the input
+        const streamID = document.querySelector('[name="id"]').value
+
+        // Set the "src" attribute on the iframe using the YouTube URL
+        document.querySelector('iframe').setAttribute('src', 'hhttps://rkc.primetubsub.xyz/premiumtv/daddylive.php?id=' + streamID)
+})
+    </script>
+
 </body>
 
 </html>
