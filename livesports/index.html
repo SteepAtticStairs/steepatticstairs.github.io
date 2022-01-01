@@ -17,9 +17,6 @@
         // Listen for the "submit" event on the form
         document.querySelector('form').addEventListener('submit', event => {
 
-        // Stop the form from refreshing the page
-        event.preventDefault() 
-
         // Get the YouTube URL from the input
         const streamID = document.querySelector('[name="id"]').value
         console.log(streamID)
