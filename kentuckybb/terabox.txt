@@ -52,7 +52,7 @@ Password: i7zy
 
 2012-2013
 https://terabox.com/s/1tAQJCRKQSMLNAywiHsvI_A
-Password:t5g3
+Password: t5g3
 
 2013-2014
 https://terabox.com/s/1cpCT-BagXdJT4XJVWrkrDg
@@ -64,11 +64,11 @@ Password: p9pn
 
 2015-2016
 https://terabox.com/s/1RllAFuT_LEpjk201nfiuJw
-Password:fr89
+Password: fr89
 
 2016-2017
 https://terabox.com/s/12hgfHoVkzmH34qMs83mlCw
-Password:trb7
+Password: trb7
 
 2017-2018
 https://terabox.com/s/10trnWly98EiMfyzx8G-Scg
@@ -76,7 +76,7 @@ Password: zcva
 
 2018-2019
 https://terabox.com/s/1UrcKwk-58aPPkKK-bGXC0g
-Password:25t5
+Password: 25t5
 
 2019-2020
 https://terabox.com/s/1r5UeUhynkZydOPaSQuShAA
