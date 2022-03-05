@@ -1,56 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-    <style>
+    <title></title>
+    <style type="text/css">
+        /*<![CDATA[*/
 
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', 'Helvetica', 'Myriad Pro', 'Arial', sans-serif;
+            font-size: 12px;
+            font-weight: 300;
+            color: #333;
+            padding: 20px;
+            line-height: 1.5em;
+        }
+
+        h1,
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 10px;
+        }
+
+        a {
+            width: 100px;
+            font-weight: bold;
+            text-decoration: none;
+            color: #007ACC;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /*]]>*/
     </style>
+    <script type="text/javascript">
+        //<![CDATA[
+
+        window.addEventListener('load', function () {
+
+        });
+
+    //]]>
+    </script>
 </head>
 
 <body>
+    <h1>SteepAtticStairs</h1>
+    Credit to <a href="https://github.com/iRath96/iRath96.github.io">iRath96</a> for this welcome page.
 
-    <p>
-    <form>
-        <label for="thepass">String to hash:</label><br>
-        <input type="text" id="thepass" name="thepass" autofocus><br>
-        <input type="submit" value="Ok">
-    </form>
-    </p>
-
-    <p id="replace"></p>
-
-    <script>
-        function stringToHash(string) {
-
-            var hash = 0;
-
-            if (string.length == 0) return hash;
-
-            for (i = 0; i < string.length; i++) {
-                char = string.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
-            }
-
-            return hash;
-        }
-    </script>
-
-    <script type="text/javascript">
-            // Listen for the "submit" event on the form
-            document.querySelector('form').addEventListener('submit', event => {
-
-            // Stop the form from refreshing the page
-            event.preventDefault()
-
-            // Get the YouTube URL from the input
-            const password = document.querySelector('[name="thepass"]').value
-            // console.log(password);
-
-            var passHash = stringToHash(password);
-            document.getElementById("replace").innerHTML = passHash;
-        })
-    </script>
+    <h2>Links</h2>
+    <ul>
+        <li><a href="/hasher/sha1.html"> SHA1</a> SHA1 hash (better)</li>
+        <li><a href="/hasher/otherHash.html"> other hash</a> other hash (worse)</li>
+    </ul>
+    </ul>
+    <!-- Matomo -->
+    <!-- End Matomo Code -->
 </body>
 
 </html>
+<!--heheyee-->

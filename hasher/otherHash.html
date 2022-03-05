@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+
+    </style>
+</head>
+
+<body>
+
+    <p>
+    <form>
+        <label for="thepass">String to hash:</label><br>
+        <input type="text" id="thepass" name="thepass" autofocus><br>
+        <input type="submit" value="Ok">
+    </form>
+    </p>
+
+    <p id="replace"></p>
+
+    <script>
+        function stringToHash(string) {
+
+            var hash = 0;
+
+            if (string.length == 0) return hash;
+
+            for (i = 0; i < string.length; i++) {
+                char = string.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+
+            return hash;
+        }
+    </script>
+
+    <script type="text/javascript">
+        // Listen for the "submit" event on the form
+        document.querySelector('form').addEventListener('submit', event => {
+
+            // Stop the form from refreshing the page
+            event.preventDefault()
+
+            // Get the YouTube URL from the input
+            const password = document.querySelector('[name="thepass"]').value
+            // console.log(password);
+
+            var passHash = stringToHash(password);
+            document.getElementById("replace").innerHTML = passHash;
+        })
+    </script>
+</body>
+
+</html>
