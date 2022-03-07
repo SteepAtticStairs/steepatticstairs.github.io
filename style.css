@@ -11,7 +11,7 @@ body {
 }
 
 main {
-  display: flex;
+  display: table;
   flex-direction: column;
   transform: rotatex(10deg);
   -webkit-animation: rotateAngle 6s linear infinite;
@@ -40,7 +40,7 @@ button {
   display: block;
   position: relative;
   margin: 0.5em 0;
-  padding: 0.8em 0.5em;
+  padding: 0.3em 0.9em;
   cursor: pointer;
   background: #636363;
   border: none;
