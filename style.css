@@ -21,10 +21,10 @@ main {
 li {
   display: block;
   position: relative;
-  margin: 0.5em 0;
-  padding: 0.8em 2.2em;
+  margin: 0.5em 50;
+  padding: 0.2em 1.6em;
   cursor: pointer;
-  background: #636363;
+  background: #3a3a3a;
   border: none;
   border-radius: 0.4em;
   text-transform: uppercase;
