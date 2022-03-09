@@ -22,4 +22,4 @@ git filter-repo --path kentuckybb/DickVitaleVideo.mp4 --invert-paths
 git gc
 ```
 
-After this, proceed to make unnecessary chanes, soley for the purpose of being able to commit and push again. To check the size of the directory at any point to make sure that it is working, run `du -hs .` assuming that you are navigated into the desired directory.
+After this, proceed to make unnecessary chanes, soley for the purpose of being able to commit and push again. To check the size of the directory at any point to make sure that it is working, run `du -hs .` assuming that I am navigated into the desired directory.
