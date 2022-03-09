@@ -1,0 +1,3 @@
+[submodule "largefiles"]
+	path = largefiles
+	url = https://github.com/SteepAtticStairs/LargeFiles.git
