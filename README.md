@@ -4,7 +4,7 @@ This is my website, where I host various things that will likely be useful to me
 <br></br>
 
 
-## Clean `.git` folder
+## Clean `.git` folder <i>(i did this)</i>
 
 If I ever feel like I want to clean out the `.git` folder of this repository to remove instances of old, large files (now hosted in a submodule), I should do this. I must do `brew install git-filter-repo` first.**
 
