@@ -26,7 +26,7 @@ li {
   cursor: pointer;
   background: #3a3a3a;
   border: none;
-  border-radius: 0.4em;
+  border-radius: 2em;
   text-transform: uppercase;
   font-size: 1.4em;
   font-family: "Work Sans", sans-serif;
@@ -36,7 +36,43 @@ li {
   perspective: 500px;
   transform-style: preserve-3d;
 }
-button {
+#normalHeader {
+  display: block;
+  position: relative;
+  margin: 0.5em 0;
+  padding: 0.3em 0.9em;
+  cursor: pointer;
+  background: #636363;
+  border: none;
+  border-radius: 2em;
+  text-transform: none;
+  font-size: 1.4em;
+  font-family: "Work Sans", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  mix-blend-mode: color-dodge;
+  perspective: 500px;
+  transform-style: preserve-3d;
+}
+#normalDark {
+  display: block;
+  position: relative;
+  margin: 0.5em 0;
+  padding: 0.3em 0.9em;
+  cursor: pointer;
+  background: #414141;
+  border: none;
+  border-radius: 0.4em;
+  text-transform: none;
+  font-size: 1.4em;
+  font-family: "Work Sans", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  mix-blend-mode: color-dodge;
+  perspective: 500px;
+  transform-style: preserve-3d;
+}
+#normal {
   display: block;
   position: relative;
   margin: 0.5em 0;
