@@ -5,6 +5,6 @@ url=https://codeload.github.com/SteepAtticStairs/steepatticstairs.github.io/zip/
 now="$(date '+%m.%d.%Y')"
 
 
-cd ~/Downloads
+cd ~/Downloads || exit
 
 wget -O "steepatticstairs.github.io_${now}.zip" $url
