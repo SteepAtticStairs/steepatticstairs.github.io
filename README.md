@@ -38,6 +38,7 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/games/` - Various games ported to JavaScript <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/projects/` - The individual game folders <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/harrypotterpdfs/` - PDFs of all 7 Harry Potter books <br>
+`/logos/` - Various versions of my logo <br>
 `/ncaam/` - Lists of college basketball AP#1 losses <br>
 `/not-used/` - Files not being used but still being stored <br>
 `/private/` - "Password protected" pages, redirected to from the 'other' tab on the homepage <br>
