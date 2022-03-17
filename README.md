@@ -54,7 +54,7 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 ## Update directory listing in `/theatticrealm/`
 
 ```
-cd ~/Github/steepatticstairs.github.io/theatticrealm && tree . -H /theatticrealm -o index.html && cd ..
+cd ~/Github/steepatticstairs.github.io/theatticrealm && tree . -H /theatticrealm -o tree.html && cd ..
 ```
 
 <br></br>
