@@ -1,3 +1,6 @@
 [submodule "largefiles"]
 	path = largefiles
 	url = https://github.com/SteepAtticStairs/LargeFiles.git
+[submodule "theatticrealm"]
+	path = theatticrealm
+	url = https://github.com/SteepAtticStairs/TheAtticRealm.git

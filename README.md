@@ -43,10 +43,19 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 `/not-used/` - Files not being used but still being stored <br>
 `/private/` - "Password protected" pages, redirected to from the 'other' tab on the homepage <br>
 `/random/` - Random files <br>
+`/theatticrealm/` - Submodule that hosts my made-up world, with large files that would be inefficient to store in this repo <br>
 `/youtubedownloader/` - Various resources for downloading YouTube videos <br>
 `index.html` - Redirects to the right homepage based on your mobile / desktop status <br>
 `logo.png` - Website logo (favicon) <br>
 `README.md` - This file and the description for the github repo <br>
+
+<br></br>
+
+## Update directory listing in `/theatticrealm/`
+
+```
+cd ~/Github/steepatticstairs.github.io/theatticrealm && tree . -H https://steepatticstairs.github.io/ -o index.html && cd ..
+```
 
 <br></br>
 
