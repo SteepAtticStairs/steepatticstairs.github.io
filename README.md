@@ -22,6 +22,11 @@ cd steepatticstairs.github.io
 git submodule init; git submodule update
 ```
 
+If you want to automatically checkout to the right submodule branches, do
+```
+git submodule init; git submodule update; cd largefiles; git checkout main; cd ..; cd theatticrealm; git checkout main; cd ..
+```
+
 After this, you can open the `steepatticstairs.github.io` directory in the code editor of your choice. I use VSCode, but any editor will work.
 
 <br></br>
