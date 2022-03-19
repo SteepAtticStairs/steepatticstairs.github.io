@@ -26,8 +26,8 @@
 
     <li><select id="colors" onchange="setColors(); return;">
         <option value="0">Black and White Values</option>
-        <option value="1">Original</option>
-        <option value="2" selected="selected">Universal Blue</option>
+        <option value="1" selected="selected">Original</option>
+        <option value="2">Universal Blue</option>
         <option value="3">TITAN</option>
         <option value="4">The Weather Channel</option>
         <option value="5">Meteored</option>
@@ -42,7 +42,7 @@
 <div id="mapid" style="position: absolute; top: 80px; left: 0; bottom: 0; right: 0;"></div>
 
 <script>
-    var map = L.map('mapid').setView([48.8566, 2.3522], 6);
+    var map = L.map('mapid').setView([38.8696, -77.0922], 7);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attributions: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
@@ -60,7 +60,7 @@
     var optionKind = 'radar'; // can be 'radar' or 'satellite'
 
     var optionTileSize = 256; // can be 256 or 512.
-    var optionColorScheme = 2; // from 0 to 8. Check the https://rainviewer.com/api/color-schemes.html for additional information
+    var optionColorScheme = 1; // from 0 to 8. Check the https://rainviewer.com/api/color-schemes.html for additional information
     var optionSmoothData = 1; // 0 - not smooth, 1 - smooth
     var optionSnowColors = 1; // 0 - do not show snow colors, 1 - show snow colors
 
