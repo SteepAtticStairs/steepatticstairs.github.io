@@ -1,30 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-	<meta charset="UTF-8">
+    <title>The Attic Realm</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/theatticrealm/98css/98.css" />
+    <style type="text/css">
+        body, html
+        {
+            margin: 0; padding: 0; height: 100%; overflow: hidden;
+        }
+
+        #content
+        {
+            position:absolute; left: 0; right: 0; bottom: 0; top: 0px; 
+        }
+        #content2
+        {
+            position:absolute; left: 0; right: 0; bottom: 0; top: 0px; 
+        }
+    </style>
 </head>
+
 <body>
-    <h3>WNG736 162.450</h3>
-
-    <p>Main Stream</p>
-	<audio controls>
-        <source src="https://radio.weatherusa.net/NWR/WNG736.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-    </audio>
-
-    <br><br><br><br>
-
-    <p>Alternate Stream</p>
-	<audio controls>
-        <source src="http://ca.radioboss.fm:8149/stream=r=RLSX8.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-    </audio>
-
-    <p>Alternate Stream (to the one above)</p>
-	<audio controls>
-        <source src="http://ca.radioboss.fm:8149/stream" type="audio/mpeg">
-    Your browser does not support the audio element.
-    </audio>
-
+    <div class="window" id="content">
+        <div class="title-bar">
+            <div class="title-bar-text">Exploring - Weather</div>
+            <div class="title-bar-controls">
+                <button aria-label="Minimize"></button>
+                <button aria-label="Maximize"></button>
+                <button aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="window-body" id="content2">
+            <br></br>
+            <button onclick="window.location.href = 'https://github.com/jdan/98.css'"><b><u>C</u>SS Source</b></button>
+            <br><br><br>
+            <a href="/weather/radar.html">
+                <button>radar</button>
+            </a><p>Using the <a href="https://github.com/rainviewer/rainviewer-api-example">RainViewer API</a></p>
+                    <br><br>
+            <a href="/weather/radio.html">
+                <button>radio</button>
+            </a><p>NOAA Weather Radio</p>
+                    <br><br>
+        </div>
+    </div>
 </body>
+
 </html>
