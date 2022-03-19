@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- https://www.weather.gov/nwr/station_listing -->
     <title>Radio</title>
 	<meta charset="UTF-8">
 </head>
 <body>
-    <h3>WNG736 162.450</h3>
+    <h3>Default:</h3>
+    <p>WNG736 162.450 <br>
+        KEC84 162.400</p>
+    <br>
+    <p><u>Randon Links:</u></p>
     <a href="https://www.eldoradoweather.com/wxradio/index-washingtondc.html">https://www.eldoradoweather.com/wxradio/index-washingtondc.html</a>
     <br>
     <a href="https://www.streamtastic.com/station/8905/">https://www.streamtastic.com/station/8905/</a>
@@ -18,21 +23,43 @@
 
     <br><br><br>
 
-    <p>Main Stream</p>
+    <p><form>
+        <label for="callsign">Station Call Sign:</label> <a href="https://www.weather.gov/nwr/station_listing">(search here)</a><br>
+        <input type="text" id="callsign" name="callsign"><br>
+        <input type="submit" value="Ok">
+    </form></p>
+    <script type="text/javascript">
+        // Listen for the "submit" event on the form
+        document.querySelector('form').addEventListener('submit', event => {
+
+        // Stop the form from refreshing the page
+        event.preventDefault() 
+
+        // Get the call sign from the input
+        const radioCallSign = document.querySelector('[name="callsign"]').value
+
+        // Set the "src" attribute on the source using the call sign
+        document.querySelector('audio').setAttribute('src', 'https://radio.weatherusa.net/NWR/' + radioCallSign + ".mp3")
+})
+    </script>
+
+    <br><br><br>
+
+    <p>Main Stream (that changes with the inputted call sign)</p>
 	<audio controls>
-        <source src="https://radio.weatherusa.net/NWR/WNG736.mp3" type="audio/mpeg">
+        <source id="theSource" src="https://radio.weatherusa.net/NWR/WNG736.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
     </audio>
 
     <br><br><br><br>
 
-    <p>Alternate Stream</p>
+    <p>Alternate Stream - WNG736 (does not change)</p>
 	<audio controls>
         <source src="http://ca.radioboss.fm:8149/stream=r=RLSX8.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
     </audio>
 
-    <p>Alternate Stream (to the one above)</p>
+    <p>Alternate Stream - WNG736 (alternate to the one above, does not change)</p>
 	<audio controls>
         <source src="http://ca.radioboss.fm:8149/stream" type="audio/mpeg">
     Your browser does not support the audio element.
