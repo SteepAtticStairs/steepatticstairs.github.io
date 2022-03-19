@@ -166,7 +166,7 @@
 
         var pastOrForecast = nextFrame.time > Date.now() / 1000 ? 'FORECAST' : 'PAST';
 
-        document.getElementById("timestamp").innerHTML = pastOrForecast + ': ' + (new Date(nextFrame.time * 1000)).toString();
+        document.getElementById("timestamp").innerHTML = pastOrForecast + ': ' + (new Date(nextFrame.time * 1000)).toLocaleDateString() + ' ' + (new Date(nextFrame.time * 1000)).toLocaleTimeString();
     }
 
     /**
