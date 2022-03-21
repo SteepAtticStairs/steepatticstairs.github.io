@@ -12,6 +12,27 @@
             return roundOutValue;
         }
 
+        // if the div contents are shown, hide them
+        function hideGeoUrl() {
+            var GeoUrl = document.getElementById("geourl");
+            if (GeoUrl.style.display === "none") {
+                GeoUrl.style.display = "block";
+            } else {
+                GeoUrl.style.display = "none";
+            }
+        }
+
+        // if the div contents are shown, hide them
+        function hideDataUrl() {
+            var DataUrl = document.getElementById("dataurl");
+            if (DataUrl.style.display === "none") {
+                DataUrl.style.display = "block";
+            } else {
+                DataUrl.style.display = "none";
+            }
+        }
+
+        // reset the text in all of the divs
         function resetAllDivs () {
             document.getElementById("replacezip").innerHTML = " ";
             document.getElementById("replacecity").innerHTML = " ";
@@ -26,6 +47,17 @@
             document.getElementById("alertname").innerHTML = " ";
             document.getElementById("alertlocation").innerHTML = " ";
             document.getElementById("alertdescription").innerHTML = " ";
+
+            // if the showURL buttons have already been clicked, hide them
+            // so that another click won't show them again
+            var GeoUrl2 = document.getElementById("geourl");
+            if (GeoUrl2.style.display === "none") {
+                GeoUrl2.style.display = "block";
+            }
+            var DataUrl2 = document.getElementById("dataurl");
+            if (DataUrl2.style.display === "none") {
+                DataUrl2.style.display = "block";
+            }
         }
     </script>
 </head>
@@ -47,7 +79,9 @@
     <div><b>Latitude: </b><a id="replaceziplat"></a></div>
     <div><b>Longitude: </b><a id="replaceziplon"></a></div>
     <br>
+    <button id="buttongeo" onclick="hideGeoUrl()">Show Geolocator URL</button>
     <div><b>Geolocator URL: </b><a id="geourl"></a></div>
+    <button id="buttondata" onclick="hideDataUrl()">Show Main Weather Data URL</button>
     <div><b>Main Weather Data URL: </b><a id="dataurl"></a></div>
     <br>
     <br>
@@ -69,6 +103,9 @@
 
         // reset all div elements to their original state
         resetAllDivs();
+        // click the buttons to hide the urls
+        $("#buttongeo").click()
+        $("#buttondata").click()
         
         // Stop the form from refreshing the page
         event.preventDefault()
