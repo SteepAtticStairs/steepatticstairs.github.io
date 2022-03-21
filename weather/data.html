@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        // converts kelvin to fahrenheit, then rounds to one decimal
+        function KtoF (value) {
+            var outValue = 0;
+            outValue = ((value-273.15)*1.8)+32;
+            roundOutValue = (Math.round(outValue * 10) / 10);
+            return roundOutValue;
+        }
+    </script>
+</head>
+
+<body>
+    <p>
+        <form>
+            <label for="zipcode">Zip Code:</label><br>
+            <input type="text" id="zipcode" name="zipcode" autofocus><br>
+            <input type="submit" value="Ok">
+        </form>
+    </p>
+
+    <br>
+    <div><b>Zip Code: </b><a id="replacezip"></a></div>
+    <div><b>City Name: </b><a id="replacecity"></a></div>
+    <br>
+    <div><b>Latitude: </b><a id="replaceziplat"></a></div>
+    <div><b>Longitude: </b><a id="replaceziplon"></a></div>
+    <br><br>
+    <div><b>Description: </b><a id="description"></a></div>
+    <div><b>Temperature: </b><a id="temp"></a></div>
+    <div><b>Feels Like: </b><a id="feelslike"></a></div>
+    <div><b>Humidity: </b><a id="humidity"></a></div>
+    <br>
+
+    <script type="text/javascript">
+        // Listen for the "submit" event on the form
+        document.querySelector('form').addEventListener('submit', event => {
+
+        // Stop the form from refreshing the page
+        event.preventDefault()
+
+        // Get the zip code from the input
+        const zipCodeOutput = document.querySelector('[name="zipcode"]').value
+        
+        document.getElementById("replacezip").innerHTML = zipCodeOutput;
+
+        /*
+        *  Gets the latitude and longitude from the inputted zip code
+        */
+        $.getJSON(`http://api.openweathermap.org/geo/1.0/zip?zip=${zipCodeOutput},US&appid=dbf262da490678e53bec10704ce4032d`, function(data) {
+
+            var cityname = data.name;
+            var ziplat = data.lat;
+            var ziplon = data.lon;
+    
+            document.getElementById('replacecity').innerHTML = cityname;
+            document.getElementById('replaceziplat').innerHTML = ziplat;
+            document.getElementById('replaceziplon').innerHTML = ziplon;
+
+            /*
+            *  Gets all of the weather information
+            */
+            $.getJSON(`https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&appid=dbf262da490678e53bec10704ce4032d`, function(data) {
+
+                // stores the temperature from the json in a variable
+                var temp = data.current.temp;
+                // stores the feels like temperature from the json in a variable
+                var feelslike = data.current.feels_like;
+
+                // prints all of the values to the html document
+                document.getElementById('description').innerHTML = data.current.weather[0].description;
+                document.getElementById('temp').innerHTML = KtoF(temp) + "℉";
+                document.getElementById('feelslike').innerHTML = KtoF(feelslike) + "℉";
+                document.getElementById('humidity').innerHTML = data.current.humidity + "%";
+            });
+        });
+        })
+    </script>
+</body>
+</html>
