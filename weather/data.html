@@ -11,6 +11,22 @@
             roundOutValue = (Math.round(outValue * 10) / 10);
             return roundOutValue;
         }
+
+        function resetAllDivs () {
+            document.getElementById("replacezip").innerHTML = " ";
+            document.getElementById("replacecity").innerHTML = " ";
+            document.getElementById("replaceziplat").innerHTML = " ";
+            document.getElementById("replaceziplon").innerHTML = " ";
+            document.getElementById("geourl").innerHTML = " ";
+            document.getElementById("dataurl").innerHTML = " ";
+            document.getElementById("description").innerHTML = " ";
+            document.getElementById("temp").innerHTML = " ";
+            document.getElementById("feelslike").innerHTML = " ";
+            document.getElementById("humidity").innerHTML = " ";
+            document.getElementById("alertname").innerHTML = " ";
+            document.getElementById("alertlocation").innerHTML = " ";
+            document.getElementById("alertdescription").innerHTML = " ";
+        }
     </script>
 </head>
 
@@ -23,23 +39,37 @@
         </form>
     </p>
 
+<div id="myForm">
     <br>
     <div><b>Zip Code: </b><a id="replacezip"></a></div>
     <div><b>City Name: </b><a id="replacecity"></a></div>
     <br>
     <div><b>Latitude: </b><a id="replaceziplat"></a></div>
     <div><b>Longitude: </b><a id="replaceziplon"></a></div>
-    <br><br>
+    <br>
+    <div><b>Geolocator URL: </b><a id="geourl"></a></div>
+    <div><b>Main Weather Data URL: </b><a id="dataurl"></a></div>
+    <br>
+    <br>
+    <br>
     <div><b>Description: </b><a id="description"></a></div>
     <div><b>Temperature: </b><a id="temp"></a></div>
     <div><b>Feels Like: </b><a id="feelslike"></a></div>
     <div><b>Humidity: </b><a id="humidity"></a></div>
     <br>
+    <div><b>Alert Name: </b><a id="alertname"></a></div>
+    <div><b>Alert Location: </b><a id="alertlocation"></a></div>
+    <div><b>Alert Description: </b><a id="alertdescription"></a></div>
+    <br>
+</div>
 
     <script type="text/javascript">
         // Listen for the "submit" event on the form
         document.querySelector('form').addEventListener('submit', event => {
 
+        // reset all div elements to their original state
+        resetAllDivs();
+        
         // Stop the form from refreshing the page
         event.preventDefault()
 
@@ -51,20 +81,25 @@
         /*
         *  Gets the latitude and longitude from the inputted zip code
         */
-        $.getJSON(`https://api.openweathermap.org/geo/1.0/zip?zip=${zipCodeOutput},US&appid=${key}`, function(data) {
+        var geoUrl = `https://api.openweathermap.org/geo/1.0/zip?zip=${zipCodeOutput},US&appid=${key}`;
+        $.getJSON(geoUrl, function(data) {
 
             var cityname = data.name;
             var ziplat = data.lat;
             var ziplon = data.lon;
     
             document.getElementById('replacecity').innerHTML = cityname;
+
             document.getElementById('replaceziplat').innerHTML = ziplat;
             document.getElementById('replaceziplon').innerHTML = ziplon;
+
+            document.getElementById('geourl').innerHTML = geoUrl;
 
             /*
             *  Gets all of the weather information
             */
-            $.getJSON(`https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&appid=${key}`, function(data) {
+            var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&appid=${key}`;
+            $.getJSON(dataUrl, function(data) {
 
                 // stores the temperature from the json in a variable
                 var temp = data.current.temp;
@@ -72,10 +107,15 @@
                 var feelslike = data.current.feels_like;
 
                 // prints all of the values to the html document
+                document.getElementById('dataurl').innerHTML = dataUrl;
+
                 document.getElementById('description').innerHTML = data.current.weather[0].description;
                 document.getElementById('temp').innerHTML = KtoF(temp) + "℉";
                 document.getElementById('feelslike').innerHTML = KtoF(feelslike) + "℉";
                 document.getElementById('humidity').innerHTML = data.current.humidity + "%";
+                document.getElementById('alertname').innerHTML = data.alerts[0].event;
+                document.getElementById('alertlocation').innerHTML = data.alerts[0].sender_name;
+                document.getElementById('alertdescription').innerHTML = data.alerts[0].description;
             });
         });
         })
