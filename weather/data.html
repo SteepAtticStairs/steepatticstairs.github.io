@@ -4,13 +4,25 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="/98css/98.css" />
     <style type="text/css">
+        :root {
+            --fontsize: 13px
+        }
         body, html
         {
             margin: 0; padding: 0; height: 100%; overflow: hidden;
         }
         #content
         {
-            position:absolute; left: 0; right: 0; bottom: 0; top: 0px; 
+            position:absolute; left: 0; right: 0; bottom: 0; top: 0px; font-size: var(--fontsize);
+        }
+        #form
+        {
+            font-size: var(--fontsize)
+        }
+        #submitbutton
+        {
+            background-color:#929292;
+            font-size: var(--fontsize)
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -87,10 +99,12 @@
         <div class="window-body">
     <p>
         <form>
-            <label for="zipcode">Zip Code:</label><br>
-            <input type="text" id="zipcode" name="zipcode" autofocus><br>
-            <input type="submit" value="Ok">
+            <label id="form" for="zipcode">Zip Code:</label><br>
+            <input id="form" type="text" id="zipcode" name="zipcode" autofocus><br>
+            <br>
+            <button id="submitbutton" type="submit">Ok</button>
         </form>
+        <br>
     </p>
 
 <div>
