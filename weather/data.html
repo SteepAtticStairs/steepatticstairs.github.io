@@ -3,6 +3,7 @@
 <head>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script>
+        var key = "dbf262da490678e53bec10704ce4032d";
         // converts kelvin to fahrenheit, then rounds to one decimal
         function KtoF (value) {
             var outValue = 0;
@@ -50,7 +51,7 @@
         /*
         *  Gets the latitude and longitude from the inputted zip code
         */
-        $.getJSON(`http://api.openweathermap.org/geo/1.0/zip?zip=${zipCodeOutput},US&appid=dbf262da490678e53bec10704ce4032d`, function(data) {
+        $.getJSON(`https://api.openweathermap.org/geo/1.0/zip?zip=${zipCodeOutput},US&appid=${key}`, function(data) {
 
             var cityname = data.name;
             var ziplat = data.lat;
@@ -63,7 +64,7 @@
             /*
             *  Gets all of the weather information
             */
-            $.getJSON(`https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&appid=dbf262da490678e53bec10704ce4032d`, function(data) {
+            $.getJSON(`https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&appid=${key}`, function(data) {
 
                 // stores the temperature from the json in a variable
                 var temp = data.current.temp;
