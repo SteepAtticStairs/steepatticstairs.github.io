@@ -28,12 +28,37 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script>
         var key = "dbf262da490678e53bec10704ce4032d";
+
         // converts kelvin to fahrenheit, then rounds to one decimal
         function KtoF (value) {
             var outValue = 0;
             outValue = ((value-273.15)*1.8)+32;
             roundOutValue = (Math.round(outValue * 10) / 10);
             return roundOutValue;
+        }
+
+        // get direction from wind angle
+        function getCardinal(angle) {
+            /** 
+             * Customize by changing the number of directions you have
+             * We have 8
+             */
+            const degreePerDirection = 360 / 8;
+        
+            /** 
+             * Offset the angle by half of the degrees per direction
+             * Example: in 4 direction system North (320-45) becomes (0-90)
+             */
+            const offsetAngle = angle + degreePerDirection / 2;
+        
+            return (offsetAngle >= 0 * degreePerDirection && offsetAngle < 1 * degreePerDirection) ? "N"
+              : (offsetAngle >= 1 * degreePerDirection && offsetAngle < 2 * degreePerDirection) ? "NE"
+                : (offsetAngle >= 2 * degreePerDirection && offsetAngle < 3 * degreePerDirection) ? "E"
+                  : (offsetAngle >= 3 * degreePerDirection && offsetAngle < 4 * degreePerDirection) ? "SE"
+                    : (offsetAngle >= 4 * degreePerDirection && offsetAngle < 5 * degreePerDirection) ? "S"
+                      : (offsetAngle >= 5 * degreePerDirection && offsetAngle < 6 * degreePerDirection) ? "SW"
+                        : (offsetAngle >= 6 * degreePerDirection && offsetAngle < 7 * degreePerDirection) ? "W"
+                            : "NW";
         }
 
         // if the div contents are shown, hide them
@@ -68,6 +93,8 @@
             document.getElementById("temp").innerHTML = " ";
             document.getElementById("feelslike").innerHTML = " ";
             document.getElementById("humidity").innerHTML = " ";
+            document.getElementById("cloudcover").innerHTML = " ";
+            document.getElementById("wind").innerHTML = " ";
             document.getElementById("alertname").innerHTML = " ";
             document.getElementById("alertlocation").innerHTML = " ";
             document.getElementById("alertdescription").innerHTML = " ";
@@ -126,6 +153,8 @@
     <div><b>Temperature: </b><a id="temp"></a></div>
     <div><b>Feels Like: </b><a id="feelslike"></a></div>
     <div><b>Humidity: </b><a id="humidity"></a></div>
+    <div><b>Cloud Cover: </b><a id="cloudcover"></a></div>
+    <div><b>Wind Speed: </b><a id="wind"></a></div>
     <br>
     <div><b>Alert Name: </b><a id="alertname"></a></div>
     <div><b>Alert Location: </b><a id="alertlocation"></a></div>
@@ -154,7 +183,7 @@
         /*
         *  Gets the latitude and longitude from the inputted zip code
         */
-        var geoUrl = `https://api.openweathermap.org/geo/1.0/zip?zip=${zipCodeOutput},US&appid=${key}`;
+        var geoUrl = `https://api.openweathermap.org/geo/1.0/zip?zip=${zipCodeOutput},US&units=imperial&appid=${key}`;
         $.getJSON(geoUrl, function(data) {
 
             var cityname = data.name;
@@ -171,7 +200,7 @@
             /*
             *  Gets all of the weather information
             */
-            var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&appid=${key}`;
+            var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${key}`;
             $.getJSON(dataUrl, function(data) {
 
                 // stores the temperature from the json in a variable
@@ -183,9 +212,11 @@
                 document.getElementById('dataurl').innerHTML = dataUrl;
 
                 document.getElementById('description').innerHTML = data.current.weather[0].description;
-                document.getElementById('temp').innerHTML = KtoF(temp) + "℉";
-                document.getElementById('feelslike').innerHTML = KtoF(feelslike) + "℉";
+                document.getElementById('temp').innerHTML = temp + "℉";
+                document.getElementById('feelslike').innerHTML = feelslike + "℉";
                 document.getElementById('humidity').innerHTML = data.current.humidity + "%";
+                document.getElementById('cloudcover').innerHTML = data.current.clouds + "%";
+                document.getElementById('wind').innerHTML = Math.round(data.current.wind_speed) + " mph " + getCardinal(data.current.wind_deg);
                 document.getElementById('alertname').innerHTML = data.alerts[0].event;
                 document.getElementById('alertlocation').innerHTML = data.alerts[0].sender_name;
                 document.getElementById('alertdescription').innerHTML = data.alerts[0].description;
