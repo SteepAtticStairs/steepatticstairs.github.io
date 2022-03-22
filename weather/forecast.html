@@ -10,11 +10,11 @@
         }
         body, html
         {
-            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            margin: 0; padding: 0; height: 100%;
         }
         #content
         {
-            position:absolute; left: 0; right: 0; bottom: 0; top: 0px; font-size: var(--fontsize);
+            left: 0; right: 0; bottom: 0; top: 0px; font-size: var(--fontsize);
         }
         #form
         {
@@ -84,9 +84,12 @@
 
         // reset the text in all of the divs
         function resetAllDivs () {
-            document.getElementById("alertname").innerHTML = " ";
-            document.getElementById("alertlocation").innerHTML = " ";
-            document.getElementById("alertdescription").innerHTML = " ";
+            document.getElementById("replacezip").innerHTML = " ";
+            document.getElementById("replacecity").innerHTML = " ";
+            document.getElementById("replaceziplat").innerHTML = " ";
+            document.getElementById("replaceziplon").innerHTML = " ";
+            document.getElementById("geourl").innerHTML = " ";
+            document.getElementById("dataurl").innerHTML = " ";
 
             // if the showURL buttons have already been clicked, hide them
             // so that another click won't show them again
@@ -113,8 +116,6 @@
             </div>
         </div>
         <div class="window-body">
-            <button onclick="window.location.href = '/weather/forecast.html'"><b><u>6</u> Hour Forecast</b></button>
-            <br><br><br>
     <p>
         <form>
             <label id="form" for="zipcode">Zip Code:</label><br>
@@ -140,17 +141,61 @@
     <br>
     <br>
     <br>
-    <div><b>Description: </b><a id="description"></a></div>
-    <div><b>Temperature: </b><a id="temp"></a></div>
-    <div><b>Feels Like: </b><a id="feelslike"></a></div>
-    <div><b>Humidity: </b><a id="humidity"></a></div>
-    <div><b>Cloud Cover: </b><a id="cloudcover"></a></div>
-    <div><b>Chance of Rain: </b><a id="chanceofrain"></a></div>
-    <div><b>Wind Speed: </b><a id="wind"></a></div>
+    <div><b>FORECAST</b></div>
     <br>
-    <div><b>Alert Name: </b><a id="alertname"></a></div>
-    <div><b>Alert Location: </b><a id="alertlocation"></a></div>
-    <div><b>Alert Description: </b><a id="alertdescription"></a></div>
+    <div><b>Time: <a id="FCTime0"></a></b></div>
+    <div><b>Description: </b><a id="FCdescription0"></a></div>
+    <div><b>Temperature: </b><a id="FCtemp0"></a></div>
+    <div><b>Feels Like: </b><a id="FCfeelslike0"></a></div>
+    <div><b>Humidity: </b><a id="FChumidity0"></a></div>
+    <div><b>Cloud Cover: </b><a id="FCcloudcover0"></a></div>
+    <div><b>Chance of Rain: </b><a id="FCchanceofrain0"></a></div>
+    <div><b>Wind Speed: </b><a id="FCwind0"></a></div>
+    <br>
+    <div><b>Time: <a id="FCTime1"></a></b></div>
+    <div><b>Description: </b><a id="FCdescription1"></a></div>
+    <div><b>Temperature: </b><a id="FCtemp1"></a></div>
+    <div><b>Feels Like: </b><a id="FCfeelslike1"></a></div>
+    <div><b>Humidity: </b><a id="FChumidity1"></a></div>
+    <div><b>Cloud Cover: </b><a id="FCcloudcover1"></a></div>
+    <div><b>Chance of Rain: </b><a id="FCchanceofrain1"></a></div>
+    <div><b>Wind Speed: </b><a id="FCwind1"></a></div>
+    <br>
+    <div><b>Time: <a id="FCTime2"></a></b></div>
+    <div><b>Description: </b><a id="FCdescription2"></a></div>
+    <div><b>Temperature: </b><a id="FCtemp2"></a></div>
+    <div><b>Feels Like: </b><a id="FCfeelslike2"></a></div>
+    <div><b>Humidity: </b><a id="FChumidity2"></a></div>
+    <div><b>Cloud Cover: </b><a id="FCcloudcover2"></a></div>
+    <div><b>Chance of Rain: </b><a id="FCchanceofrain2"></a></div>
+    <div><b>Wind Speed: </b><a id="FCwind2"></a></div>
+    <br>
+    <div><b>Time: <a id="FCTime3"></a></b></div>
+    <div><b>Description: </b><a id="FCdescription3"></a></div>
+    <div><b>Temperature: </b><a id="FCtemp3"></a></div>
+    <div><b>Feels Like: </b><a id="FCfeelslike3"></a></div>
+    <div><b>Humidity: </b><a id="FChumidity3"></a></div>
+    <div><b>Cloud Cover: </b><a id="FCcloudcover3"></a></div>
+    <div><b>Chance of Rain: </b><a id="FCchanceofrain3"></a></div>
+    <div><b>Wind Speed: </b><a id="FCwind3"></a></div>
+    <br>
+    <div><b>Time: <a id="FCTime4"></a></b></div>
+    <div><b>Description: </b><a id="FCdescription4"></a></div>
+    <div><b>Temperature: </b><a id="FCtemp4"></a></div>
+    <div><b>Feels Like: </b><a id="FCfeelslike4"></a></div>
+    <div><b>Humidity: </b><a id="FChumidity4"></a></div>
+    <div><b>Cloud Cover: </b><a id="FCcloudcover4"></a></div>
+    <div><b>Chance of Rain: </b><a id="FCchanceofrain4"></a></div>
+    <div><b>Wind Speed: </b><a id="FCwind4"></a></div>
+    <br>
+    <div><b>Time: <a id="FCTime5"></a></b></div>
+    <div><b>Description: </b><a id="FCdescription5"></a></div>
+    <div><b>Temperature: </b><a id="FCtemp5"></a></div>
+    <div><b>Feels Like: </b><a id="FCfeelslike5"></a></div>
+    <div><b>Humidity: </b><a id="FChumidity5"></a></div>
+    <div><b>Cloud Cover: </b><a id="FCcloudcover5"></a></div>
+    <div><b>Chance of Rain: </b><a id="FCchanceofrain5"></a></div>
+    <div><b>Wind Speed: </b><a id="FCwind5"></a></div>
     <br>
 </div>
 
@@ -195,24 +240,28 @@
             var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${key}`;
             $.getJSON(dataUrl, function(data) {
 
-                // stores the temperature from the json in a variable
-                var temp = data.current.temp;
-                // stores the feels like temperature from the json in a variable
-                var feelslike = data.current.feels_like;
-
                 // prints all of the values to the html document
                 document.getElementById('dataurl').innerHTML = dataUrl;
 
-                document.getElementById('description').innerHTML = data.current.weather[0].description;
-                document.getElementById('temp').innerHTML = temp + "℉";
-                document.getElementById('feelslike').innerHTML = feelslike + "℉";
-                document.getElementById('humidity').innerHTML = data.current.humidity + "%";
-                document.getElementById('cloudcover').innerHTML = data.current.clouds + "%";
-                document.getElementById('chanceofrain').innerHTML = (data.hourly[0].pop) * 100 + "%";
-                document.getElementById('wind').innerHTML = Math.round(data.current.wind_speed) + " mph " + getCardinal(data.current.wind_deg);
-                document.getElementById('alertname').innerHTML = data.alerts[0].event;
-                document.getElementById('alertlocation').innerHTML = data.alerts[0].sender_name;
-                document.getElementById('alertdescription').innerHTML = data.alerts[0].description;
+                function printData (hour) {
+                    var timeStamp = data.hourly[hour].dt;
+
+                    document.getElementById(`FCTime${hour}`).innerHTML = new Date(timeStamp * 1000).toLocaleDateString() + " " + new Date(timeStamp * 1000).toLocaleTimeString();
+                    document.getElementById(`FCdescription${hour}`).innerHTML = data.hourly[hour].weather[0].description;
+                    document.getElementById(`FCtemp${hour}`).innerHTML = data.hourly[hour].temp + "℉";
+                    document.getElementById(`FCfeelslike${hour}`).innerHTML = data.hourly[hour].feels_like; + "℉";
+                    document.getElementById(`FChumidity${hour}`).innerHTML = data.hourly[hour].humidity + "%";
+                    document.getElementById(`FCcloudcover${hour}`).innerHTML = data.hourly[hour].clouds + "%";
+                    document.getElementById(`FCchanceofrain${hour}`).innerHTML = (data.hourly[hour].pop) * 100 + "%";
+                    document.getElementById(`FCwind${hour}`).innerHTML = Math.round(data.hourly[hour].wind_speed) + " mph " + getCardinal(data.current.wind_deg);
+                }
+
+                printData(0);
+                printData(1);
+                printData(2);
+                printData(3);
+                printData(4);
+                printData(5);
             });
         });
         })
