@@ -10,11 +10,11 @@
         }
         body, html
         {
-            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            margin: 0; padding: 0; height: 100%;
         }
         #content
         {
-            position:absolute; left: 0; right: 0; bottom: 0; top: 0px; font-size: var(--fontsize);
+            left: 0; right: 0; bottom: 0; top: 0px; font-size: var(--fontsize);
         }
         #form
         {
@@ -90,16 +90,6 @@
             document.getElementById("replaceziplon").innerHTML = " ";
             document.getElementById("geourl").innerHTML = " ";
             document.getElementById("dataurl").innerHTML = " ";
-            document.getElementById("description").innerHTML = " ";
-            document.getElementById("temp").innerHTML = " ";
-            document.getElementById("feelslike").innerHTML = " ";
-            document.getElementById("humidity").innerHTML = " ";
-            document.getElementById("cloudcover").innerHTML = " ";
-            document.getElementById("chanceofrain").innerHTML = " ";
-            document.getElementById("wind").innerHTML = " ";
-            document.getElementById("alertname").innerHTML = " ";
-            document.getElementById("alertlocation").innerHTML = " ";
-            document.getElementById("alertdescription").innerHTML = " ";
 
             // if the showURL buttons have already been clicked, hide them
             // so that another click won't show them again
@@ -126,11 +116,7 @@
             </div>
         </div>
         <div class="window-body">
-            <button onclick="window.location.href = '/weather/forecast/hourly.html'"><b><u>6</u> Hour Forecast</b></button>
-            <button onclick="window.location.href = '/weather/forecast/daily.html'"><b><u>7</u> Day Forecast</b></button>
-            <br><br>
-            <button onclick="window.location.href = '/weather/weathergov/data.html'"><b><u>W</u>eather.gov Data</b></button>
-            <br><br><br>
+            <button onclick="window.location.href = '/weather/data.html'"><b><u>B</u>ack</b></button>
     <p>
         <form>
             <label id="form" for="zipcode">Zip Code:</label><br>
@@ -141,34 +127,80 @@
         <br>
     </p>
 
-<div>
-    <br>
-    <div><b>Zip Code: </b><a id="replacezip"></a></div>
-    <div><b>City Name: </b><a id="replacecity"></a></div>
-    <br>
-    <div><b>Latitude: </b><a id="replaceziplat"></a></div>
-    <div><b>Longitude: </b><a id="replaceziplon"></a></div>
-    <br>
-    <button id="buttongeo" onclick="hideGeoUrl()">Show Geolocator URL</button>
-    <div><b>Geolocator URL: </b><a id="geourl"></a></div>
-    <button id="buttondata" onclick="hideDataUrl()">Show Main Weather Data URL</button>
-    <div><b>Main Weather Data URL: </b><a id="dataurl"></a></div>
-    <br>
-    <br>
-    <br>
-    <div><b>Description: </b><a id="description"></a></div>
-    <div><b>Temperature: </b><a id="temp"></a></div>
-    <div><b>Feels Like: </b><a id="feelslike"></a></div>
-    <div><b>Humidity: </b><a id="humidity"></a></div>
-    <div><b>Cloud Cover: </b><a id="cloudcover"></a></div>
-    <div><b>Chance of Rain: </b><a id="chanceofrain"></a></div>
-    <div><b>Wind Speed: </b><a id="wind"></a></div>
-    <br>
-    <div><b>Alert Name: </b><a id="alertname"></a></div>
-    <div><b>Alert Location: </b><a id="alertlocation"></a></div>
-    <div><b>Alert Description: </b><a id="alertdescription"></a></div>
-    <br>
-</div>
+    <div>
+        <br>
+        <div><b>Zip Code: </b><a id="replacezip"></a></div>
+        <div><b>City Name: </b><a id="replacecity"></a></div>
+        <br>
+        <div><b>Latitude: </b><a id="replaceziplat"></a></div>
+        <div><b>Longitude: </b><a id="replaceziplon"></a></div>
+        <br>
+        <button id="buttongeo" onclick="hideGeoUrl()">Show Geolocator URL</button>
+        <div><b>Geolocator URL: </b><a id="geourl"></a></div>
+        <button id="buttondata" onclick="hideDataUrl()">Show Main Weather Data URL</button>
+        <div><b>Main Weather Data URL: </b><a id="dataurl"></a></div>
+        <br>
+        <br>
+        <br>
+        <div><b>DAILY FORECAST</b></div>
+        <br>
+        <div><b>Time: <a id="FCTime0"></a></b></div>
+        <div><b>Description: </b><a id="FCdescription0"></a></div>
+        <div><b>Start Time: </b><a id="FCstarttime0"></a></div>
+        <div><b>End Time: </b><a id="FCendtime0"></a></div>
+        <div><b>Temperature: </b><a id="FCtemp0"></a></div>
+        <div><b>Wind Speed: </b><a id="FCwind0"></a></div>
+        <div><b>Summary: </b><a id="FCsummary0"></a></div>
+        <br>
+        <div><b>Time: <a id="FCTime1"></a></b></div>
+        <div><b>Description: </b><a id="FCdescription1"></a></div>
+        <div><b>Start Time: </b><a id="FCstarttime1"></a></div>
+        <div><b>End Time: </b><a id="FCendtime1"></a></div>
+        <div><b>Temperature: </b><a id="FCtemp1"></a></div>
+        <div><b>Wind Speed: </b><a id="FCwind1"></a></div>
+        <div><b>Summary: </b><a id="FCsummary1"></a></div>
+        <br>
+        <div><b>Time: <a id="FCTime2"></a></b></div>
+        <div><b>Description: </b><a id="FCdescription2"></a></div>
+        <div><b>Start Time: </b><a id="FCstarttime2"></a></div>
+        <div><b>End Time: </b><a id="FCendtime2"></a></div>
+        <div><b>Temperature: </b><a id="FCtemp2"></a></div>
+        <div><b>Wind Speed: </b><a id="FCwind2"></a></div>
+        <div><b>Summary: </b><a id="FCsummary2"></a></div>
+        <br>
+        <div><b>Time: <a id="FCTime3"></a></b></div>
+        <div><b>Description: </b><a id="FCdescription3"></a></div>
+        <div><b>Start Time: </b><a id="FCstarttime3"></a></div>
+        <div><b>End Time: </b><a id="FCendtime3"></a></div>
+        <div><b>Temperature: </b><a id="FCtemp3"></a></div>
+        <div><b>Wind Speed: </b><a id="FCwind3"></a></div>
+        <div><b>Summary: </b><a id="FCsummary3"></a></div>
+        <br>
+        <div><b>Time: <a id="FCTime4"></a></b></div>
+        <div><b>Description: </b><a id="FCdescription4"></a></div>
+        <div><b>Start Time: </b><a id="FCstarttime4"></a></div>
+        <div><b>End Time: </b><a id="FCendtime4"></a></div>
+        <div><b>Temperature: </b><a id="FCtemp4"></a></div>
+        <div><b>Wind Speed: </b><a id="FCwind4"></a></div>
+        <div><b>Summary: </b><a id="FCsummary4"></a></div>
+        <br>
+        <div><b>Time: <a id="FCTime5"></a></b></div>
+        <div><b>Description: </b><a id="FCdescription5"></a></div>
+        <div><b>Start Time: </b><a id="FCstarttime5"></a></div>
+        <div><b>End Time: </b><a id="FCendtime5"></a></div>
+        <div><b>Temperature: </b><a id="FCtemp5"></a></div>
+        <div><b>Wind Speed: </b><a id="FCwind5"></a></div>
+        <div><b>Summary: </b><a id="FCsummary5"></a></div>
+        <br>
+        <div><b>Time: <a id="FCTime6"></a></b></div>
+        <div><b>Description: </b><a id="FCdescription6"></a></div>
+        <div><b>Start Time: </b><a id="FCstarttime6"></a></div>
+        <div><b>End Time: </b><a id="FCendtime6"></a></div>
+        <div><b>Temperature: </b><a id="FCtemp6"></a></div>
+        <div><b>Wind Speed: </b><a id="FCwind6"></a></div>
+        <div><b>Summary: </b><a id="FCsummary6"></a></div>
+        <br>
+    </div>
 
     <script type="text/javascript">
         // Listen for the "submit" event on the form
@@ -194,11 +226,8 @@
         var geoUrl = `https://api.openweathermap.org/geo/1.0/zip?zip=${zipCodeOutput},US&units=imperial&appid=${key}`;
         $.getJSON(geoUrl, function(data) {
 
-            var cityname = data.name;
             var ziplat = data.lat;
             var ziplon = data.lon;
-    
-            document.getElementById('replacecity').innerHTML = cityname;
 
             document.getElementById('replaceziplat').innerHTML = ziplat;
             document.getElementById('replaceziplon').innerHTML = ziplon;
@@ -208,27 +237,35 @@
             /*
             *  Gets all of the weather information
             */
-            var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${key}`;
-            $.getJSON(dataUrl, function(data) {
+            var getLocationUrl = `https://api.weather.gov/points/${ziplat},${ziplon}`;
+            $.getJSON(getLocationUrl, function(data) {
 
-                // stores the temperature from the json in a variable
-                var temp = data.current.temp;
-                // stores the feels like temperature from the json in a variable
-                var feelslike = data.current.feels_like;
+                var cityname = data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state;
+                document.getElementById('replacecity').innerHTML = cityname;
 
-                // prints all of the values to the html document
+                var dataUrl = data.properties.forecast;
                 document.getElementById('dataurl').innerHTML = dataUrl;
 
-                document.getElementById('description').innerHTML = data.current.weather[0].description;
-                document.getElementById('temp').innerHTML = temp + "℉";
-                document.getElementById('feelslike').innerHTML = feelslike + "℉";
-                document.getElementById('humidity').innerHTML = data.current.humidity + "%";
-                document.getElementById('cloudcover').innerHTML = data.current.clouds + "%";
-                document.getElementById('chanceofrain').innerHTML = (data.hourly[0].pop) * 100 + "%";
-                document.getElementById('wind').innerHTML = Math.round(data.current.wind_speed) + " mph " + getCardinal(data.current.wind_deg);
-                document.getElementById('alertname').innerHTML = data.alerts[0].event;
-                document.getElementById('alertlocation').innerHTML = data.alerts[0].sender_name;
-                document.getElementById('alertdescription').innerHTML = data.alerts[0].description;
+                
+                $.getJSON(dataUrl, function(data) {
+                    function printData (day) {
+                        document.getElementById(`FCTime${day}`).innerHTML = data.properties.periods[day].name;
+                        document.getElementById(`FCdescription${day}`).innerHTML = data.properties.periods[day].shortForecast;
+                        document.getElementById(`FCstarttime${day}`).innerHTML = data.properties.periods[day].startTime;
+                        document.getElementById(`FCendtime${day}`).innerHTML = data.properties.periods[day].endTime;
+                        document.getElementById(`FCtemp${day}`).innerHTML = data.properties.periods[day].temperature + "℉";
+                        document.getElementById(`FCwind${day}`).innerHTML = data.properties.periods[day].windSpeed + " " + data.properties.periods[day].windDirection;
+                        document.getElementById(`FCsummary${day}`).innerHTML = data.properties.periods[day].detailedForecast;
+                    }
+    
+                    printData(0);
+                    printData(1);
+                    printData(2);
+                    printData(3);
+                    printData(4);
+                    printData(5);
+                    printData(6);
+                });
             });
         });
         })
