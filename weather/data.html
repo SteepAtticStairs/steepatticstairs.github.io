@@ -94,6 +94,7 @@
             document.getElementById("feelslike").innerHTML = " ";
             document.getElementById("humidity").innerHTML = " ";
             document.getElementById("cloudcover").innerHTML = " ";
+            document.getElementById("chanceofrain").innerHTML = " ";
             document.getElementById("wind").innerHTML = " ";
             document.getElementById("alertname").innerHTML = " ";
             document.getElementById("alertlocation").innerHTML = " ";
@@ -154,6 +155,7 @@
     <div><b>Feels Like: </b><a id="feelslike"></a></div>
     <div><b>Humidity: </b><a id="humidity"></a></div>
     <div><b>Cloud Cover: </b><a id="cloudcover"></a></div>
+    <div><b>Chance of Rain: </b><a id="chanceofrain"></a></div>
     <div><b>Wind Speed: </b><a id="wind"></a></div>
     <br>
     <div><b>Alert Name: </b><a id="alertname"></a></div>
@@ -216,6 +218,7 @@
                 document.getElementById('feelslike').innerHTML = feelslike + "℉";
                 document.getElementById('humidity').innerHTML = data.current.humidity + "%";
                 document.getElementById('cloudcover').innerHTML = data.current.clouds + "%";
+                document.getElementById('chanceofrain').innerHTML = (data.hourly[0].pop) * 100 + "%";
                 document.getElementById('wind').innerHTML = Math.round(data.current.wind_speed) + " mph " + getCardinal(data.current.wind_deg);
                 document.getElementById('alertname').innerHTML = data.alerts[0].event;
                 document.getElementById('alertlocation').innerHTML = data.alerts[0].sender_name;
