@@ -249,7 +249,7 @@
                     document.getElementById(`FCTime${hour}`).innerHTML = new Date(timeStamp * 1000).toLocaleDateString() + " " + new Date(timeStamp * 1000).toLocaleTimeString();
                     document.getElementById(`FCdescription${hour}`).innerHTML = data.hourly[hour].weather[0].description;
                     document.getElementById(`FCtemp${hour}`).innerHTML = data.hourly[hour].temp + "℉";
-                    document.getElementById(`FCfeelslike${hour}`).innerHTML = data.hourly[hour].feels_like; + "℉";
+                    document.getElementById(`FCfeelslike${hour}`).innerHTML = data.hourly[hour].feels_like + "℉";
                     document.getElementById(`FChumidity${hour}`).innerHTML = data.hourly[hour].humidity + "%";
                     document.getElementById(`FCcloudcover${hour}`).innerHTML = data.hourly[hour].clouds + "%";
                     document.getElementById(`FCchanceofrain${hour}`).innerHTML = (data.hourly[hour].pop) * 100 + "%";
