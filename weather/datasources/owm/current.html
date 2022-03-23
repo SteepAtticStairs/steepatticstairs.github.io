@@ -90,13 +90,6 @@
             document.getElementById("replaceziplon").innerHTML = " ";
             document.getElementById("geourl").innerHTML = " ";
             document.getElementById("dataurl").innerHTML = " ";
-            document.getElementById("description").innerHTML = " ";
-            document.getElementById("temp").innerHTML = " ";
-            document.getElementById("feelslike").innerHTML = " ";
-            document.getElementById("humidity").innerHTML = " ";
-            document.getElementById("cloudcover").innerHTML = " ";
-            document.getElementById("chanceofrain").innerHTML = " ";
-            document.getElementById("wind").innerHTML = " ";
             document.getElementById("alertname").innerHTML = " ";
             document.getElementById("alertlocation").innerHTML = " ";
             document.getElementById("alertdescription").innerHTML = " ";
@@ -136,7 +129,7 @@
 <body>
     <div class="window" id="content">
         <div class="title-bar">
-            <div class="title-bar-text">Exploring - Weather</div>
+            <div class="title-bar-text">Exploring - OWM Current Weather</div>
             <div class="title-bar-controls">
                 <button aria-label="Minimize"></button>
                 <button aria-label="Maximize"></button>
@@ -144,16 +137,19 @@
             </div>
         </div>
         <div class="window-body">
-            <button onclick="window.location.href = '/weather/owm/forecast.html'"><b><u>6</u> Hour / <u>7</u> Day Forecast</b></button>
+            <button onclick="window.location.href = '/weather/datasources/owm/forecast.html'"><b><u>6</u> Hour / <u>7</u> Day Forecast</b></button>
             <br><br>
-            <button onclick="window.location.href = '/weather/wdg/forecast.html'"><b><u>W</u>eather.gov Data</b></button>
-            <br><br><br>
+            <button onclick="window.location.href = '/weather/datasources/wdg/forecast.html'"><b><u>W</u>eather.gov Data</b></button>
+            <br>
+            <button onclick="window.location.href = '/weather/datasources/accw/current.html'"><b><u>A</u>ccuweather Data <i>(incomplete)</i></b></button>
+            <br><br><br><br>
     <p>
         <button id="submitbutton" onclick="getLocation()"><b><u>G</u>et Current Location</b></button>
             <p>You might need to wait a bit or reload the page if your current loctaion details do not load.</p>
             <div><b>Your Current Zip Code: </b><a id="geocode"></a></div>
             <div><b>Current Latitude: </b><a id="curlat"></a></div>
             <div><b>Current Longitude: </b><a id="curlon"></a></div>
+            <br><br>
         <form>
             <br>
             <label id="form" for="zipcode">Zip Code:</label><br>
@@ -172,10 +168,10 @@
     <div><b>Latitude: </b><a id="replaceziplat"></a></div>
     <div><b>Longitude: </b><a id="replaceziplon"></a></div>
     <br>
-    <button id="buttongeo" onclick="hideGeoUrl()">Show Geolocator URL</button>
-    <div><b>Geolocator URL: </b><a id="geourl"></a></div>
-    <button id="buttondata" onclick="hideDataUrl()">Show Main Weather Data URL</button>
-    <div><b>Main Weather Data URL: </b><a id="dataurl"></a></div>
+    <button id="buttongeo" onclick="hideGeoUrl()">Show OWM Geolocator URL</button>
+    <div><b>OWM Geolocator URL: </b><a id="geourl"></a></div>
+    <button id="buttondata" onclick="hideDataUrl()">Show OWM Main Weather Data URL</button>
+    <div><b>OWM Main Weather Data URL: </b><a id="dataurl"></a></div>
     <br>
     <br>
     <br>
