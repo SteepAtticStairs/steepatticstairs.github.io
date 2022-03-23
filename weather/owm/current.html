@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Daily Forecast</title>
+    <title>Data</title>
     <link rel="stylesheet" href="/dump/98css/98.css" />
     <style type="text/css">
         :root {
@@ -90,6 +90,16 @@
             document.getElementById("replaceziplon").innerHTML = " ";
             document.getElementById("geourl").innerHTML = " ";
             document.getElementById("dataurl").innerHTML = " ";
+            document.getElementById("description").innerHTML = " ";
+            document.getElementById("temp").innerHTML = " ";
+            document.getElementById("feelslike").innerHTML = " ";
+            document.getElementById("humidity").innerHTML = " ";
+            document.getElementById("cloudcover").innerHTML = " ";
+            document.getElementById("chanceofrain").innerHTML = " ";
+            document.getElementById("wind").innerHTML = " ";
+            document.getElementById("alertname").innerHTML = " ";
+            document.getElementById("alertlocation").innerHTML = " ";
+            document.getElementById("alertdescription").innerHTML = " ";
 
             // if the showURL buttons have already been clicked, hide them
             // so that another click won't show them again
@@ -101,6 +111,24 @@
             if (DataUrl2.style.display === "none") {
                 DataUrl2.style.display = "block";
             }
+        }
+
+        var lat = "";
+        var lon = "";
+
+        function getLocation() {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
+        
+        function showPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+
+            $.getJSON(`https://geocode.xyz/${lat},${lon}?geoit=json`, function(data) {
+                document.getElementById('geocode').innerHTML = data.postal;
+                document.getElementById('curlat').innerHTML = lat;
+                document.getElementById('curlon').innerHTML = lon;
+            });
         }
     </script>
 </head>
@@ -116,15 +144,24 @@
             </div>
         </div>
         <div class="window-body">
-            <button onclick="window.location.href = '/weather/data.html'"><b><u>B</u>ack</b></button>
+            <button onclick="window.location.href = '/weather/owm/forecast.html'"><b><u>6</u> Hour / <u>7</u> Day Forecast</b></button>
+            <br><br>
+            <button onclick="window.location.href = '/weather/wdg/forecast.html'"><b><u>W</u>eather.gov Data</b></button>
+            <br><br><br>
     <p>
+        <button id="submitbutton" onclick="getLocation()"><b><u>G</u>et Current Location</b></button>
+            <p>You might need to wait a bit or reload the page if your current loctaion details do not load.</p>
+            <div><b>Your Current Zip Code: </b><a id="geocode"></a></div>
+            <div><b>Current Latitude: </b><a id="curlat"></a></div>
+            <div><b>Current Longitude: </b><a id="curlon"></a></div>
         <form>
+            <br>
             <label id="form" for="zipcode">Zip Code:</label><br>
             <input id="form" type="text" id="zipcode" name="zipcode" autofocus><br>
             <br>
             <button id="submitbutton" type="submit">Ok</button>
+            <br>
         </form>
-        <br>
     </p>
 
 <div>
@@ -142,84 +179,17 @@
     <br>
     <br>
     <br>
-    <div><b>DAILY FORECAST</b></div>
+    <div><b>Description: </b><a id="description"></a></div>
+    <div><b>Temperature: </b><a id="temp"></a></div>
+    <div><b>Feels Like: </b><a id="feelslike"></a></div>
+    <div><b>Humidity: </b><a id="humidity"></a></div>
+    <div><b>Cloud Cover: </b><a id="cloudcover"></a></div>
+    <div><b>Chance of Rain: </b><a id="chanceofrain"></a></div>
+    <div><b>Wind Speed: </b><a id="wind"></a></div>
     <br>
-    <div><b>Time: <a id="FCTime0"></a></b></div>
-    <div><b>Description: </b><a id="FCdescription0"></a></div>
-    <div><b>Sunrise: </b><a id="FCsunrise0"></a></div>
-    <div><b>Sunset: </b><a id="FCsunset0"></a></div>
-    <div><b>High Temp: </b><a id="FChightemp0"></a></div>
-    <div><b>Low Temp: </b><a id="FClowtemp0"></a></div>
-    <div><b>Humidity: </b><a id="FChumidity0"></a></div>
-    <div><b>Cloud Cover: </b><a id="FCcloudcover0"></a></div>
-    <div><b>Chance of Rain: </b><a id="FCchanceofrain0"></a></div>
-    <div><b>Wind Speed: </b><a id="FCwind0"></a></div>
-    <br>
-    <div><b>Time: <a id="FCTime1"></a></b></div>
-    <div><b>Description: </b><a id="FCdescription1"></a></div>
-    <div><b>Sunrise: </b><a id="FCsunrise1"></a></div>
-    <div><b>Sunset: </b><a id="FCsunset1"></a></div>
-    <div><b>High Temp: </b><a id="FChightemp1"></a></div>
-    <div><b>Low Temp: </b><a id="FClowtemp1"></a></div>
-    <div><b>Humidity: </b><a id="FChumidity1"></a></div>
-    <div><b>Cloud Cover: </b><a id="FCcloudcover1"></a></div>
-    <div><b>Chance of Rain: </b><a id="FCchanceofrain1"></a></div>
-    <div><b>Wind Speed: </b><a id="FCwind1"></a></div>
-    <br>
-    <div><b>Time: <a id="FCTime2"></a></b></div>
-    <div><b>Description: </b><a id="FCdescription2"></a></div>
-    <div><b>Sunrise: </b><a id="FCsunrise2"></a></div>
-    <div><b>Sunset: </b><a id="FCsunset2"></a></div>
-    <div><b>High Temp: </b><a id="FChightemp2"></a></div>
-    <div><b>Low Temp: </b><a id="FClowtemp2"></a></div>
-    <div><b>Humidity: </b><a id="FChumidity2"></a></div>
-    <div><b>Cloud Cover: </b><a id="FCcloudcover2"></a></div>
-    <div><b>Chance of Rain: </b><a id="FCchanceofrain2"></a></div>
-    <div><b>Wind Speed: </b><a id="FCwind2"></a></div>
-    <br>
-    <div><b>Time: <a id="FCTime3"></a></b></div>
-    <div><b>Description: </b><a id="FCdescription3"></a></div>
-    <div><b>Sunrise: </b><a id="FCsunrise3"></a></div>
-    <div><b>Sunset: </b><a id="FCsunset3"></a></div>
-    <div><b>High Temp: </b><a id="FChightemp3"></a></div>
-    <div><b>Low Temp: </b><a id="FClowtemp3"></a></div>
-    <div><b>Humidity: </b><a id="FChumidity3"></a></div>
-    <div><b>Cloud Cover: </b><a id="FCcloudcover3"></a></div>
-    <div><b>Chance of Rain: </b><a id="FCchanceofrain3"></a></div>
-    <div><b>Wind Speed: </b><a id="FCwind3"></a></div>
-    <br>
-    <div><b>Time: <a id="FCTime4"></a></b></div>
-    <div><b>Description: </b><a id="FCdescription4"></a></div>
-    <div><b>Sunrise: </b><a id="FCsunrise4"></a></div>
-    <div><b>Sunset: </b><a id="FCsunset4"></a></div>
-    <div><b>High Temp: </b><a id="FChightemp4"></a></div>
-    <div><b>Low Temp: </b><a id="FClowtemp4"></a></div>
-    <div><b>Humidity: </b><a id="FChumidity4"></a></div>
-    <div><b>Cloud Cover: </b><a id="FCcloudcover4"></a></div>
-    <div><b>Chance of Rain: </b><a id="FCchanceofrain4"></a></div>
-    <div><b>Wind Speed: </b><a id="FCwind4"></a></div>
-    <br>
-    <div><b>Time: <a id="FCTime5"></a></b></div>
-    <div><b>Description: </b><a id="FCdescription5"></a></div>
-    <div><b>Sunrise: </b><a id="FCsunrise5"></a></div>
-    <div><b>Sunset: </b><a id="FCsunset5"></a></div>
-    <div><b>High Temp: </b><a id="FChightemp5"></a></div>
-    <div><b>Low Temp: </b><a id="FClowtemp5"></a></div>
-    <div><b>Humidity: </b><a id="FChumidity5"></a></div>
-    <div><b>Cloud Cover: </b><a id="FCcloudcover5"></a></div>
-    <div><b>Chance of Rain: </b><a id="FCchanceofrain5"></a></div>
-    <div><b>Wind Speed: </b><a id="FCwind5"></a></div>
-    <br>
-    <div><b>Time: <a id="FCTime6"></a></b></div>
-    <div><b>Description: </b><a id="FCdescription6"></a></div>
-    <div><b>Sunrise: </b><a id="FCsunrise6"></a></div>
-    <div><b>Sunset: </b><a id="FCsunset6"></a></div>
-    <div><b>High Temp: </b><a id="FChightemp6"></a></div>
-    <div><b>Low Temp: </b><a id="FClowtemp6"></a></div>
-    <div><b>Humidity: </b><a id="FChumidity6"></a></div>
-    <div><b>Cloud Cover: </b><a id="FCcloudcover6"></a></div>
-    <div><b>Chance of Rain: </b><a id="FCchanceofrain6"></a></div>
-    <div><b>Wind Speed: </b><a id="FCwind6"></a></div>
+    <div><b>Alert Name: </b><a id="alertname"></a></div>
+    <div><b>Alert Location: </b><a id="alertlocation"></a></div>
+    <div><b>Alert Description: </b><a id="alertdescription"></a></div>
     <br>
 </div>
 
@@ -264,37 +234,24 @@
             var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${key}`;
             $.getJSON(dataUrl, function(data) {
 
+                // stores the temperature from the json in a variable
+                var temp = data.current.temp;
+                // stores the feels like temperature from the json in a variable
+                var feelslike = data.current.feels_like;
+
                 // prints all of the values to the html document
                 document.getElementById('dataurl').innerHTML = dataUrl;
 
-                function printData (day) {
-                    var timeStamp = data.daily[day].dt;
-                    var timeStampDateObj = new Date(timeStamp * 1000);
-                    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-                    var dayOfWeek = days[timeStampDateObj.getDay()];
-
-                    var sunriseTimeStamp = data.daily[day].sunrise;
-                    var sunsetTimeStamp = data.daily[day].sunset;
-
-                    document.getElementById(`FCTime${day}`).innerHTML = dayOfWeek + " " + new Date(timeStamp * 1000).toLocaleDateString();
-                    document.getElementById(`FCdescription${day}`).innerHTML = data.daily[day].weather[0].description;
-                    document.getElementById(`FCsunrise${day}`).innerHTML = new Date(sunriseTimeStamp * 1000).toLocaleTimeString();
-                    document.getElementById(`FCsunset${day}`).innerHTML = new Date(sunsetTimeStamp * 1000).toLocaleTimeString();
-                    document.getElementById(`FChightemp${day}`).innerHTML = data.daily[day].temp.max + "℉";
-                    document.getElementById(`FClowtemp${day}`).innerHTML = data.daily[day].temp.min + "℉";
-                    document.getElementById(`FChumidity${day}`).innerHTML = data.daily[day].humidity + "%";
-                    document.getElementById(`FCcloudcover${day}`).innerHTML = data.daily[day].clouds + "%";
-                    document.getElementById(`FCchanceofrain${day}`).innerHTML = (data.daily[day].pop) * 100 + "%";
-                    document.getElementById(`FCwind${day}`).innerHTML = Math.round(data.daily[day].wind_speed) + " mph " + getCardinal(data.current.wind_deg);
-                }
-
-                printData(0);
-                printData(1);
-                printData(2);
-                printData(3);
-                printData(4);
-                printData(5);
-                printData(6);
+                document.getElementById('description').innerHTML = data.current.weather[0].description;
+                document.getElementById('temp').innerHTML = temp + "℉";
+                document.getElementById('feelslike').innerHTML = feelslike + "℉";
+                document.getElementById('humidity').innerHTML = data.current.humidity + "%";
+                document.getElementById('cloudcover').innerHTML = data.current.clouds + "%";
+                document.getElementById('chanceofrain').innerHTML = (data.hourly[0].pop) * 100 + "%";
+                document.getElementById('wind').innerHTML = Math.round(data.current.wind_speed) + " mph " + getCardinal(data.current.wind_deg);
+                document.getElementById('alertname').innerHTML = data.alerts[0].event;
+                document.getElementById('alertlocation').innerHTML = data.alerts[0].sender_name;
+                document.getElementById('alertdescription').innerHTML = data.alerts[0].description;
             });
         });
         })
