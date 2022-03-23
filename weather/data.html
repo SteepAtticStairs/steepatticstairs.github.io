@@ -10,11 +10,11 @@
         }
         body, html
         {
-            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            margin: 0; padding: 0; height: 100%;
         }
         #content
         {
-            position:absolute; left: 0; right: 0; bottom: 0; top: 0px; font-size: var(--fontsize);
+            left: 0; right: 0; bottom: 0; top: 0px; font-size: var(--fontsize);
         }
         #form
         {
@@ -112,6 +112,24 @@
                 DataUrl2.style.display = "block";
             }
         }
+
+        var lat = "";
+        var lon = "";
+
+        function getLocation() {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
+        
+        function showPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+
+            $.getJSON(`https://geocode.xyz/${lat},${lon}?geoit=json`, function(data) {
+                document.getElementById('geocode').innerHTML = data.postal;
+                document.getElementById('curlat').innerHTML = lat;
+                document.getElementById('curlon').innerHTML = lon;
+            });
+        }
     </script>
 </head>
 
@@ -133,12 +151,18 @@
             <br><br><br>
     <p>
         <form>
+            <button id="submitbutton" onclick="getLocation()"><b><u>G</u>et Current Location</b></button>
+            <div>You might need to wait a bit or reload the page if your current loctaion details do not load.</div>
+            <div><b>Your Current Zip Code: </b><a id="geocode"></a></div>
+            <div><b>Current Latitude: </b><a id="curlat"></a></div>
+            <div><b>Current Longitude: </b><a id="curlon"></a></div>
+            <br>
             <label id="form" for="zipcode">Zip Code:</label><br>
             <input id="form" type="text" id="zipcode" name="zipcode" autofocus><br>
             <br>
             <button id="submitbutton" type="submit">Ok</button>
+            <br>
         </form>
-        <br>
     </p>
 
 <div>
