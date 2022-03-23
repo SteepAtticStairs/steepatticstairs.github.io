@@ -150,12 +150,12 @@
             <button onclick="window.location.href = '/weather/weathergov/forecast.html'"><b><u>W</u>eather.gov Data</b></button>
             <br><br><br>
     <p>
-        <form>
-            <button id="submitbutton" onclick="getLocation()"><b><u>G</u>et Current Location</b></button>
-            <div>You might need to wait a bit or reload the page if your current loctaion details do not load.</div>
+        <button id="submitbutton" onclick="getLocation()"><b><u>G</u>et Current Location</b></button>
+            <p>You might need to wait a bit or reload the page if your current loctaion details do not load.</p>
             <div><b>Your Current Zip Code: </b><a id="geocode"></a></div>
             <div><b>Current Latitude: </b><a id="curlat"></a></div>
             <div><b>Current Longitude: </b><a id="curlon"></a></div>
+        <form>
             <br>
             <label id="form" for="zipcode">Zip Code:</label><br>
             <input id="form" type="text" id="zipcode" name="zipcode" autofocus><br>
