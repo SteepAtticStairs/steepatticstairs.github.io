@@ -210,14 +210,14 @@
             /*
             *  Gets all of the weather information
             */
-            var getLocationUrl = `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${ACCWkey}&q=${ziplat},${ziplon}`;
+            var getLocationUrl = `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${ACCWkey}&q=${ziplat},${ziplon}`;
             document.getElementById('locurl').innerHTML = getLocationUrl;
             
             $.getJSON(getLocationUrl, function(data) {
 
                 var locKey = data.Key;
 
-                var dataUrl = `http://dataservice.accuweather.com/currentconditions/v1/${locKey}?apikey=${ACCWkey}&details=true`
+                var dataUrl = `https://dataservice.accuweather.com/currentconditions/v1/${locKey}?apikey=${ACCWkey}&details=true`
                 document.getElementById('dataurl').innerHTML = dataUrl;
 
                 $.getJSON(dataUrl, function(data) {
