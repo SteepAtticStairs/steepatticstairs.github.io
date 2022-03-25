@@ -233,7 +233,7 @@ L.OWM.Current = L.Layer.extend({
 		progressControl: true, // available: true, false
 		imageLoadingUrl: 'owmloading.gif', // URL of loading image relative to HTML document
 		imageLoadingBgUrl: null, // URL of background image for progress control
-		temperatureUnit: 'C', // available: 'K' (Kelvin), 'C' (Celsius), 'F' (Fahrenheit)
+		temperatureUnit: 'F', // available: 'K' (Kelvin), 'C' (Celsius), 'F' (Fahrenheit)
 		temperatureDigits: 1,
 		speedUnit: 'ms', // available: 'ms' (m/s), 'kmh' (km/h), 'mph' (mph)
 		speedDigits: 0,
