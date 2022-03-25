@@ -240,7 +240,7 @@ L.OWM.Current = L.Layer.extend({
 		popup: true, // available: true, false
 		keepPopup: true, // available: true, false
 		showOwmStationLink: true, // available: true, false
-		showWindSpeed: 'both', // available: 'speed', 'beaufort', 'both'
+		showWindSpeed: 'speed', // available: 'speed', 'beaufort', 'both'
 		showWindDirection: 'both', // available: 'deg', 'desc', 'both'
 		showTimestamp: true, // available: true, false
 		showTempMinMax: true, // available: true, false
@@ -503,12 +503,12 @@ L.OWM.Current = L.Layer.extend({
 			if (typeof station.main.humidity != 'undefined') {
 				txt += '<div class="owm-popup-detail">'
 					+ this.i18n('humidity', 'Humidity')
-					+ ': ' + station.main.humidity + '&nbsp;%</div>';
+					+ ': ' + station.main.humidity + '%</div>';
 			}
 			if (typeof station.main.pressure != 'undefined') {
 				txt += '<div class="owm-popup-detail">'
 					+ this.i18n('pressure', 'Pressure')
-					+ ': ' + station.main.pressure + '&nbsp;hPa</div>';
+					+ ': ' + (station.main.pressure * 0.029529983071445).toFixed(2) + '&nbsp;inHg</div>';
 			}
 			if (this.options.showTempMinMax) {
 				if (typeof station.main.temp_max != 'undefined' && typeof station.main.temp_min != 'undefined') {

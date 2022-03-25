@@ -88,7 +88,7 @@ function foundLocation(position) {
 	if (typeof map != "undefined") {
 		var lat = position.coords.latitude;
 		var lon = position.coords.longitude;
-		map.setView(new L.LatLng(lat, lon), 11);
+		map.setView(new L.LatLng(lat, lon), 9);
 	}
 }
 
@@ -224,6 +224,10 @@ function toggleWheel(localLang) {
 	}
 }
 
+function getLoc() {
+	navigator.geolocation.getCurrentPosition(foundLocation);
+}
+
 /**
  * Initialize the map.
  */
@@ -265,13 +269,13 @@ function initMap() {
 			appId: OWM_API_KEY});
 	var windrose = L.OWM.current({intervall: 15, imageLoadingUrl: 'leaflet/owmloading.gif', lang: localLang, minZoom: 4,
 			appId: OWM_API_KEY, markerFunction: myWindroseMarker, popup: false, clusterSize: 50,
-   			imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
+			imageLoadingBgUrl: 'https://openweathermap.org/img/w0/iwind.png' });
 	windrose.on('owmlayeradd', windroseAdded, windrose); // Add an event listener to get informed when windrose layer is ready
 
 	var useGeolocation = true;
-	var zoom = 6;
-	var lat = 51.58;
-	var lon = 10.1;
+	var zoom = 7;
+	var lat = 38.8696;
+	var lon = -77.0922;
 	var urlParams = getUrlParameters();
 	if (typeof urlParams.zoom != "undefined" && typeof urlParams.lat != "undefined" && typeof urlParams.lon != "undefined") {
 		zoom = urlParams.zoom;
@@ -347,10 +351,6 @@ function initMap() {
 	patch.innerHTML = getI18n('prefs', localLang); // 'Preferences';
 	layerControl._form.children[0].parentNode.insertBefore(patch, null);
 	patch = L.DomUtil.create('div', '');
-	patch.innerHTML = '<div id="wheeldiv" onClick="toggleWheel(\'' + localLang + '\')"><img id="wheelimg" src="files/ScrollWheel20.png" align="middle" > <span id="wheeltxt">' + getI18n('scrollwheel', localLang) + ' ' + getI18n('on', localLang) + '</span></div>';
+	patch.innerHTML = '<div id="wheeldiv" onClick="getLoc(\'' + localLang + '\')"><img id="wheelimg"src="leaflet/images/marker-icon.png" align="middle" > &nbspGet Location</div>';
 	layerControl._form.children[0].parentNode.insertBefore(patch, null);
-
-	if (useGeolocation && typeof navigator.geolocation != "undefined") {
-		navigator.geolocation.getCurrentPosition(foundLocation);
-	}
 }
