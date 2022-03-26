@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Hourly Forecast</title>
+    <title>Data</title>
     <link rel="stylesheet" href="/dump/98css/98.css" />
     <style type="text/css">
         :root {
@@ -90,6 +90,9 @@
             document.getElementById("replaceziplon").innerHTML = " ";
             document.getElementById("geourl").innerHTML = " ";
             document.getElementById("dataurl").innerHTML = " ";
+            document.getElementById("alertname").innerHTML = " ";
+            document.getElementById("alertlocation").innerHTML = " ";
+            document.getElementById("alertdescription").innerHTML = " ";
 
             // if the showURL buttons have already been clicked, hide them
             // so that another click won't show them again
@@ -102,13 +105,31 @@
                 DataUrl2.style.display = "block";
             }
         }
+
+        var lat = "";
+        var lon = "";
+
+        function getLocation() {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
+        
+        function showPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+
+            $.getJSON(`https://geocode.xyz/${lat},${lon}?geoit=json`, function(data) {
+                document.getElementById('geocode').innerHTML = data.postal;
+                document.getElementById('curlat').innerHTML = lat;
+                document.getElementById('curlon').innerHTML = lon;
+            });
+        }
     </script>
 </head>
 
 <body>
     <div class="window" id="content">
         <div class="title-bar">
-            <div class="title-bar-text">Exploring - OWM Forecast</div>
+            <div class="title-bar-text">Exploring - OWM Weather</div>
             <div class="title-bar-controls">
                 <button aria-label="Minimize"></button>
                 <button aria-label="Maximize"></button>
@@ -116,15 +137,25 @@
             </div>
         </div>
         <div class="window-body">
-            <button onclick="window.location.href = '/weather/datasources/owm/current.html'"><b><u>B</u>ack</b></button>
+            <button onclick="window.location.href = '/weather/datasources/wdg/forecast.html'"><b><u>W</u>eather.gov Data</b></button>
+            <br>
+            <button onclick="window.location.href = '/weather/datasources/accw/current.html'"><b><u>A</u>ccuweather Data <i>(incomplete)</i></b></button>
+            <br><br><br><br>
     <p>
+        <button id="submitbutton" onclick="getLocation()"><b><u>G</u>et Current Location</b></button>
+            <p>You might need to wait a bit or reload the page if your current loctaion details do not load.</p>
+            <div><b>Your Current Zip Code: </b><a id="geocode"></a></div>
+            <div><b>Current Latitude: </b><a id="curlat"></a></div>
+            <div><b>Current Longitude: </b><a id="curlon"></a></div>
+            <br><br>
         <form>
+            <br>
             <label id="form" for="zipcode">Zip Code:</label><br>
             <input id="form" type="text" id="zipcode" name="zipcode" autofocus><br>
             <br>
             <button id="submitbutton" type="submit">Ok</button>
+            <br>
         </form>
-        <br>
     </p>
 
 <div>
@@ -139,6 +170,23 @@
     <div><b>OWM Geolocator URL: </b><a id="geourl"></a></div>
     <button id="buttondata" onclick="hideDataUrl()">Show OWM Main Weather Data URL</button>
     <div><b>OWM Main Weather Data URL: </b><a id="dataurl"></a></div>
+    <br>
+    <br>
+    <br>
+    <div><b>Description: </b><a id="description"></a></div>
+    <div><b>Temperature: </b><a id="temp"></a></div>
+    <div><b>Feels Like: </b><a id="feelslike"></a></div>
+    <div><b>Humidity: </b><a id="humidity"></a></div>
+    <div><b>Cloud Cover: </b><a id="cloudcover"></a></div>
+    <div><b>Chance of Rain: </b><a id="chanceofrain"></a></div>
+    <div><b>Wind Speed: </b><a id="wind"></a></div>
+    <br>
+    <div><b>Alert Name: </b><a id="alertname"></a></div>
+    <div><b>Alert Location: </b><a id="alertlocation"></a></div>
+    <div><b>Alert Description: </b><a id="alertdescription"></a></div>
+    <br>
+    <br>
+    <br>
     <br>
     <br>
     <br>
@@ -197,7 +245,7 @@
     <div><b>Cloud Cover: </b><a id="HFCcloudcover5"></a></div>
     <div><b>Chance of Rain: </b><a id="HFCchanceofrain5"></a></div>
     <div><b>Wind Speed: </b><a id="HFCwind5"></a></div>
-    <br><br><br><br><br>
+    <br><br><br><br><br><br>
     <div><b>DAILY FORECAST</b></div>
     <br>
     <div><b>Time: <a id="DFCTime0"></a></b></div>
@@ -320,8 +368,24 @@
             var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${key}`;
             $.getJSON(dataUrl, function(data) {
 
+                // stores the temperature from the json in a variable
+                var temp = data.current.temp;
+                // stores the feels like temperature from the json in a variable
+                var feelslike = data.current.feels_like;
+
                 // prints all of the values to the html document
                 document.getElementById('dataurl').innerHTML = dataUrl;
+
+                document.getElementById('description').innerHTML = data.current.weather[0].description;
+                document.getElementById('temp').innerHTML = temp + "℉";
+                document.getElementById('feelslike').innerHTML = feelslike + "℉";
+                document.getElementById('humidity').innerHTML = data.current.humidity + "%";
+                document.getElementById('cloudcover').innerHTML = data.current.clouds + "%";
+                document.getElementById('chanceofrain').innerHTML = (data.hourly[0].pop) * 100 + "%";
+                document.getElementById('wind').innerHTML = Math.round(data.current.wind_speed) + " mph " + getCardinal(data.current.wind_deg);
+                document.getElementById('alertname').innerHTML = data.alerts[0].event;
+                document.getElementById('alertlocation').innerHTML = data.alerts[0].sender_name;
+                document.getElementById('alertdescription').innerHTML = data.alerts[0].description;
 
                 function printHourData (hour) {
                     var timeStamp = data.hourly[hour].dt;
