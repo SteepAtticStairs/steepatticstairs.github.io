@@ -61,6 +61,11 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 ```
 cd ~/Github/steepatticstairs.github.io/theatticrealm && tree . -H /theatticrealm -o tree.html && cd ..
 ```
+## Update directory listing in `/2021roadatlas/`
+
+```
+cd ~/Downloads/2021RoadAtlas && tree . -H https://ia601508.us.archive.org/2/items/2021USARoadAtlas/2021RoadAtlas -o tree.html && rm -f ~/Github/steepatticstairs.github.io/2021roadatlas/tree.html && cp tree.html ~/Github/steepatticstairs.github.io/2021roadatlas/tree.html && rm -f tree.html && cd ~/Github/steepatticstairs.github.io
+```
 
 <br></br>
 
