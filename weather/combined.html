@@ -136,9 +136,9 @@
             document.getElementById("replaceziplon").innerHTML = " ";
             document.getElementById("geourl").innerHTML = " ";
             document.getElementById("dataurl").innerHTML = " ";
-            document.getElementById("alertname").innerHTML = " ";
-            document.getElementById("alertlocation").innerHTML = " ";
-            document.getElementById("alertdescription").innerHTML = " ";
+            document.getElementById("alertname0").innerHTML = " ";
+            document.getElementById("alertlocation0").innerHTML = " ";
+            document.getElementById("alertdescription0").innerHTML = " ";
 
             // if the showURL buttons have already been clicked, hide them
             // so that another click won't show them again
@@ -217,7 +217,8 @@
             <br><br>
         <form>
             <br>
-            <label id="form" for="zipcode">Zip Code:</label><br>
+            <div><i>NOTE:</i>&nbsp&nbsp&nbspPlease reload the page to input a new zip code, if you have queried one already.</div>
+            <label id="form" for="zipcode"><b>Zip Code:</b></label><br>
             <input id="form" type="text" id="zipcode" name="zipcode" autofocus><br>
             <br>
             <button id="submitbutton" type="submit">Ok</button>
@@ -231,6 +232,7 @@
 
         // reset all div elements to their original state
         resetAllDivs();
+
         // click the buttons to hide the urls
         $("#buttongeo").click()
         $("#buttondata").click()
@@ -244,7 +246,7 @@
 
         // Get the zip code from the input
         const zipCodeOutput = document.querySelector('[name="zipcode"]').value
-        
+
         document.getElementById("replacezip").innerHTML = zipCodeOutput;
 
 
@@ -448,9 +450,42 @@
                 printDayData(5);
                 printDayData(6);
 
-                document.getElementById('alertname').innerHTML = data.alerts[0].event;
-                document.getElementById('alertlocation').innerHTML = data.alerts[0].sender_name;
-                document.getElementById('alertdescription').innerHTML = data.alerts[0].description;
+                function printAlertData (alertModule) {
+                    document.getElementById(`alertname${alertModule}`).innerHTML = data.alerts[alertModule].event;
+                    document.getElementById(`alertlocation${alertModule}`).innerHTML = data.alerts[alertModule].sender_name;
+                    document.getElementById(`alertdescription${alertModule}`).innerHTML = data.alerts[alertModule].description;
+                }
+
+                var alertCheckNumber = 0
+                function checkAlert () {
+                    
+                    // if there are no alerts
+                    if (data?.alerts===undefined) {
+                        document.getElementById('allAlerts').style.display = "none";
+                        return;
+                    }
+
+                    // proceed to check the number of alerts
+                    if (data.alerts[alertCheckNumber]?.event===undefined) {
+                        finalAlertNumber = alertCheckNumber;
+
+                        var row = [ 0, 1, 2, 3, 4, 5, 6];
+                        for (var i = 0; i<row.length; i++) {
+                            if (row[i] >= finalAlertNumber) {
+                                document.getElementById(`DIValertdescription${row[i]}`).style.display = "none";
+                                document.getElementById(`DIValertlocation${row[i]}`).style.display = "none";
+                                document.getElementById(`DIValertname${row[i]}`).style.display = "none";
+                            }
+                        }
+                        return;
+                    } else {
+                        console.log(alertCheckNumber);
+                        printAlertData(alertCheckNumber);
+                        alertCheckNumber++
+                        checkAlert();
+                    }
+                }
+                checkAlert();
             });
         });
         })
@@ -464,7 +499,7 @@
 
 
 
-    <div>
+    <div id="suus">
         <br>
         <div><b>Zip Code: </b><a id="replacezip"></a></div>
         <div><b>City Name: </b><a id="replacecity"></a></div>
@@ -502,10 +537,36 @@
         <div><b>Cloud Cover: </b><a id="cloudcover"></a></div>
         <div><b>Chance of Rain: </b><a id="chanceofrain"></a></div>
         <div><b>Wind Speed: </b><a id="wind"></a></div>
+        <br><br><br>
+        <div id="allAlerts">
+        <div id="DIValertname0"><b>Alert Name: </b><a id="alertname0"></a></div>
+        <div id="DIValertlocation0"><b>Alert Location: </b><a id="alertlocation0"></a></div>
+        <div id="DIValertdescription0"><b>Alert Description: </b><a id="alertdescription0"></a></div>
         <br>
-        <div><b>Alert Name: </b><a id="alertname"></a></div>
-        <div><b>Alert Location: </b><a id="alertlocation"></a></div>
-        <div><b>Alert Description: </b><a id="alertdescription"></a></div>
+        <div id="DIValertname1"><b>Alert Name: </b><a id="alertname1"></a></div>
+        <div id="DIValertlocation1"><b>Alert Location: </b><a id="alertlocation1"></a></div>
+        <div id="DIValertdescription1"><b>Alert Description: </b><a id="alertdescription1"></a></div>
+        <br>
+        <div id="DIValertname2"><b>Alert Name: </b><a id="alertname2"></a></div>
+        <div id="DIValertlocation2"><b>Alert Location: </b><a id="alertlocation2"></a></div>
+        <div id="DIValertdescription2"><b>Alert Description: </b><a id="alertdescription2"></a></div>
+        <br>
+        <div id="DIValertname3"><b>Alert Name: </b><a id="alertname3"></a></div>
+        <div id="DIValertlocation3"><b>Alert Location: </b><a id="alertlocation3"></a></div>
+        <div id="DIValertdescription3"><b>Alert Description: </b><a id="alertdescription3"></a></div>
+        <br>
+        <div id="DIValertname4"><b>Alert Name: </b><a id="alertname4"></a></div>
+        <div id="DIValertlocation4"><b>Alert Location: </b><a id="alertlocation4"></a></div>
+        <div id="DIValertdescription4"><b>Alert Description: </b><a id="alertdescription4"></a></div>
+        <br>
+        <div id="DIValertname5"><b>Alert Name: </b><a id="alertname4"></a></div>
+        <div id="DIValertlocation5"><b>Alert Location: </b><a id="alertlocation4"></a></div>
+        <div id="DIValertdescription5"><b>Alert Description: </b><a id="alertdescription4"></a></div>
+        <br>
+        <div id="DIValertname6"><b>Alert Name: </b><a id="alertname4"></a></div>
+        <div id="DIValertlocation6"><b>Alert Location: </b><a id="alertlocation4"></a></div>
+        <div id="DIValertdescription6"><b>Alert Description: </b><a id="alertdescription4"></a></div>
+        </div>
         <br>
         <br>
         <br>
