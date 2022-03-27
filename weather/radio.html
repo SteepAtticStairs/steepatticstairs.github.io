@@ -4,13 +4,55 @@
     <!-- https://www.weather.gov/nwr/station_listing -->
     <title>Radio</title>
 	<meta charset="UTF-8">
+    <link rel="stylesheet" href="/dump/98css/98.css" />
+    <style type="text/css">
+        body, html
+        {
+            margin: 0; padding: 0; height: 100%;
+        }
+
+        #content
+        {
+            left: 0; right: 0; bottom: 0; top: 0px; 
+        }
+        #content2
+        {
+            left: 0; right: 0; bottom: 0; top: 0px; 
+        }
+        #form
+        {
+            font-size: var(--fontsize)
+        }
+        #submitbutton
+        {
+            background-color:#929292;
+            font-size: var(--fontsize)
+        }
+    </style>
 </head>
 <body>
-    <h3>Default:</h3>
+    <div class="window" id="content">
+        <div class="title-bar">
+            <div class="title-bar-text">Exploring - Weather</div>
+            <div class="title-bar-controls">
+                <button aria-label="Minimize"></button>
+                <button aria-label="Maximize"></button>
+                <button aria-label="Close"></button>
+            </div>
+        </div>
+    <div class="window-body" id="content2">
+        <button onclick="window.location.href = 'https://github.com/jdan/98.css'"><b><u>C</u>SS Source</b></button>
+        <br><br><br>
+    <h4>Default:</h4>
     <p>WNG736 162.450 <br>
         KEC84 162.400</p>
     <br>
-    <p><u>Randon Links:</u></p>
+    <p><b><u>Random Links:</u></b></p>
+    <br>
+    <div><b>Search for station call signs <a href="https://www.weather.gov/nwr/station_listing">HERE</a></b></div>
+    <div><b>Listing of various radio stations: <a href="https://noaaweatherradio.org">https://noaaweatherradio.org</a></b></div>
+    <div><b>Listing of various radio stations: <a href="https://www.weatherusa.net/radio">https://www.weatherusa.net/radio</a></b></div>
+    <br><br>
     <a href="https://www.eldoradoweather.com/wxradio/index-washingtondc.html">https://www.eldoradoweather.com/wxradio/index-washingtondc.html</a>
     <br>
     <a href="https://www.streamtastic.com/station/8905/">https://www.streamtastic.com/station/8905/</a>
@@ -27,9 +69,11 @@
 
     <br><br><br>
     <p><form>
-        <label for="callsign">Station Call Sign:</label> <a href="https://www.weather.gov/nwr/station_listing">(search here)</a><br>
+        <label for="callsign">Your Stream URL:</label><br>
         <input type="text" id="callsign" name="callsign"><br>
-        <input type="submit" value="Ok">
+        <br>
+        <button id="submitbutton" type="submit">Ok</button>
+        <br>
     </form></p>
     <script type="text/javascript">
         // Listen for the "submit" event on the form
@@ -39,16 +83,17 @@
         event.preventDefault() 
 
         // Get the call sign from the input
-        const radioCallSign = document.querySelector('[name="callsign"]').value
+        const theActualURL = document.querySelector('[name="callsign"]').value
 
         // Set the "src" attribute on the source using the call sign
-        document.querySelector('audio').setAttribute('src', 'https://radio.weatherusa.net/NWR/' + radioCallSign + ".mp3")
+        document.getElementById('inputURL').setAttribute('src', theActualURL);
+        console.log(theActualURL)
 })
     </script>
 
     <br><br><br>
 
-    <p>Main Stream - default WNG736 (this changes with the inputted call sign)</p>
+    <p>Main Stream - WNG736</p>
 	<audio controls>
         <source id="theSource" src="https://radio.weatherusa.net/NWR/WNG736.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
@@ -58,8 +103,14 @@
         <source id="theSource" src="https://radio.weatherusa.net/NWR/KEC84.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
     </audio>
-
     <br><br><br><br>
+    <p>Stream that changes with your inputted URL</p>
+	<audio id="inputURL" controls>
+        <source src="" type="audio/mpeg">
+    Your browser does not support the audio element.
+    </audio>
+
+    <br><br><br><br><br><br><br><br>
 
     <p>Alternate Stream - WNG736 (does not change)</p>
 	<audio controls>
@@ -72,6 +123,8 @@
         <source src="http://ca.radioboss.fm:8149/stream" type="audio/mpeg">
     Your browser does not support the audio element.
     </audio>
+</div>
+</div>
 
 </body>
 </html>
