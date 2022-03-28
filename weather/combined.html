@@ -36,8 +36,8 @@
         var OWMkey = "dbf262da490678e53bec10704ce4032d";
         var ACCWkey = "e7Gh3WOFT6hArk2UVeShGQUi4iDZaenk";
 
-        $(window).on('beforeunload', function() {
-            $(window).scrollTop(0);
+        $(document).ready(function(){
+            $(this).scrollTop(0);
         });
 
         // converts kelvin to fahrenheit, then rounds to one decimal
