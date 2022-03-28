@@ -450,6 +450,19 @@
                 printDayData(5);
                 printDayData(6);
 
+
+
+
+
+
+
+
+
+
+            /*
+            *  Gets active alerts
+            *  OPENWEATHERMAP
+            */
                 document.getElementById('allAlertsExceptFirst').style.display = "block";
                 function printAlertData (alertModule) {
                     document.getElementById(`alertname${alertModule}`).innerHTML = data.alerts[alertModule].event;
@@ -538,7 +551,15 @@
         <div><b>Cloud Cover: </b><a id="cloudcover"></a></div>
         <div><b>Chance of Rain: </b><a id="chanceofrain"></a></div>
         <div><b>Wind Speed: </b><a id="wind"></a></div>
-        <br><br><br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div><img width="10%" height="auto" src="/icons/weatheralert.png"></img></div>
+        <br>
+        <div><b>NOAA ALERTS (provided by OWM)</b></div>
+        <br>
         <div id="allAlerts">
         <div id="DIValertname0"><b>Alert Name: </b><a id="alertname0"></a></div>
         <div id="DIValertlocation0"><b>Alert Location: </b><a id="alertlocation0"></a></div>
