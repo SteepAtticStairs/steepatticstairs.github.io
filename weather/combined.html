@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Data</title>
-    <link rel="stylesheet" href="/dump/98css/98.css" />
+    <link rel="stylesheet" href="https://unpkg.com/98.css" />
     <style type="text/css">
         :root {
             --fontsize: 13px
@@ -324,6 +324,8 @@
             *  Gets all of the weather information
             *  WEATHER.GOV
             */
+            document.getElementById('allWDGDailyExceptFirst').style.display = "block";
+            
             var getWDGLocationUrl = `https://api.weather.gov/points/${ziplat},${ziplon}`;
             document.getElementById('WDGlocurl').innerHTML = getWDGLocationUrl;
             
@@ -404,7 +406,7 @@
 
 
 
-
+				document.getElementById('allOWMHourlyExceptFirst').style.display = "block";
                 function printHourData (hour) {
                     var timeStamp = data.hourly[hour].dt;
 
@@ -417,7 +419,8 @@
                     document.getElementById(`HFCchanceofrain${hour}`).innerHTML = (data.hourly[hour].pop) * 100 + "%";
                     document.getElementById(`HFCwind${hour}`).innerHTML = Math.round(data.hourly[hour].wind_speed) + " mph " + getCardinal(data.current.wind_deg);
                 }
-
+                
+				document.getElementById('allOWMDailyExceptFirst').style.display = "block";
                 function printDayData (day) {
                     var timeStamp = data.daily[day].dt;
                     var timeStampDateObj = new Date(timeStamp * 1000);
@@ -612,6 +615,7 @@
         <div><b>Chance of Rain: </b><a id="HFCchanceofrain0"></a></div>
         <div><b>Wind Speed: </b><a id="HFCwind0"></a></div>
         <br>
+        <div id="allOWMHourlyExceptFirst">
         <div><b>Time: <a id="HFCTime1"></a></b></div>
         <div><b>Description: </b><a id="HFCdescription1"></a></div>
         <div><b>Temperature: </b><a id="HFCtemp1"></a></div>
@@ -656,6 +660,7 @@
         <div><b>Cloud Cover: </b><a id="HFCcloudcover5"></a></div>
         <div><b>Chance of Rain: </b><a id="HFCchanceofrain5"></a></div>
         <div><b>Wind Speed: </b><a id="HFCwind5"></a></div>
+        </div>
         <br><br><br><br><br><br>
         <div><b>DAILY FORECAST</b></div>
         <br>
@@ -670,6 +675,7 @@
         <div><b>Chance of Rain: </b><a id="DFCchanceofrain0"></a></div>
         <div><b>Wind Speed: </b><a id="DFCwind0"></a></div>
         <br>
+        <div id="allOWMDailyExceptFirst">
         <div><b>Time: <a id="DFCTime1"></a></b></div>
         <div><b>Description: </b><a id="DFCdescription1"></a></div>
         <div><b>Sunrise: </b><a id="DFCsunrise1"></a></div>
@@ -735,6 +741,7 @@
         <div><b>Cloud Cover: </b><a id="DFCcloudcover6"></a></div>
         <div><b>Chance of Rain: </b><a id="DFCchanceofrain6"></a></div>
         <div><b>Wind Speed: </b><a id="DFCwind6"></a></div>
+        </div>
         <br>
         <br>
         <br>
@@ -767,6 +774,7 @@
         <div><b>Wind Speed: </b><a id="FCwind0"></a></div>
         <div><b>Summary: </b><a id="FCsummary0"></a></div>
         <br>
+        <div id="allWDGDailyExceptFirst">
         <div><b>Time: <a id="FCTime1"></a></b></div>
         <div><b>Description: </b><a id="FCdescription1"></a></div>
         <div><b>Start Time: </b><a id="FCstarttime1"></a></div>
@@ -814,6 +822,7 @@
         <div><b>Temperature: </b><a id="FCtemp6"></a></div>
         <div><b>Wind Speed: </b><a id="FCwind6"></a></div>
         <div><b>Summary: </b><a id="FCsummary6"></a></div>
+        </div>
         <br>
         <br>
         <a id="hechref" href=""><div><b><img id="mainlink" href=""></img></b></div></a>
@@ -828,6 +837,9 @@
 <script>
     // hide the extra alert elements on window load
     document.getElementById('allAlertsExceptFirst').style.display = "none";
+    document.getElementById('allOWMHourlyExceptFirst').style.display = "none";
+    document.getElementById('allOWMDailyExceptFirst').style.display = "none";
+    document.getElementById('allWDGDailyExceptFirst').style.display = "none";
 </script>
 </body>
 </html>
