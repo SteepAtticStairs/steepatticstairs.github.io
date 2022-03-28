@@ -450,6 +450,7 @@
                 printDayData(5);
                 printDayData(6);
 
+                document.getElementById('allAlertsExceptFirst').style.display = "block";
                 function printAlertData (alertModule) {
                     document.getElementById(`alertname${alertModule}`).innerHTML = data.alerts[alertModule].event;
                     document.getElementById(`alertlocation${alertModule}`).innerHTML = data.alerts[alertModule].sender_name;
@@ -543,6 +544,7 @@
         <div id="DIValertlocation0"><b>Alert Location: </b><a id="alertlocation0"></a></div>
         <div id="DIValertdescription0"><b>Alert Description: </b><a id="alertdescription0"></a></div>
         <br>
+        <div id="allAlertsExceptFirst">
         <div id="DIValertname1"><b>Alert Name: </b><a id="alertname1"></a></div>
         <div id="DIValertlocation1"><b>Alert Location: </b><a id="alertlocation1"></a></div>
         <div id="DIValertdescription1"><b>Alert Description: </b><a id="alertdescription1"></a></div>
@@ -566,6 +568,7 @@
         <div id="DIValertname6"><b>Alert Name: </b><a id="alertname4"></a></div>
         <div id="DIValertlocation6"><b>Alert Location: </b><a id="alertlocation4"></a></div>
         <div id="DIValertdescription6"><b>Alert Description: </b><a id="alertdescription4"></a></div>
+        </div>
         </div>
         <br>
         <br>
@@ -797,5 +800,9 @@
     </div>
 </div>
 </div>
+<script>
+    // hide the extra alert elements on window load
+    document.getElementById('allAlertsExceptFirst').style.display = "none";
+</script>
 </body>
 </html>
