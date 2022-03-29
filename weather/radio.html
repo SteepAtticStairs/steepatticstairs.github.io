@@ -10,6 +10,11 @@
         {
             margin: 0; padding: 0; height: 100%;
         }
+        img{
+            max-width: 100%;
+            max-height: 100%;
+            display: block; /* remove extra space below image */
+        }
 
         #content
         {
@@ -110,20 +115,6 @@
     Your browser does not support the audio element.
     </audio>
 
-    <br><br><br><br><br><br><br><br>
-
-    <p>Alternate Stream - WNG736 (does not change)</p>
-	<audio controls>
-        <source src="http://ca.radioboss.fm:8149/stream=r=RLSX8.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-    </audio>
-
-    <p>Alternate Stream - WNG736 (alternate to the one above, does not change)</p>
-	<audio controls>
-        <source src="http://ca.radioboss.fm:8149/stream" type="audio/mpeg">
-    Your browser does not support the audio element.
-    </audio>
-    
     <br>
     <br>
     <br>
@@ -131,17 +122,77 @@
     <br>
     <br>
     <br>
+    <br>
+    <br>
+    <div><b>Most streams taken from <a href="https://saratoga-weather.org/radio.php">Saratoga Weather</a></b></div>
     <br>
     <br>
     
-    <label for="station">Choose a station:</label>
-    <br><br>
-    <select id="station" name="station" onChange="getUrl(this);">
-        <optgroup label="Washington, DC">
-            <option url="https://radio.weatherusa.net/NWR/WNG736.mp3">WNG736</option>
+    <div><img width="25px" height="auto" src="/icons/flags/al.png"><b>Alabama</b></div>
+    <select onChange="getUrl(this);">
+        <!--✅-->
+        <!--❌-->
+        <!--🛠️-->
+        <!-- <option url="">WNG736</option> -->
+        <optgroup label="Alabama">
+            <option selected="selected">Select</option>
+            <option url="https://radio.weatherusa.net/NWR/KEC61_2.mp3">KEC61 - Mobile, AL</option>
+            <option url="https://radio.weatherusa.net/NWR/KIH54.mp3">KIH54 - Birmingham, AL</option>
         </optgroup>
-        <optgroup label="New Bern, NC">
-            <option url="https://radio.weatherusa.net/NWR/KEC84.mp3">KEC84</option>
+    </select>
+    <br><br>
+    <div><img width="25px" height="auto" src="/icons/flags/ar.png"><b>Arkansas</b></div>
+    <select onChange="getUrl(this);">
+        <!--✅-->
+        <!--❌-->
+        <!--🛠️-->
+        <!-- <option url="">WNG736</option> -->
+        <optgroup label="Arkansas">
+            <option selected="selected">Select</option>
+            <option url="https://ice41.securenetsystems.net/NOAA">KXI97 - Mena, AR</option>
+            <option url="https://wxradio.org/AR-Springdale-WNG694">WNG694 - Springdale, AR</option>
+        </optgroup>
+    </select>
+    <br><br>
+    <div><img width="25px" height="auto" src="/icons/flags/ca.png"><b>California</b></div>
+    <select onChange="getUrl(this);">
+        <!--✅-->
+        <!--❌-->
+        <!--🛠️-->
+        <!-- <option url="">WNG736</option> -->
+        <optgroup label="California">
+            <option selected="selected">Select</option>
+            <option url="https://wxradio.org/CA-Fresno-KIH62">KIH62 - Fresno, CA</option>
+            <option url="https://radio.weatherusa.net/NWR/KWO37.mp3">KWO37 - Los Angeles, CA</option>
+            <option url="https://wxradio.org/CA-MontereyMarine-WWF64">WWF64 - Monterey Marine, CA</option>
+            <option url="https://wxradio.org/CA-Monterey-KEC49">KEC49 - Monterey, CA</option>
+            <option url="https://radio.weatherusa.net/NWR/KEC57.mp3">KEC57 - Sacramento, CA</option>
+        </optgroup>
+    </select>
+    <br><br>
+    <div><img width="25px" height="auto" src="/icons/flags/ct.png"><b>Connecticut</b></div>
+    <select onChange="getUrl(this);">
+        <!--✅-->
+        <!--❌-->
+        <!--🛠️-->
+        <!-- <option url="">WNG736</option> -->
+        <optgroup label="Connecticut">
+            <option selected="selected">Select</option>
+            <option url="https://wxradio.org/CT-Hartford-WXJ41">WXJ41 - Hartford, CT</option>
+        </optgroup>
+    </select>
+    <br><br>
+    <div><img width="25px" height="auto" src="/icons/flags/dc.png"><b>Washington, DC</b></div>
+    <select onChange="getUrl(this);">
+        <!--✅-->
+        <!--❌-->
+        <!--🛠️-->
+        <!-- <option url="">WNG736</option> -->
+        <optgroup label="Washington, DC">
+            <option selected="selected">Select</option>
+            <option url="https://radio.weatherusa.net/NWR/WNG736.mp3">WNG736 - Washington, DC</option>
+            <option url="http://ca.radioboss.fm:8149/stream=r=RLSX8.mp3">WNG736 - Washington, DC (alt)</option>
+        </optgroup>
     </select>
     
     <br><br>
