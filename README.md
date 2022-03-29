@@ -33,11 +33,14 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 
 # Project Structure
 
+`/2021roadatlas/` - 2021 USA Road Atlas, hosted by Internet Archive <br>
 `/bignate/` - Big Nate comics in HTML format <br>
 `/calvinhobbes/` - Calvin and Hobbes comics in HTML format <br>
+`/dump/` - Random files, such as CSS libraries <br>
 `/harrypotter/` - HTML files with links to PDFs and audiobooks <br>
 `/hasher/` - JavaScript files to hash in SHA1 and another simpler hash format <br>
 `/homepages/` - Desktop and mobile homepage HTML files are stored here <br>
+`/icons/` - Images that I use on this site <br>
 `/kentuckybb/` - Massive collection of HTML files with links to Kentucky Basketball games <br>
 `/largefiles/` - Submodule that hosts the larger files that would be inefficient to store in this repo <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/games/` - Various games ported to JavaScript <br>
@@ -49,8 +52,9 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 `/private/` - "Password protected" pages, redirected to from the 'other' tab on the homepage <br>
 `/random/` - Random files <br>
 `/theatticrealm/` - Submodule that hosts my made-up world, with large files that would be inefficient to store in this repo <br>
+`/weather/` - Various collection of weather tools <br>
 `/youtubedownloader/` - Various resources for downloading YouTube videos <br>
-`index.html` - Redirects to the right homepage based on your mobile / desktop status <br>
+`index.html` - Main homepage <br>
 `logo.png` - Website logo (favicon) <br>
 `README.md` - This file and the description for the github repo <br>
 
