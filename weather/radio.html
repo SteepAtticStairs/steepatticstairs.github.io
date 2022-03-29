@@ -136,33 +136,33 @@
     
     <label for="station">Choose a station:</label>
     <br><br>
-  <select id="station" name="station" onChange="getUrl(this);">
-  <optgroup label="Washington, DC">
-    <option url="https://radio.weatherusa.net/NWR/WNG736.mp3">WNG736</option>
-  </optgroup>
-  <optgroup label="New Bern, NC">
-    <option url="https://radio.weatherusa.net/NWR/KEC84.mp3">KEC84</option>
-  </select>
-        
-  <br><br>
-        
-  <p id="plsreplace"></p>
-        
-  <script>
-      function getUrl(sel) {
-          var replace = document.getElementById('plsreplace');
-          //var value = document.getElementById('WNG736');
-          //replace.innerHTML = value.getAttribute("url");
-          
-          var selectedOption = sel.options[sel.selectedIndex];
-          // replace.innerHTML = selectedOption.getAttribute("url");
-          document.getElementById('dropdownUrl').setAttribute('src', selectedOption.getAttribute("url"));
-      }
-  </script>
-  <audio id="dropdownUrl" controls>
+    <select id="station" name="station" onChange="getUrl(this);">
+        <optgroup label="Washington, DC">
+            <option url="https://radio.weatherusa.net/NWR/WNG736.mp3">WNG736</option>
+        </optgroup>
+        <optgroup label="New Bern, NC">
+            <option url="https://radio.weatherusa.net/NWR/KEC84.mp3">KEC84</option>
+    </select>
+    
+    <br><br>
+    
+    <p id="plsreplace"></p>
+    
+    <script>
+        function getUrl(sel) {
+            var replace = document.getElementById('plsreplace');
+            //var value = document.getElementById('WNG736');
+            //replace.innerHTML = value.getAttribute("url");
+
+            var selectedOption = sel.options[sel.selectedIndex];
+            // replace.innerHTML = selectedOption.getAttribute("url");
+            document.getElementById('dropdownUrl').setAttribute('src', selectedOption.getAttribute("url"));
+        }
+    </script>
+    <audio id="dropdownUrl" controls>
         <source src="" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+        Your browser does not support the audio element.
+    </audio>
 
 	<br>
     <br>
