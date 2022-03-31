@@ -377,6 +377,27 @@
                     printData(5);
                     printData(6);
                 });
+
+                // gets the plotter image URL (10th in the array of images on the plotter page)
+                $.get(`https://forecast.weather.gov/MapClick.php?marine=0&zmx=1&zmy=1&FcstType=graphical&lat=${ziplat}&lon=${ziplon}&Submit=Submit`, function(data, status){
+                var pictures = [],
+                m;
+                var str = data,
+                    rex =  /<img[^>]+src="?([^"\s]+)"?\s*/gi;
+                
+                while (m = rex.exec( str )) {
+                    pictures.push( m[1] );
+                }
+
+                const allImages = [];
+                var index = 0;
+                pictures.forEach(function(picture){
+                    allImages.push(picture);
+                })
+                var correctImage = "https://forecast.weather.gov/" + allImages[10];
+                console.log(correctImage);
+                document.getElementById('graph').setAttribute('src', correctImage);
+                    });
             });
 
 
@@ -838,6 +859,8 @@
         <div><b><img id="radar" href=""></img></b></div>
         <br>
         <div><b><img id="outlook" href="" onclick=""></img></b></div>
+        <br>
+        <div><b><img id="graph" href="" onclick="window.location.href = correctImage"></img></b></div>
         <br>
     </div>
 </div>
