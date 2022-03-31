@@ -8,25 +8,39 @@
         :root {
             --fontsize: 13px
         }
-        body, html
-        {
+
+        body, html {
             margin: 0; padding: 0; height: 100%;
         }
-        img{
+
+        img {
             max-width: 100%;
             max-height: 100%;
             display: block; /* remove extra space below image */
         }
-        #content
-        {
+        table img {
+            width:400px;
+            height: auto;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: auto;
+        }
+        td, th {
+            border: 1px solid #3c3c3c;
+            text-align: left;
+            padding: 8px;
+        }
+
+        #content {
             left: 0; right: 0; bottom: 0; top: 0px; font-size: var(--fontsize);
         }
-        #form
-        {
+        #form {
             font-size: var(--fontsize)
         }
-        #submitbutton
-        {
+        #submitbutton {
             background-color:#929292;
             font-size: var(--fontsize)
         }
@@ -353,11 +367,19 @@
                 }
 
                 document.getElementById('mainlink').setAttribute('src', `https://www.weather.gov/wwamap/png/${gridID}.png`);
-                document.getElementById('hechref').setAttribute('href', `https://www.weather.gov/${gridID}`);
+                document.getElementById('mainlinkLink').setAttribute('href', `https://www.weather.gov/${gridID}`);
+
                 document.getElementById('radar').setAttribute('src', `https://radar.weather.gov/ridge/lite/${radarStation}_loop.gif`);
+                document.getElementById('radarLink').setAttribute('href', `https://radar.weather.gov/ridge/lite/${radarStation}_loop.gif`);
+
                 document.getElementById('precipmap').setAttribute('src', `https://graphical.weather.gov/images/${gridID}/PoP121_${gridID}.png`);
+                document.getElementById('precipmapLink').setAttribute('href', `https://graphical.weather.gov/images/${gridID}/PoP121_${gridID}.png`);
+
                 document.getElementById('thunderrisk').setAttribute('src', `https://www.weather.gov/images/${gridID}/ghwo/ThunderstormWindDay1.jpg`);
+                document.getElementById('thunderriskLink').setAttribute('href', `https://www.weather.gov/images/${gridID}/ghwo/ThunderstormWindDay1.jpg`);
+
                 document.getElementById('outlook').setAttribute('src', `https://www.weather.gov/images/${gridID}/weatherstory.gif`);
+                document.getElementById('outlookLink').setAttribute('href', `https://www.weather.gov/images/${gridID}/weatherstory.gif`);
 
                 
                 $.getJSON(WDGdataUrl, function(data) {
@@ -383,24 +405,25 @@
                 // gets the plotter image URL (10th in the array of images on the plotter page)
                 // https://stackoverflow.com/questions/43772776/
                 $.get(`https://forecast.weather.gov/MapClick.php?marine=0&zmx=1&zmy=1&FcstType=graphical&lat=${ziplat}&lon=${ziplon}&Submit=Submit`, function(data, status){
-                var pictures = [],
-                m;
-                var str = data,
-                    rex =  /<img[^>]+src="?([^"\s]+)"?\s*/gi;
-                
-                while (m = rex.exec( str )) {
-                    pictures.push( m[1] );
-                }
+                    var pictures = [],
+                    m;
+                    var str = data,
+                        rex =  /<img[^>]+src="?([^"\s]+)"?\s*/gi;
 
-                const allImages = [];
-                var index = 0;
-                pictures.forEach(function(picture){
+                    while (m = rex.exec( str )) {
+                        pictures.push( m[1] );
+                    }
+
+                    const allImages = [];
+                    var index = 0;
+                    pictures.forEach(function(picture){
                     allImages.push(picture);
-                })
-                var correctImage = "https://forecast.weather.gov/" + allImages[10];
-                console.log(correctImage);
-                document.getElementById('graph').setAttribute('src', correctImage);
-                    });
+                    })
+                    var correctImage = "https://forecast.weather.gov/" + allImages[10];
+                    console.log(correctImage);
+                    document.getElementById('graph').setAttribute('src', correctImage);
+                    document.getElementById('graphLink').setAttribute('href', correctImage);
+                });
             });
 
 
@@ -857,17 +880,49 @@
         </div>
         <br>
         <br>
-        <a id="hechref" href=""><div><b><img id="mainlink" href=""></img></b></div></a>
-        <br>
-        <div><b><img id="radar" href=""></img></b></div>
-        <br>
-        <div><b><img id="outlook" href="" onclick=""></img></b></div>
-        <br>
-        <div><b><img id="precipmap" href=""></img></b></div>
-        <br>
-        <div><b><img id="thunderrisk" href=""></img></b></div>
-        <br>
-        <div><b><img id="graph" href="" onclick="window.location.href = correctImage"></img></b></div>
+        <table>
+
+            <tr>
+                <th>Location</th>
+                <th>Radar</th>
+            </tr>
+            <tr>
+                <td>
+                    <a id="mainlinkLink" href=""><div><b><img id="mainlink" href=""></img></b></div></a>
+                </td>
+                <td>
+                    <a id="radarLink" href=""><div><b><img id="radar" href=""></img></b></div></a>
+                </td>
+            </tr>
+
+
+            <tr>
+                <th>Outlook</th>
+                <th>Precipitation Map</th>
+            </tr>
+            <tr>
+                <td>
+                    <a id="outlookLink" href=""><div><b><img id="outlook" href="" onclick=""></img></b></div></a>
+                </td>
+                <td>
+                    <a id="precipmapLink" href=""><div><b><img id="precipmap" href=""></img></b></div></a>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Thunder Risk</th>
+                <th>Graph</th>
+            </tr>
+            <tr>
+                <td>
+                    <a id="thunderriskLink" href=""><div><b><img id="thunderrisk" href=""></img></b></div></a>
+                </td>
+                <td>
+                    <a id="graphLink" href=""><div><b><img id="graph" href=""></img></b></div></a>
+                </td>
+            </tr>
+
+        </table>
         <br>
     </div>
 </div>
