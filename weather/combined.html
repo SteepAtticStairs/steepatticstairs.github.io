@@ -379,6 +379,7 @@
                 });
 
                 // gets the plotter image URL (10th in the array of images on the plotter page)
+                // https://stackoverflow.com/questions/43772776/
                 $.get(`https://forecast.weather.gov/MapClick.php?marine=0&zmx=1&zmy=1&FcstType=graphical&lat=${ziplat}&lon=${ziplon}&Submit=Submit`, function(data, status){
                 var pictures = [],
                 m;
