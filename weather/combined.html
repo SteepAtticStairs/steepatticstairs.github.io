@@ -439,6 +439,7 @@
                 var currentFrame = 0;
                 function changePicture(){
                     document.getElementById('cloudCoverImg').src = allImgs[currentFrame];
+                    document.getElementById('cloudCoverImgLink').href = allImgs[currentFrame];
                     currentFrame++;
                     if(currentFrame >= allImgs.length){
                         currentFrame = 0;
