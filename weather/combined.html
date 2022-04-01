@@ -382,6 +382,18 @@
                 document.getElementById('outlook').setAttribute('src', `https://www.weather.gov/images/${gridID}/weatherstory.gif`);
                 document.getElementById('outlookLink').setAttribute('href', `https://www.weather.gov/images/${gridID}/weatherstory.gif`);
 
+                document.getElementById('maxTemp').setAttribute('src', `https://graphical.weather.gov/images/${gridID}/MaxT1_${gridID}.png`);
+                document.getElementById('maxTempLink').setAttribute('href', `https://graphical.weather.gov/images/${gridID}/MaxT1_${gridID}.png`);
+
+                document.getElementById('minTemp').setAttribute('src', `https://graphical.weather.gov/images/${gridID}/MinT1_${gridID}.png`);
+                document.getElementById('minTempLink').setAttribute('href', `https://graphical.weather.gov/images/${gridID}/MinT1_${gridID}.png`);
+
+                document.getElementById('goesImagery').setAttribute('src', `https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/GOES16-CONUS-GEOCOLOR-625x375.gif`);
+                document.getElementById('goesImageryLink').setAttribute('href', `https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/GEOCOLOR/GOES16-CONUS-GEOCOLOR-625x375.gif`);
+
+                document.getElementById('goesRadar').setAttribute('src', `https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/13/GOES16-CONUS-13-625x375.gif`);
+                document.getElementById('goesRadarLink').setAttribute('href', `https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/13/GOES16-CONUS-13-625x375.gif`);
+
                 
                 $.getJSON(WDGdataUrl, function(data) {
                     function printData (day) {
@@ -904,6 +916,20 @@
 
 
             <tr>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">GOES Satellite Imagery</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">GOES Satellite Radar</th>
+            </tr>
+            <tr>
+                <td class="status-bar-field">
+                    <a id="goesImageryLink" href=""><div><b><img id="goesImagery" href=""></img></b></div></a>
+                </td>
+                <td class="status-bar-field">
+                    <a id="goesRadarLink" href=""><div><b><img id="goesRadar" href=""></img></b></div></a>
+                </td>
+            </tr>
+
+
+            <tr>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Precipitation Map</th>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Outlook</th>
             </tr>
@@ -927,6 +953,34 @@
                 </td>
                 <td class="status-bar-field">
                     <a id="thunderriskLink" href=""><div><b><img id="thunderrisk" href=""></img></b></div></a>
+                </td>
+            </tr>
+
+
+            <tr>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Maximum Temperature (day)</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Minimum Temperature (night)</th>
+            </tr>
+            <tr>
+                <td class="status-bar-field">
+                    <a id="maxTempLink" href=""><div><b><img id="maxTemp" href=""></img></b></div></a>
+                </td>
+                <td class="status-bar-field">
+                    <a id="minTempLink" href=""><div><b><img id="minTemp" href=""></img></b></div></a>
+                </td>
+            </tr>
+
+
+            <tr>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Maximum Temperature (day)</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Minimum Temperature (night)</th>
+            </tr>
+            <tr>
+                <td class="status-bar-field">
+                    <a id="maxTempLink" href=""><div><b><img id="maxTemp" href=""></img></b></div></a>
+                </td>
+                <td class="status-bar-field">
+                    <a id="minTempLink" href=""><div><b><img id="minTemp" href=""></img></b></div></a>
                 </td>
             </tr>
 
