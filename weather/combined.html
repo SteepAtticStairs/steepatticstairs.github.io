@@ -431,7 +431,7 @@
 
                 // gets the next 10 cloud cover images, and displays them in a GIF-similar loop
                 var allImgs = [];
-                for (let i = 1; i < 10; i++) {
+                for (let i = 1; i < 12; i++) {
                     allImgs.push(`https://graphical.weather.gov/images/${gridID}/Sky${i}_${gridID}.png`);
                 }
                 console.log(allImgs);
@@ -444,8 +444,11 @@
                     if(currentFrame >= allImgs.length){
                         currentFrame = 0;
                     }
+                    if (cloudCoverPlay == false) {
+                        clearInterval(changeCloudPicture);
+                    }
                 }
-                setInterval(changePicture, 700); // waits 700ms between images
+                var changeCloudPicture = setInterval(changePicture, 700); // waits 700ms between images
 
                 // gets the plotter image URL (10th in the array of images on the plotter page)
                 // https://stackoverflow.com/questions/43772776/
@@ -1011,7 +1014,10 @@
 
 
             <tr>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover</th>
+                <script>
+                    let cloudCoverPlay = new Boolean(true);
+                </script>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover&nbsp;&nbsp;&nbsp; <button onclick="cloudCoverStop = false;">Stop</button></th>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
             </tr>
             <tr>
