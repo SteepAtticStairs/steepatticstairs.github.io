@@ -206,10 +206,20 @@
                 document.getElementById('curlon').innerHTML = lon;
             });
         }
+
+        function scrollToChart() {
+            var chartScrollDiv = document.getElementById("chartImages").offsetTop;
+            window.scrollTo({ top: chartScrollDiv, behavior: 'smooth'});
+        }
+
+        function scrollToTop() {
+            var topScrollDiv = document.getElementById("mainBody").offsetTop;
+            window.scrollTo({ top: topScrollDiv, behavior: 'smooth'});
+        }
     </script>
 </head>
 
-<body>
+<body id="mainBody">
     <div class="window" id="content">
         <div class="title-bar">
             <div class="title-bar-text">Exploring - OWM Weather</div>
@@ -236,6 +246,9 @@
             <div><b>Current Latitude: </b><a id="curlat"></a></div>
             <div><b>Current Longitude: </b><a id="curlon"></a></div>
             <br><br>
+            <br>
+            <button onclick="scrollToChart()"><b><u>J</u>ump to Images</b></button>
+            <br>
         <form>
             <br>
             <div style="color: rgb(226, 0, 0);"><b><i>NOTE:</i>&nbsp&nbsp&nbspPlease reload the page to input a new zip code, if you have queried one already.</b></div>
@@ -899,6 +912,13 @@
         <br>
         <br>
 
+        <div id="chartImages"></div>
+
+        <br>
+            <button onclick="scrollToTop()"><b><u>J</u>ump to Top</b></button>
+        <br>
+        <br>
+
         <table border="3">
 
             <tr>
@@ -953,20 +973,6 @@
                 </td>
                 <td class="status-bar-field">
                     <a id="thunderriskLink" href=""><div><b><img id="thunderrisk" href=""></img></b></div></a>
-                </td>
-            </tr>
-
-
-            <tr>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Maximum Temperature (day)</th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Minimum Temperature (night)</th>
-            </tr>
-            <tr>
-                <td class="status-bar-field">
-                    <a id="maxTempLink" href=""><div><b><img id="maxTemp" href=""></img></b></div></a>
-                </td>
-                <td class="status-bar-field">
-                    <a id="minTempLink" href=""><div><b><img id="minTemp" href=""></img></b></div></a>
                 </td>
             </tr>
 
