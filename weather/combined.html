@@ -429,14 +429,16 @@
                 });
 
 
-                document.getElementById('cloudCoverImg').setAttribute('src', `https://graphical.weather.gov/images/${gridID}/Sky2_${gridID}.png`);
-                document.getElementById('cloudCoverImgLink').setAttribute('href', `https://graphical.weather.gov/images/${gridID}/Sky2_${gridID}.png`);
-
                 // gets the next 10 cloud cover images, and displays them in a GIF-similar loop
                 var allImgs = [];
-                var cloudWaitValue = 700;
+                // add all images 1-11 to the array
                 for (let i = 1; i < 12; i++) {
                     allImgs.push(`https://graphical.weather.gov/images/${gridID}/Sky${i}_${gridID}.png`);
+                }
+                // adds multiple of the last image to the array, making it appear to delay every loop
+                for (let i = 1; i < 3; i++) {
+                    // allImgs.push('/icons/black.jpg');
+                    allImgs.push(`https://graphical.weather.gov/images/${gridID}/Sky11_${gridID}.png`);
                 }
                 console.log(allImgs);
 
@@ -448,13 +450,11 @@
                     if(currentFrame >= allImgs.length){
                         currentFrame = 0;
                     }
-                }
-                function checkCloudBoolValue(){
-                    if (cloudCoverControl == true) {
-                        var changeCloudPicture = setInterval(changePicture, cloudWaitValue); // waits 700ms between images
+                    if (cloudCoverControl == false) {
+                        clearInterval(changeCloudPicture);
                     }
                 }
-                setInterval(checkCloudBoolValue, cloudWaitValue);
+                var changeCloudPicture = setInterval(changePicture, 700); // waits 700ms between images
 
                 // gets the plotter image URL (10th in the array of images on the plotter page)
                 // https://stackoverflow.com/questions/43772776/
@@ -1021,9 +1021,9 @@
 
             <tr>
                 <script>
-                    let cloudCoverControl = new Boolean(false);
+                    let cloudCoverControl = new Boolean(true);
                 </script>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover&nbsp;&nbsp;&nbsp; <button onclick="cloudCoverControl = true;">Play</button></th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover&nbsp;&nbsp;&nbsp; <button onclick="cloudCoverControl = false;">Stop</button></th>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
             </tr>
             <tr>
