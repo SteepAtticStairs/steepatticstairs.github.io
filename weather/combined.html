@@ -444,7 +444,7 @@
                     if(currentFrame >= allImgs.length){
                         currentFrame = 0;
                     }
-                    if (cloudCoverPlay == false) {
+                    if (cloudCoverControl == false) {
                         clearInterval(changeCloudPicture);
                     }
                 }
@@ -1015,9 +1015,9 @@
 
             <tr>
                 <script>
-                    let cloudCoverPlay = new Boolean(true);
+                    let cloudCoverControl = new Boolean(true);
                 </script>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover&nbsp;&nbsp;&nbsp; <button onclick="cloudCoverStop = false;">Stop</button></th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover&nbsp;&nbsp;&nbsp; <button onclick="cloudCoverControl = false;">Stop</button></th>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
             </tr>
             <tr>
