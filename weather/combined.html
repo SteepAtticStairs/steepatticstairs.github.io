@@ -209,12 +209,12 @@
 
         function scrollToChart() {
             var chartScrollDiv = document.getElementById("chartImages").offsetTop;
-            window.scrollTo({ top: chartScrollDiv, behavior: 'smooth'});
+            window.scrollTo({ top: chartScrollDiv});
         }
 
         function scrollToTop() {
             var topScrollDiv = document.getElementById("mainBody").offsetTop;
-            window.scrollTo({ top: topScrollDiv, behavior: 'smooth'});
+            window.scrollTo({ top: topScrollDiv});
         }
     </script>
 </head>
@@ -427,6 +427,24 @@
                     printData(5);
                     printData(6);
                 });
+
+
+                // gets the next 10 cloud cover images, and displays them in a GIF-similar loop
+                var allImgs = [];
+                for (let i = 1; i < 10; i++) {
+                    allImgs.push(`https://graphical.weather.gov/images/${gridID}/Sky${i}_${gridID}.png`);
+                }
+                console.log(allImgs);
+
+                var currentFrame = 0;
+                function changePicture(){
+                    document.getElementById('cloudCoverImg').src = allImgs[currentFrame];
+                    currentFrame++;
+                    if(currentFrame >= allImgs.length){
+                        currentFrame = 0;
+                    }
+                }
+                setInterval(changePicture, 700); // waits 700ms between images
 
                 // gets the plotter image URL (10th in the array of images on the plotter page)
                 // https://stackoverflow.com/questions/43772776/
@@ -987,6 +1005,20 @@
                 </td>
                 <td class="status-bar-field">
                     <a id="minTempLink" href=""><div><b><img id="minTemp" href=""></img></b></div></a>
+                </td>
+            </tr>
+
+
+            <tr>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
+            </tr>
+            <tr>
+                <td class="status-bar-field">
+                    <a id="cloudCoverImgLink" href=""><div><b><img id="cloudCoverImg" href=""></img></b></div></a>
+                </td>
+                <td class="status-bar-field">
+                    <a id="blankLink" href=""><div><b><img id="blankLink" href=""></img></b></div></a>
                 </td>
             </tr>
 
