@@ -441,8 +441,12 @@
                     allImgs.push(`https://graphical.weather.gov/images/${gridID}/Sky11_${gridID}.png`);
                 }
                 console.log(allImgs);
+                // sets the default images before play is hit
+                document.getElementById('cloudCoverImg').src = `https://graphical.weather.gov/images/${gridID}/Sky2_${gridID}.png`;
+                document.getElementById('cloudCoverImgLink').href = `https://graphical.weather.gov/images/${gridID}/Sky2_${gridID}.png`;
 
                 var currentFrame = 0;
+                // function to loop through the images
                 function changePicture(){
                     document.getElementById('cloudCoverImg').src = allImgs[currentFrame];
                     document.getElementById('cloudCoverImgLink').href = allImgs[currentFrame];
@@ -450,11 +454,27 @@
                     if(currentFrame >= allImgs.length){
                         currentFrame = 0;
                     }
-                    if (cloudCoverControl == false) {
-                        clearInterval(changeCloudPicture);
+                }
+                // checks if cloudControl is true (play the loop)
+                function checkCloudControlTrue() {
+                    if (cloudCoverControl == true) {
+                        // start the loop to cycle thorugh the images
+                        var changeCloudPicture = setInterval(changePicture, 700); // waits 700ms between images
+                        // starts the loop to check if cloudControl is false (stop the loop)
+                        setInterval(checkCloudControlFalse, 700);
+                        // stops the loop that checks if cloudControl is true (play the loop)
+                        clearInterval(checkCloudControlIntervalTrue);
+                    }
+                    // checks if cloudControl is false (stop the loop)
+                    function checkCloudControlFalse() {
+                        if (cloudCoverControl == false) {
+                            // stops the loop tha cycles through the images
+                            clearInterval(changeCloudPicture);
+                        }
                     }
                 }
-                var changeCloudPicture = setInterval(changePicture, 700); // waits 700ms between images
+                // the initial loop running is checking if cloudControl is true (play the loop)
+                var checkCloudControlIntervalTrue = setInterval(checkCloudControlTrue, 700);
 
                 // gets the plotter image URL (10th in the array of images on the plotter page)
                 // https://stackoverflow.com/questions/43772776/
@@ -1021,9 +1041,9 @@
 
             <tr>
                 <script>
-                    let cloudCoverControl = new Boolean(true);
+                    let cloudCoverControl = new Boolean(false);
                 </script>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover&nbsp;&nbsp;&nbsp; <button onclick="cloudCoverControl = false;">Stop</button></th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover&nbsp;&nbsp;&nbsp; <button onclick="cloudCoverControl = true;">Play</button><button onclick="cloudCoverControl = false;">Stop</button></th>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
             </tr>
             <tr>
