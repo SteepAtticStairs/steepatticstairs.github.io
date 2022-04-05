@@ -22,9 +22,9 @@ cd steepatticstairs.github.io
 git submodule init; git submodule update
 ```
 
-If you want to automatically checkout to the right submodule branches, do
+If you want to automatically checkout to the right submodule branch, do
 ```
-git submodule init; git submodule update; cd largefiles; git checkout main; cd ..; cd theatticrealm; git checkout main; cd ..
+git submodule init; git submodule update; cd largefiles; git checkout main; cd ..
 ```
 
 After this, you can open the `steepatticstairs.github.io` directory in the code editor of your choice. I use VSCode, but any editor will work.
@@ -46,12 +46,12 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/games/` - Various games ported to JavaScript <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/projects/` - The individual game folders <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/harrypotterpdfs/` - PDFs of all 7 Harry Potter books <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/theatticrealm/` - Submodule that hosts my made-up world, with large files that would be inefficient to store in this repo <br>
 `/logos/` - Various versions of my logo <br>
 `/ncaam/` - Lists of college basketball AP#1 losses <br>
 `/not-used/` - Files not being used but still being stored <br>
 `/private/` - "Password protected" pages, redirected to from the 'other' tab on the homepage <br>
 `/random/` - Random files <br>
-`/theatticrealm/` - Submodule that hosts my made-up world, with large files that would be inefficient to store in this repo <br>
 `/weather/` - Various collection of weather tools <br>
 `/youtubedownloader/` - Various resources for downloading YouTube videos <br>
 `index.html` - Main homepage <br>
@@ -60,10 +60,10 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 
 <br></br>
 
-## Update directory listing in `/theatticrealm/`
+## Update directory listing in `/largefiles/theatticrealm/`
 
 ```
-cd ~/Github/steepatticstairs.github.io/theatticrealm && tree . -H /theatticrealm -o tree.html && cd ..
+cd ~/Github/steepatticstairs.github.io/largefiles/theatticrealm && tree . -H /largefiles/theatticrealm -o tree.html && cd ../..
 ```
 ## Update directory listing in `/2021roadatlas/`
 
