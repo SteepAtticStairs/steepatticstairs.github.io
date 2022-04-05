@@ -63,9 +63,14 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 ## Update directory listing in `/largefiles/theatticrealm/`
 
 ```
-# if you get a DS_Store error
-find . -name ".DS_Store" -delete
 cd largefiles/theatticrealm && apindex . && cd ../..
+
+# if you get a DS_Store error
+cd largefiles/theatticrealm && find . -name ".DS_Store" -delete
+
+# to delete all index.htmls in current directory (BE CAREFUL)
+find . -name "index.html" -delete
+
 
 # inefficient
 cd ~/Github/steepatticstairs.github.io/largefiles/theatticrealm && tree . -H /largefiles/theatticrealm -o tree.html && cd ../..
@@ -73,12 +78,33 @@ cd ~/Github/steepatticstairs.github.io/largefiles/theatticrealm && tree . -H /la
 ## Update directory listing in `/largefiles/2021roadatlas/`
 
 ```
-# if you get a DS_Store error
-find . -name ".DS_Store" -delete
 cd largefiles/2021roadatlas && apindex . && cd ../..
+
+# if you get a DS_Store error
+cd largefiles/theatticrealm && find . -name ".DS_Store" -delete
+
+# to delete all index.htmls in current directory (BE CAREFUL)
+find . -name "index.html" -delete
+
 
 # inefficient / old / doesn't work anymore
 cd ~/Downloads/2021RoadAtlas && tree . -H https://ia601508.us.archive.org/2/items/2021USARoadAtlas/2021RoadAtlas -o tree.html && rm -f ~/Github/steepatticstairs.github.io/2021roadatlas/tree.html && cp tree.html ~/Github/steepatticstairs.github.io/2021roadatlas/tree.html && rm -f tree.html && cd ~/Github/steepatticstairs.github.io && sed -i '' -e '$d' 2021RoadAtlas/tree.html && sed -i '' -e '$d' 2021RoadAtlas/tree.html && echo "<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><div>end</div></body></html>" >> 2021RoadAtlas/tree.html
+```
+
+## Install `apindex` for directory listing
+
+`apindex` can be found [here](https://github.com/jayanta525/apindex-v2). That repository gives you an install script, but it is for a UNIX system that uses `/usr/share` as its executable path. On MacOS, it is `/usr/local/bin`. Run this script in your terminal to install `apindex` on MacOS:
+
+```
+#!/bin/bash
+
+echo "installing apindex"
+git clone --depth=1 https://github.com/jayanta525/apindex.git
+cd apindex
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/bin
+sudo make install
+cd ..
+rm -rf apindex/
 ```
 
 <br></br>
