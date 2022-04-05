@@ -33,7 +33,6 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 
 # Project Structure
 
-`/2021roadatlas/` - 2021 USA Road Atlas, hosted by Internet Archive <br>
 `/bignate/` - Big Nate comics in HTML format <br>
 `/calvinhobbes/` - Calvin and Hobbes comics in HTML format <br>
 `/dump/` - Random files, such as CSS libraries <br>
@@ -46,7 +45,8 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/games/` - Various games ported to JavaScript <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/projects/` - The individual game folders <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/harrypotterpdfs/` - PDFs of all 7 Harry Potter books <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/theatticrealm/` - Submodule that hosts my made-up world, with large files that would be inefficient to store in this repo <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/theatticrealm/` - My made-up world <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|--> `/2021roadatlas/` - 2021 USA Road Atlas, hosted by Internet Archive and Github <br>
 `/logos/` - Various versions of my logo <br>
 `/ncaam/` - Lists of college basketball AP#1 losses <br>
 `/not-used/` - Files not being used but still being stored <br>
@@ -63,15 +63,21 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 ## Update directory listing in `/largefiles/theatticrealm/`
 
 ```
+# if you get a DS_Store error
+find . -name ".DS_Store" -delete
 cd largefiles/theatticrealm && apindex . && cd ../..
 
 # inefficient
 cd ~/Github/steepatticstairs.github.io/largefiles/theatticrealm && tree . -H /largefiles/theatticrealm -o tree.html && cd ../..
 ```
-## Update directory listing in `/2021roadatlas/`
+## Update directory listing in `/largefiles/2021roadatlas/`
 
 ```
-# inefficient
+# if you get a DS_Store error
+find . -name ".DS_Store" -delete
+cd largefiles/2021roadatlas && apindex . && cd ../..
+
+# inefficient / old / doesn't work anymore
 cd ~/Downloads/2021RoadAtlas && tree . -H https://ia601508.us.archive.org/2/items/2021USARoadAtlas/2021RoadAtlas -o tree.html && rm -f ~/Github/steepatticstairs.github.io/2021roadatlas/tree.html && cp tree.html ~/Github/steepatticstairs.github.io/2021roadatlas/tree.html && rm -f tree.html && cd ~/Github/steepatticstairs.github.io && sed -i '' -e '$d' 2021RoadAtlas/tree.html && sed -i '' -e '$d' 2021RoadAtlas/tree.html && echo "<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><div>end</div></body></html>" >> 2021RoadAtlas/tree.html
 ```
 
