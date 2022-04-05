@@ -63,11 +63,15 @@ After this, you can open the `steepatticstairs.github.io` directory in the code 
 ## Update directory listing in `/largefiles/theatticrealm/`
 
 ```
+cd largefiles/theatticrealm && apindex . && cd ../..
+
+# inefficient
 cd ~/Github/steepatticstairs.github.io/largefiles/theatticrealm && tree . -H /largefiles/theatticrealm -o tree.html && cd ../..
 ```
 ## Update directory listing in `/2021roadatlas/`
 
 ```
+# inefficient
 cd ~/Downloads/2021RoadAtlas && tree . -H https://ia601508.us.archive.org/2/items/2021USARoadAtlas/2021RoadAtlas -o tree.html && rm -f ~/Github/steepatticstairs.github.io/2021roadatlas/tree.html && cp tree.html ~/Github/steepatticstairs.github.io/2021roadatlas/tree.html && rm -f tree.html && cd ~/Github/steepatticstairs.github.io && sed -i '' -e '$d' 2021RoadAtlas/tree.html && sed -i '' -e '$d' 2021RoadAtlas/tree.html && echo "<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><div>end</div></body></html>" >> 2021RoadAtlas/tree.html
 ```
 
