@@ -613,13 +613,12 @@
                 function checkAlert () {
                     
                     // if there are no alerts
-                    if (data?.alerts===undefined) {
+                    if (JSON.stringify(data.alerts)===undefined) {
                         document.getElementById('allAlerts').style.display = "none";
                         return;
                     }
 
-                    // proceed to check the number of alerts
-                    if (data.alerts[alertCheckNumber]?.event===undefined) {
+                    if (typeof data.alerts[alertCheckNumber]=== 'undefined') {
                         finalAlertNumber = alertCheckNumber;
 
                         var row = [ 0, 1, 2, 3, 4, 5, 6];
