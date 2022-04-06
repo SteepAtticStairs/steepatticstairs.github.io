@@ -613,8 +613,9 @@
                 function checkAlert () {
                     
                     // if there are no alerts
-                    if (JSON.stringify(data.alerts)===undefined) {
+                    if (JSON.stringify(data.alerts) === undefined) {
                         document.getElementById('allAlerts').style.display = "none";
+                        document.getElementById('DIValertnone').style.display = "block";
                         return;
                     }
 
@@ -697,6 +698,8 @@
         <div><img width="10%" height="auto" src="/icons/weatheralert.png"></img></div>
         <br>
         <div><b>NOAA ALERTS (provided by OWM)</b></div>
+        <br>
+        <div id="DIValertnone"><i>No active alerts for the inputted location</i><a id="alertnone"></a></div>
         <br>
         <div id="allAlerts">
         <div id="DIValertname0"><b>Alert Name: </b><a id="alertname0"></a></div>
@@ -1064,6 +1067,7 @@
 <script>
     // hide the extra alert elements on window load
     document.getElementById('allAlertsExceptFirst').style.display = "none";
+    document.getElementById('DIValertnone').style.display = "none";
     document.getElementById('allOWMHourlyExceptFirst').style.display = "none";
     document.getElementById('allOWMDailyExceptFirst').style.display = "none";
     document.getElementById('allWDGDailyExceptFirst').style.display = "none";
