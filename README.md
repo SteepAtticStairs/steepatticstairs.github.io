@@ -29,6 +29,14 @@ git submodule init; git submodule update; cd largefiles; git checkout main; cd .
 
 After this, you can open the `steepatticstairs.github.io` directory in the code editor of your choice. I use VSCode, but any editor will work.
 
+# Info on `largefiles`
+
+THIS IS NEWER INFORMATION
+
+`largefiles` is where I keep the bigger files for this repo, for the sake of efficiency. I used to store it as a submodule, but that would mean that Github Pages would take forever to deploy, as it is building the multiple gigabytes of `largefiles` every deployment, even if `largefiles` wasn't changed.
+
+What I have now done is remove `largefiles` as a submodule, but have its own Github Pages deployment. Its repo can be found [here](https://github.com/SteepAtticStairs/largefiles). This deploys to the root folder `/largefiles/`, e.g. `https://steepatticstairs.github.io/largefiles/`. This means that if I want to link to `largefiles`, I just need to keep that in mind when making directory listings.
+
 <br></br>
 
 # Project Structure
