@@ -8,7 +8,7 @@
 
         <style>
             img {
-                max-width: 50%;
+                max-width: 100%;
                 max-height: auto;
                 display: block; /* remove extra space below image */
             }
@@ -25,13 +25,30 @@
     </head>
 <body id="mainBody">
 
+    <p><form>
+        <label for="pagenumber">Page Number:</label><br>
+        <input type="text" id="pagenumber" name="pagenumber"><br>
+        <input type="submit" value="Ok">
+    </form></p>
+
     <img id="mainImage" href=""></img>
 
     <script>
+        document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/0insidecovercombined.jpeg");
+        
+        // Listen for the "submit" event on the form
+        document.querySelector('form').addEventListener('submit', event => {
+
+        // Stop the form from refreshing the page
+        event.preventDefault() 
+
+        // Get the YouTube URL from the input
+        const submittedNumber = document.querySelector('[name="pagenumber"]').value
+        document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/" + submittedNumber + ".jpeg");
+
         $.getJSON("./data.json", function(json) {
-            var initPageNumber = 12;
-            var curPageNumber = 12;
-            document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/" + initPageNumber + ".jpeg");
+            var initPageNumber = submittedNumber;
+            var curPageNumber = submittedNumber;
 
             document.onkeydown = checkKey;
             function checkKey(e) {
@@ -64,6 +81,7 @@
             }
 
         });
+    })
     </script>
 
 </body>
