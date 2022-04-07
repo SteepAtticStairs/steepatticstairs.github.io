@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <meta charset="UTF-8" />
+        <title>Interactive Road Atlas</title>
+        <link rel="icon" href="/logo.png">
+
+        <style>
+            img {
+                max-width: 100%;
+                max-height: 100%;
+                display: block; /* remove extra space below image */
+            }
+        </style>
+    </head>
+<body>
+
+    <img id="mainImage" href=""></img>
+
+    <script>
+        $.getJSON("./data.json", function(json) {
+            var initPageNumber = 12;
+            var curPageNumber = 12;
+            document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/" + initPageNumber + ".jpeg");
+
+            document.onkeydown = checkKey;
+                function checkKey(e) {
+                    e = e || window.event;
+                    if (e.keyCode == '38') {
+                        var keyPressed = "up";
+                        var pageNumberNew = json.pages[curPageNumber].up;
+                        changeImg(pageNumberNew);
+                    }
+                    else if (e.keyCode == '40') {
+                        var keyPressed = "down";
+                        var pageNumberNew = json.pages[curPageNumber].down;
+                        changeImg(pageNumberNew);
+                    }
+                    else if (e.keyCode == '37') {
+                        var keyPressed = "left";
+                        var pageNumberNew = json.pages[curPageNumber].left;
+                        changeImg(pageNumberNew);
+                    }
+                    else if (e.keyCode == '39') {
+                        var keyPressed = "right";
+                        var pageNumberNew = json.pages[curPageNumber].right;
+                        changeImg(pageNumberNew);
+                    }
+                }
+
+            function changeImg(number) {
+                document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/" + number + ".jpeg");
+                curPageNumber = number;
+            }
+
+        });
+    </script>
+
+</body>
+</html>
