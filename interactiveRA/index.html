@@ -8,13 +8,22 @@
 
         <style>
             img {
-                max-width: 100%;
-                max-height: 100%;
+                max-width: 50%;
+                max-height: auto;
                 display: block; /* remove extra space below image */
             }
         </style>
+
+        <script>
+            // prevent arrow keys from scrolling the page
+            window.addEventListener("keydown", function(e) {
+                if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+                    e.preventDefault();
+                }
+            }, false);
+        </script>
     </head>
-<body>
+<body id="mainBody">
 
     <img id="mainImage" href=""></img>
 
@@ -25,29 +34,29 @@
             document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/" + initPageNumber + ".jpeg");
 
             document.onkeydown = checkKey;
-                function checkKey(e) {
-                    e = e || window.event;
-                    if (e.keyCode == '38') {
-                        var keyPressed = "up";
-                        var pageNumberNew = json.pages[curPageNumber].up;
-                        changeImg(pageNumberNew);
-                    }
-                    else if (e.keyCode == '40') {
-                        var keyPressed = "down";
-                        var pageNumberNew = json.pages[curPageNumber].down;
-                        changeImg(pageNumberNew);
-                    }
-                    else if (e.keyCode == '37') {
-                        var keyPressed = "left";
-                        var pageNumberNew = json.pages[curPageNumber].left;
-                        changeImg(pageNumberNew);
-                    }
-                    else if (e.keyCode == '39') {
-                        var keyPressed = "right";
-                        var pageNumberNew = json.pages[curPageNumber].right;
-                        changeImg(pageNumberNew);
-                    }
+            function checkKey(e) {
+                e = e || window.event;
+                if (e.keyCode == '38') {
+                    var keyPressed = "up";
+                    var pageNumberNew = json.pages[curPageNumber].up;
+                    changeImg(pageNumberNew);
                 }
+                else if (e.keyCode == '40') {
+                    var keyPressed = "down";
+                    var pageNumberNew = json.pages[curPageNumber].down;
+                    changeImg(pageNumberNew);
+                }
+                else if (e.keyCode == '37') {
+                    var keyPressed = "left";
+                    var pageNumberNew = json.pages[curPageNumber].left;
+                    changeImg(pageNumberNew);
+                }
+                else if (e.keyCode == '39') {
+                    var keyPressed = "right";
+                    var pageNumberNew = json.pages[curPageNumber].right;
+                    changeImg(pageNumberNew);
+                }
+            }
 
             function changeImg(number) {
                 document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/" + number + ".jpeg");
