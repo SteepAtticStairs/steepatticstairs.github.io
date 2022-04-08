@@ -7,14 +7,20 @@
         <link rel="icon" href="/logo.png">
 
         <style>
-            img {
-                max-width: 100%;
-                max-height: auto;
-                display: block; /* remove extra space below image */
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #mainImage {
+                height: 85vh;
+                width: auto;
             }
         </style>
 
         <script>
+            var submitCheck = 1;
+            
             // prevent arrow keys from scrolling the page
             window.addEventListener("keydown", function(e) {
                 if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
@@ -25,13 +31,20 @@
     </head>
 <body id="mainBody">
 
-    <p><form>
+    <form id="theform">
         <label for="pagenumber">Page Number:</label><br>
         <input type="text" id="pagenumber" name="pagenumber"><br>
-        <input type="submit" value="Ok">
-    </form></p>
+        <input id="submitter" type="submit" value="Ok">
+    </form>
 
-    <img id="mainImage" href=""></img>
+    <img class="mainImage" id="mainImage" href=""></img>
+
+    <div class="controlDiv" id="controlDiv" style="display: flex; justify-content: space-around">
+        <button id="upButton">Up</button>
+        <button id="downButton">Down</button>
+        <button id="leftButton">Left</button>
+        <button id="rightButton">Right</button>
+    </div>
 
     <script>
         document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/0insidecovercombined.jpeg");
@@ -44,11 +57,36 @@
 
         // Get the YouTube URL from the input
         const submittedNumber = document.querySelector('[name="pagenumber"]').value
-        document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/" + submittedNumber + ".jpeg");
 
         $.getJSON("./data.json", function(json) {
+            if (submitCheck == 1) {
+                $("#submitter").click();
+                setTimeout(function() { $("#submitter").click(); }, 50);
+                console.log("clicked");
+                console.log(submitCheck);
+                submitCheck++;
+            }
+            changeImg(submittedNumber);
+
             var initPageNumber = submittedNumber;
             var curPageNumber = submittedNumber;
+
+            document.getElementById("upButton").onclick = function() {
+                var pageNumberNew = json.pages[curPageNumber].up;
+                changeImg(pageNumberNew);
+            };
+            document.getElementById("downButton").onclick = function() {
+                var pageNumberNew = json.pages[curPageNumber].down;
+                changeImg(pageNumberNew);
+            };
+            document.getElementById("leftButton").onclick = function() {
+                var pageNumberNew = json.pages[curPageNumber].left;
+                changeImg(pageNumberNew);
+            };
+            document.getElementById("rightButton").onclick = function() {
+                var pageNumberNew = json.pages[curPageNumber].right;
+                changeImg(pageNumberNew);
+            };
 
             document.onkeydown = checkKey;
             function checkKey(e) {
@@ -78,6 +116,7 @@
             function changeImg(number) {
                 document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/" + number + ".jpeg");
                 curPageNumber = number;
+                setWidth();
             }
 
         });
@@ -85,4 +124,15 @@
     </script>
 
 </body>
+<script>
+    function setWidth() {
+        $(document).ready(function() {
+            $(".controlDiv").css({
+                'width': ($(".mainImage").width() + 'px')
+            });
+        });
+    }
+    setWidth();
+    setTimeout(function() { setWidth(); }, 20);
+</script>
 </html>
