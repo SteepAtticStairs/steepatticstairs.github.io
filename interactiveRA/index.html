@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- jquery -->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <!-- jquery UI -->
+        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+        
         <meta charset="UTF-8" />
         <title>Interactive Road Atlas</title>
         <link rel="icon" href="/logo.png">
@@ -68,6 +72,8 @@
         const submittedNumber = document.querySelector('[name="pagenumber"]').value
 
         $.getJSON("./data.json", function(json) {
+            var animateTime = 500;
+
             if (submitCheck == 1) {
                 $("#submitter").click();
                 setTimeout(function() { $("#submitter").click(); }, 50);
@@ -82,19 +88,27 @@
 
             document.getElementById("upButton").onclick = function() {
                 var pageNumberNew = json.pages[curPageNumber].up;
-                changeImg(pageNumberNew);
+                $('#mainImage').hide("slide", { direction: "down" }, animateTime);
+                $('#mainImage').show("slide", { direction: "up" }, animateTime);
+                setTimeout(function() { changeImg(pageNumberNew); }, animateTime);    
             };
             document.getElementById("downButton").onclick = function() {
                 var pageNumberNew = json.pages[curPageNumber].down;
-                changeImg(pageNumberNew);
+                $('#mainImage').hide("slide", { direction: "up" }, animateTime);
+                $('#mainImage').show("slide", { direction: "down" }, animateTime);
+                setTimeout(function() { changeImg(pageNumberNew); }, animateTime);    
             };
             document.getElementById("leftButton").onclick = function() {
                 var pageNumberNew = json.pages[curPageNumber].left;
-                changeImg(pageNumberNew);
+                $('#mainImage').hide("slide", { direction: "right" }, animateTime);
+                $('#mainImage').show("slide", { direction: "left" }, animateTime);
+                setTimeout(function() { changeImg(pageNumberNew); }, animateTime);   
             };
             document.getElementById("rightButton").onclick = function() {
                 var pageNumberNew = json.pages[curPageNumber].right;
-                changeImg(pageNumberNew);
+                $('#mainImage').hide("slide", { direction: "left" }, animateTime);
+                $('#mainImage').show("slide", { direction: "right" }, animateTime);
+                setTimeout(function() { changeImg(pageNumberNew); }, animateTime);    
             };
 
             document.onkeydown = checkKey;
@@ -103,22 +117,30 @@
                 if (e.keyCode == '38') {
                     var keyPressed = "up";
                     var pageNumberNew = json.pages[curPageNumber].up;
-                    changeImg(pageNumberNew);
+                    $('#mainImage').hide("slide", { direction: "down" }, animateTime);
+                    $('#mainImage').show("slide", { direction: "up" }, animateTime);
+                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
                 }
                 else if (e.keyCode == '40') {
                     var keyPressed = "down";
                     var pageNumberNew = json.pages[curPageNumber].down;
-                    changeImg(pageNumberNew);
+                    $('#mainImage').hide("slide", { direction: "up" }, animateTime);
+                    $('#mainImage').show("slide", { direction: "down" }, animateTime);
+                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
                 }
                 else if (e.keyCode == '37') {
                     var keyPressed = "left";
                     var pageNumberNew = json.pages[curPageNumber].left;
-                    changeImg(pageNumberNew);
+                    $('#mainImage').hide("slide", { direction: "right" }, animateTime);
+                    $('#mainImage').show("slide", { direction: "left" }, animateTime);
+                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
                 }
                 else if (e.keyCode == '39') {
                     var keyPressed = "right";
                     var pageNumberNew = json.pages[curPageNumber].right;
-                    changeImg(pageNumberNew);
+                    $('#mainImage').hide("slide", { direction: "left" }, animateTime);
+                    $('#mainImage').show("slide", { direction: "right" }, animateTime);
+                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
                 }
             }
 
