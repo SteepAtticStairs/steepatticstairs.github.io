@@ -5,6 +5,7 @@
         <meta charset="UTF-8" />
         <title>Interactive Road Atlas</title>
         <link rel="icon" href="/logo.png">
+        <link rel="stylesheet" href="/dump/98css/98.css" />
 
         <style>
             html, body {
@@ -12,9 +13,10 @@
                 margin: 0;
                 padding: 0;
             }
-            #mainImage {
-                height: 85vh;
-                width: auto;
+            img {
+                height: 80vh;
+                width: 100%;
+                object-fit: contain;
             }
         </style>
 
@@ -30,20 +32,27 @@
         </script>
     </head>
 <body id="mainBody">
-
-    <form id="theform">
-        <label for="pagenumber">Page Number:</label><br>
-        <input type="text" id="pagenumber" name="pagenumber"><br>
-        <input id="submitter" type="submit" value="Ok">
-    </form>
-
-    <img class="mainImage" id="mainImage" href=""></img>
-
-    <div class="controlDiv" id="controlDiv" style="display: flex; justify-content: space-around">
-        <button id="upButton">Up</button>
-        <button id="downButton">Down</button>
-        <button id="leftButton">Left</button>
-        <button id="rightButton">Right</button>
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-bar-text">Title</div>
+        </div>
+        <div class="window-body">
+            <form id="theform">
+                <label for="pagenumber">Page Number:</label><br>
+                <input type="text" id="pagenumber" name="pagenumber"><br>
+                <input id="submitter" type="submit" value="Ok">
+            </form>
+        
+            <img class="mainImage" id="mainImage" href=""></img>
+        </div>
+        <div class="status-bar">
+            <div class="controlDiv" id="controlDiv" style="display: flex; justify-content: space-around">
+                <button class="status-bar-field" id="upButton">Up</button>
+                <button class="status-bar-field" id="downButton">Down</button>
+                <button class="status-bar-field" id="leftButton">Left</button>
+                <button class="status-bar-field" id="rightButton">Right</button>
+            </div>
+        </div>
     </div>
 
     <script>
