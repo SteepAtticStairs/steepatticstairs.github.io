@@ -12,6 +12,32 @@
         <link rel="stylesheet" href="/dump/98css/98.css" />
 
         <style>
+            .tooltip {
+                position: relative;
+                display: inline-block;
+                border-bottom: 1px dotted black;
+            }
+
+            .tooltip .tooltiptext {
+                visibility: hidden;
+                width: 120px;
+                background-color: black;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px 0;
+                
+                /* Position the tooltip */
+                position: absolute;
+                z-index: 1;
+                top: -5px;
+                left: 105%;
+            }
+
+            .tooltip:hover .tooltiptext {
+                visibility: visible;
+            }
+
             html, body {
                 height: 100%;
                 margin: 0;
@@ -33,7 +59,16 @@
             function preloadImage(url) {
                 var img = new Image();
                 img.src = url;
-                console.log("loaded image: " + url);
+            }
+
+            function preloadAllImages() {
+                console.clear();
+                preloadImage("/largefiles/2021roadatlas/Images/0insidecovercombined.jpeg");
+                for (let i = 12; i < 188; i++) {
+                    preloadImage(`/largefiles/2021roadatlas/Images/${i}.jpeg`);
+                    console.log("loaded image: " + `/largefiles/2021roadatlas/Images/${i}.jpeg`);
+                }
+                console.log("loading finished");
             }
             
             // prevent arrow keys from scrolling the page
@@ -69,16 +104,7 @@
     </div>
 
     <script>
-        preloadImage("/largefiles/2021roadatlas/Images/12.jpeg");
-        preloadImage("/largefiles/2021roadatlas/Images/13.jpeg");
-        preloadImage("/largefiles/2021roadatlas/Images/14.jpeg");
-        preloadImage("/largefiles/2021roadatlas/Images/15.jpeg");
-        preloadImage("/largefiles/2021roadatlas/Images/16.jpeg");
-        preloadImage("/largefiles/2021roadatlas/Images/17.jpeg");
-        preloadImage("/largefiles/2021roadatlas/Images/18.jpeg");
-        preloadImage("/largefiles/2021roadatlas/Images/19.jpeg");
-        preloadImage("/largefiles/2021roadatlas/Images/20.jpeg");
-        console.log("loading finished");
+        preloadAllImages();
 
         document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/0insidecovercombined.jpeg");
         
