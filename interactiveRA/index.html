@@ -87,27 +87,43 @@
 
             document.getElementById("upButton").onclick = function() {
                 var pageNumberNew = json.pages[curPageNumber].up;
-                $('#mainImage').hide("slide", { direction: "down" }, animateTime);
-                $('#mainImage').show("slide", { direction: "up" }, animateTime);
-                setTimeout(function() { changeImg(pageNumberNew); }, animateTime);    
+                if (pageNumberNew == "null") {
+                    return;
+                } else {
+                    $('#mainImage').hide("slide", { direction: "down" }, animateTime);
+                    $('#mainImage').show("slide", { direction: "up" }, animateTime);
+                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
+                }
             };
             document.getElementById("downButton").onclick = function() {
                 var pageNumberNew = json.pages[curPageNumber].down;
-                $('#mainImage').hide("slide", { direction: "up" }, animateTime);
-                $('#mainImage').show("slide", { direction: "down" }, animateTime);
-                setTimeout(function() { changeImg(pageNumberNew); }, animateTime);    
+                if (pageNumberNew == "null") {
+                    return;
+                } else {
+                    $('#mainImage').hide("slide", { direction: "up" }, animateTime);
+                    $('#mainImage').show("slide", { direction: "down" }, animateTime);
+                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
+                }
             };
             document.getElementById("leftButton").onclick = function() {
                 var pageNumberNew = json.pages[curPageNumber].left;
-                $('#mainImage').hide("slide", { direction: "right" }, animateTime);
-                $('#mainImage').show("slide", { direction: "left" }, animateTime);
-                setTimeout(function() { changeImg(pageNumberNew); }, animateTime);   
+                if (pageNumberNew == "null") {
+                    return;
+                } else {
+                    $('#mainImage').hide("slide", { direction: "right" }, animateTime);
+                    $('#mainImage').show("slide", { direction: "left" }, animateTime);
+                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime); 
+                }
             };
             document.getElementById("rightButton").onclick = function() {
                 var pageNumberNew = json.pages[curPageNumber].right;
-                $('#mainImage').hide("slide", { direction: "left" }, animateTime);
-                $('#mainImage').show("slide", { direction: "right" }, animateTime);
-                setTimeout(function() { changeImg(pageNumberNew); }, animateTime);    
+                if (pageNumberNew == "null") {
+                    return;
+                } else {
+                    $('#mainImage').hide("slide", { direction: "left" }, animateTime);
+                    $('#mainImage').show("slide", { direction: "right" }, animateTime);
+                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
+                }
             };
 
             document.onkeydown = checkKey;
@@ -116,30 +132,46 @@
                 if (e.keyCode == '38') {
                     var keyPressed = "up";
                     var pageNumberNew = json.pages[curPageNumber].up;
-                    $('#mainImage').hide("slide", { direction: "down" }, animateTime);
-                    $('#mainImage').show("slide", { direction: "up" }, animateTime);
-                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
+                    if (pageNumberNew == "null") {
+                        return;
+                    } else {
+                        $('#mainImage').hide("slide", { direction: "down" }, animateTime);
+                        $('#mainImage').show("slide", { direction: "up" }, animateTime);
+                        setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
+                    }
                 }
                 else if (e.keyCode == '40') {
                     var keyPressed = "down";
                     var pageNumberNew = json.pages[curPageNumber].down;
-                    $('#mainImage').hide("slide", { direction: "up" }, animateTime);
-                    $('#mainImage').show("slide", { direction: "down" }, animateTime);
-                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
+                    if (pageNumberNew == "null") {
+                        return;
+                    } else {
+                        $('#mainImage').hide("slide", { direction: "up" }, animateTime);
+                        $('#mainImage').show("slide", { direction: "down" }, animateTime);
+                        setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
+                    }
                 }
                 else if (e.keyCode == '37') {
                     var keyPressed = "left";
                     var pageNumberNew = json.pages[curPageNumber].left;
-                    $('#mainImage').hide("slide", { direction: "right" }, animateTime);
-                    $('#mainImage').show("slide", { direction: "left" }, animateTime);
-                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
+                    if (pageNumberNew == "null") {
+                        return;
+                    } else {
+                        $('#mainImage').hide("slide", { direction: "right" }, animateTime);
+                        $('#mainImage').show("slide", { direction: "left" }, animateTime);
+                        setTimeout(function() { changeImg(pageNumberNew); }, animateTime);    
+                    }
                 }
                 else if (e.keyCode == '39') {
                     var keyPressed = "right";
                     var pageNumberNew = json.pages[curPageNumber].right;
-                    $('#mainImage').hide("slide", { direction: "left" }, animateTime);
-                    $('#mainImage').show("slide", { direction: "right" }, animateTime);
-                    setTimeout(function() { changeImg(pageNumberNew); }, animateTime);
+                    if (pageNumberNew == "null") {
+                        return;
+                    } else {
+                        $('#mainImage').hide("slide", { direction: "left" }, animateTime);
+                        $('#mainImage').show("slide", { direction: "right" }, animateTime);
+                        setTimeout(function() { changeImg(pageNumberNew); }, animateTime);    
+                    }
                 }
             }
 
