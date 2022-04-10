@@ -59,6 +59,7 @@
             function preloadImage(url) {
                 var img = new Image();
                 img.src = url;
+                console.log("loaded image: " + url);
             }
 
             function preloadAllImages() {
@@ -66,7 +67,6 @@
                 preloadImage("/largefiles/2021roadatlas/Images/0insidecovercombined.jpeg");
                 for (let i = 12; i < 188; i++) {
                     preloadImage(`/largefiles/2021roadatlas/Images/${i}.jpeg`);
-                    console.log("loaded image: " + `/largefiles/2021roadatlas/Images/${i}.jpeg`);
                 }
                 console.log("loading finished");
             }
