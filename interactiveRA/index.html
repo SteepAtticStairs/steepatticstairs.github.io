@@ -12,6 +12,13 @@
         <link rel="stylesheet" href="/dump/98css/98.css" />
 
         <style>
+            .left-element {
+                float: left;
+            }
+            .right-element {
+                float: left;
+            }
+
             html, body {
                 height: 100%;
                 margin: 0;
@@ -29,6 +36,21 @@
             
             var longAnimateTime = 500;
             var shortAnimateTime = 200;
+
+            function preloadImage(url) {
+                var img = new Image();
+                img.onload = function() { $('#loadStatus').text("loaded image: " + url); }
+                img.src = url;
+            }
+
+            function preloadAllImages() {
+                console.clear();
+                preloadImage("/largefiles/2021roadatlas/Images/0insidecovercombined.jpeg");
+                for (let i = 12; i < 188; i++) {
+                    preloadImage(`/largefiles/2021roadatlas/Images/${i}.jpeg`);
+                }
+                console.log("loading finished");
+            }
             
             // prevent arrow keys from scrolling the page
             window.addEventListener("keydown", function(e) {
@@ -44,13 +66,27 @@
             <div class="title-bar-text">Title</div>
         </div>
         <div class="window-body">
-            <form id="theform">
-                <label for="pagenumber">Page Number:</label><br>
-                <input type="text" id="pagenumber" name="pagenumber"><br>
-                <input id="submitter" type="submit" value="Ok">
-            </form>
+
+            <div class="left-element">
+                <form id="theform">
+                    <label for="pagenumber">Page Number:</label><br>
+                    <input type="text" id="pagenumber" name="pagenumber"><br>
+                    <input id="submitter" type="submit" value="Ok">
+                </form>
+            </div>
+            <div class="right-element">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="right-element">
+                <b><span style="color: rgb(0, 79, 226);" id="loadStatus">Load status</span></b>
+                <div>&nbsp;</div>
+                <button onclick="preloadAllImages()">Preload Images</button>
+            </div>
         
             <img class="mainImage" id="mainImage" href=""></img>
+
         </div>
         <div class="status-bar">
             <div class="controlDiv" id="controlDiv" style="display: flex; justify-content: space-around">
@@ -63,6 +99,8 @@
     </div>
 
     <script>
+        //preloadAllImages();
+
         document.getElementById('mainImage').setAttribute('src', "/largefiles/2021roadatlas/Images/0insidecovercombined.jpeg");
         
         // Listen for the "submit" event on the form
