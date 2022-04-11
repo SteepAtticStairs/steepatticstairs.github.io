@@ -480,6 +480,17 @@
                     document.getElementById('graph').setAttribute('src', correctImage);
                     document.getElementById('graphLink').setAttribute('href', correctImage);
                 });
+
+                var req = new XMLHttpRequest();
+                req.onreadystatechange = function() {
+                    if (req.readyState === 4) {
+                        var response = req.responseText;
+                        console.log(response);
+                    }
+                };
+
+                req.open('GET', 'https://cors-anywhere.herokuapp.com/https://weather.rap.ucar.edu/radar/displayRad.php?icao=KLWX&prod=BREF&bkgr=gray&endTime=-1&duration=2');
+                req.send(null);
             });
 
 
