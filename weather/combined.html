@@ -407,7 +407,10 @@
                 document.getElementById('goesRadar').setAttribute('src', `https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/13/GOES16-CONUS-13-625x375.gif`);
                 document.getElementById('goesRadarLink').setAttribute('href', `https://cdn.star.nesdis.noaa.gov/GOES16/ABI/CONUS/13/GOES16-CONUS-13-625x375.gif`);
 
-                
+                document.getElementById('iastateRadar').setAttribute('src', `https://mesonet.agron.iastate.edu/GIS/radmap.php?tz=EDT&sector=wfo&sector_wfo=${gridID}&layers[]=uscounties&layers[]=cwas&layers[]=watches&layers[]=nexrad&layers[]=county_warnings&layers[]=sbw&`);
+                document.getElementById('iastateRadarLink').setAttribute('href', `https://mesonet.agron.iastate.edu/GIS/radmap.php?tz=EDT&sector=wfo&sector_wfo=${gridID}&layers[]=uscounties&layers[]=cwas&layers[]=watches&layers[]=nexrad&layers[]=county_warnings&layers[]=sbw&`);
+
+
                 $.getJSON(WDGdataUrl, function(data) {
                     function printData (day) {
                         document.getElementById(`FCTime${day}`).innerHTML = data.properties.periods[day].name;
@@ -974,7 +977,7 @@
 
             <tr>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Location</th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Radar</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">WDG Radar</th>
             </tr>
             <tr>
                 <td class="status-bar-field">
@@ -987,12 +990,12 @@
 
 
             <tr>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">GOES Satellite Imagery</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Iowa State Radar&nbsp;&nbsp;&nbsp; <a href="https://mesonet.agron.iastate.edu/GIS/apps/rview/warnings.phtml">Radar</a>, <a href="https://mesonet.agron.iastate.edu/GIS/radmap_api.phtml">API</a></th>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">GOES Satellite Radar</th>
             </tr>
             <tr>
                 <td class="status-bar-field">
-                    <a id="goesImageryLink" href=""><div><b><img id="goesImagery" href=""></img></b></div></a>
+                    <a id="iastateRadarLink" href=""><div><b><img id="iastateRadar" href=""></img></b></div></a>
                 </td>
                 <td class="status-bar-field">
                     <a id="goesRadarLink" href=""><div><b><img id="goesRadar" href=""></img></b></div></a>
@@ -1001,15 +1004,15 @@
 
 
             <tr>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">GOES Satellite Imagery</th>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Precipitation Map</th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Outlook</th>
             </tr>
             <tr>
                 <td class="status-bar-field">
-                    <a id="precipmapLink" href=""><div><b><img id="precipmap" href=""></img></b></div></a>
+                    <a id="goesImageryLink" href=""><div><b><img id="goesImagery" href=""></img></b></div></a>
                 </td>
                 <td class="status-bar-field">
-                    <a id="outlookLink" href=""><div><b><img id="outlook" href="" onclick=""></img></b></div></a>
+                    <a id="precipmapLink" href=""><div><b><img id="precipmap" href=""></img></b></div></a>
                 </td>
             </tr>
 
@@ -1047,14 +1050,14 @@
                     let cloudCoverControl = new Boolean(false);
                 </script>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover&nbsp;&nbsp;&nbsp; <button onclick="cloudCoverControl = true;">Play</button><button onclick="cloudCoverControl = false;">Stop</button></th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Outlook</th>
             </tr>
             <tr>
                 <td class="status-bar-field">
                     <a id="cloudCoverImgLink" href=""><div><b><img id="cloudCoverImg" href=""></img></b></div></a>
                 </td>
                 <td class="status-bar-field">
-                    <a id="blankLink" href=""><div><b><img id="blankLink" href=""></img></b></div></a>
+                    <a id="outlookLink" href=""><div><b><img id="outlook" href="" onclick=""></img></b></div></a>
                 </td>
             </tr>
 
