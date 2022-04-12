@@ -481,6 +481,30 @@
                     document.getElementById('graphLink').setAttribute('href', correctImage);
                 });
 
+                $.get(proxy + `https://weather.ral.ucar.edu/radar/displayRad.php?icao=KLWX&prod=BREF&bkgr=gray`, function(data, status){
+                    var pictures = [],
+                    m;
+                    var str = data,
+                        rex =  /<img[^>]+src="?([^"\s]+)"?\s*/gi;
+
+                    while (m = rex.exec( str )) {
+                        pictures.push( m[1] );
+                    }
+
+                    const allImages = [];
+                    var index = 0;
+                    pictures.forEach(function(picture){
+                    allImages.push(picture);
+                    })
+                    // console.log(allImages);
+                    var theActualImg = allImages[0].replace("..", "https://weather.ral.ucar.edu");
+                    console.log(theActualImg);
+                    //var correctImage = "https://forecast.weather.gov/" + allImages[10];
+                    //console.log(correctImage);
+                    document.getElementById('nexradStillRadar').setAttribute('src', theActualImg);
+                    document.getElementById('nexradStillRadarLink').setAttribute('href', theActualImg);
+                });
+
 
                 //
                 // Test for other radar
@@ -993,42 +1017,42 @@
 
             <tr>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Iowa State Radar&nbsp;&nbsp;&nbsp; <a href="https://mesonet.agron.iastate.edu/GIS/apps/rview/warnings.phtml">Radar</a>, <a href="https://mesonet.agron.iastate.edu/GIS/radmap_api.phtml">API</a></th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">GOES Satellite Radar</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">NEXRAD Still Radar&nbsp;&nbsp;&nbsp; <a href="https://weather.ral.ucar.edu/radar/">Source</a></th>
             </tr>
             <tr>
                 <td class="status-bar-field">
                     <a id="iastateRadarLink" href=""><div><b><img id="iastateRadar" href=""></img></b></div></a>
                 </td>
                 <td class="status-bar-field">
+                    <a id="nexradStillRadarLink" href=""><div><b><img id="nexradStillRadar" href=""></img></b></div></a>
+                </td>
+            </tr>
+
+
+            <tr>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">GOES Satellite Radar</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">GOES Satellite Imagery</th>
+            </tr>
+            <tr>
+                <td class="status-bar-field">
                     <a id="goesRadarLink" href=""><div><b><img id="goesRadar" href=""></img></b></div></a>
                 </td>
-            </tr>
-
-
-            <tr>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">GOES Satellite Imagery</th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Precipitation Map</th>
-            </tr>
-            <tr>
                 <td class="status-bar-field">
                     <a id="goesImageryLink" href=""><div><b><img id="goesImagery" href=""></img></b></div></a>
-                </td>
-                <td class="status-bar-field">
-                    <a id="precipmapLink" href=""><div><b><img id="precipmap" href=""></img></b></div></a>
                 </td>
             </tr>
 
 
             <tr>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Graph</th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Thunder Risk</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Precipitation Map</th>
             </tr>
             <tr>
                 <td class="status-bar-field">
                     <a id="graphLink" href=""><div><b><img id="graph" href=""></img></b></div></a>
                 </td>
                 <td class="status-bar-field">
-                    <a id="thunderriskLink" href=""><div><b><img id="thunderrisk" href=""></img></b></div></a>
+                    <a id="precipmapLink" href=""><div><b><img id="precipmap" href=""></img></b></div></a>
                 </td>
             </tr>
 
@@ -1049,21 +1073,21 @@
 
             <tr>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Outlook</th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Thunder Risk</th>
             </tr>
             <tr>
                 <td class="status-bar-field">
                     <a id="outlookLink" href=""><div><b><img id="outlook" href="" onclick=""></img></b></div></a>
                 </td>
                 <td class="status-bar-field">
-                    
+                    <a id="thunderriskLink" href=""><div><b><img id="thunderrisk" href=""></img></b></div></a>
                 </td>
             </tr>
 
 
             <tr>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover</th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)"></th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
             </tr>
             <tr>
                 <td class="status-bar-field">
