@@ -481,16 +481,31 @@
                     document.getElementById('graphLink').setAttribute('href', correctImage);
                 });
 
-                var req = new XMLHttpRequest();
-                req.onreadystatechange = function() {
-                    if (req.readyState === 4) {
-                        var response = req.responseText;
-                        console.log(response);
-                    }
-                };
 
-                req.open('GET', 'https://cors-anywhere.herokuapp.com/https://weather.rap.ucar.edu/radar/displayRad.php?icao=KLWX&prod=BREF&bkgr=gray&endTime=-1&duration=2');
-                req.send(null);
+                //
+                // Test for other radar
+                //
+                // var req = new XMLHttpRequest();
+                // req.onreadystatechange = function() {
+                //     if (req.readyState === 4) {
+                //         var response = req.responseText;
+                //         //console.log(response);
+
+                //         var el = document.createElement('html');
+                //         el.innerHTML = response;
+                //         var element = el.getElementsByTagName('script');
+                //         string = [].map.call( element, function(node){
+                //             return node.textContent || node.innerText || "";
+                //         }).join("");
+                //         //window.alert(string);
+                //         const initialArray = string.split("'images':").join(';').split("'theme':").join(';').split(';');
+                //         const finalArray = initialArray[1].split(",");
+                //         //console.log(finalArray[22].replace("..", "https://weather.rap.ucar.edu"));
+                //     }
+                // };
+
+                // req.open('GET', 'https://cors-anywhere.herokuapp.com/https://weather.rap.ucar.edu/radar/displayRad.php?icao=KLWX&prod=BREF&bkgr=gray&endTime=-1&duration=2');
+                // req.send(null);
             });
 
 
