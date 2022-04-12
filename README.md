@@ -37,6 +37,17 @@ THIS IS NEWER INFORMATION
 
 What I have now done is remove `largefiles` as a submodule, but have its own Github Pages deployment. Its repo can be found [here](https://github.com/SteepAtticStairs/largefiles). This deploys to the root folder `/largefiles/`, e.g. `https://steepatticstairs.github.io/largefiles/`. This means that if I want to link to `largefiles`, I just need to keep that in mind when making directory listings.
 
+# To make another CORS bypass proxy
+
+```
+git clone https://github.com/Rob--W/cors-anywhere.git
+cd cors-anywhere
+npm install
+heroku create
+git push heroku master
+```
+I got this from [this StackOverflow answer](https://stackoverflow.com/a/43881141).
+
 <br></br>
 
 # Project Structure
