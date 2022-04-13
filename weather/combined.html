@@ -414,6 +414,8 @@
                 document.getElementById('iastateRadar').setAttribute('src', `https://mesonet.agron.iastate.edu/GIS/radmap.php?tz=EDT&sector=wfo&sector_wfo=${gridID}&layers[]=uscounties&layers[]=cwas&layers[]=watches&layers[]=nexrad&layers[]=county_warnings&layers[]=sbw&`);
                 document.getElementById('iastateRadarLink').setAttribute('href', `https://mesonet.agron.iastate.edu/GIS/radmap.php?tz=EDT&sector=wfo&sector_wfo=${gridID}&layers[]=uscounties&layers[]=cwas&layers[]=watches&layers[]=nexrad&layers[]=county_warnings&layers[]=sbw&`);
 
+                document.getElementById('wundergroundRadar').setAttribute('src', `https://radblast-aa.wunderground.com/cgi-bin/radar/WUNIDS_map?station=${data.properties.gridId}&brand=wui&num=10&delay=60&type=NCR&frame=0&scale=0.999&noclutter=0&t=1621025493&showstorms=0&map.x=400&map.y=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=1&rainsnow=1&lightning=1`);
+                document.getElementById('wundergroundRadarLink').setAttribute('href', `https://radblast-aa.wunderground.com/cgi-bin/radar/WUNIDS_map?station=${data.properties.gridId}&brand=wui&num=10&delay=60&type=NCR&frame=0&scale=0.999&noclutter=0&t=1621025493&showstorms=0&map.x=400&map.y=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=1&rainsnow=1&lightning=1`);
 
                 $.getJSON(WDGdataUrl, function(data) {
                     function printData (day) {
@@ -1048,12 +1050,12 @@
 
 
             <tr>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Graph</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Wunderground Radar&nbsp;&nbsp;&nbsp; <a href="https://www.wunderground.com/radar/us">Source</a></th>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Precipitation Map</th>
             </tr>
             <tr>
                 <td class="status-bar-field">
-                    <a id="graphLink" href=""><div><b><img id="graph" href=""></img></b></div></a>
+                    <a id="wundergroundRadarLink" href=""><div><b><img id="wundergroundRadar" href=""></img></b></div></a>
                 </td>
                 <td class="status-bar-field">
                     <a id="precipmapLink" href=""><div><b><img id="precipmap" href=""></img></b></div></a>
@@ -1096,6 +1098,20 @@
             <tr>
                 <td class="status-bar-field">
                     <div id="cloudCoverLoop"></div>
+                </td>
+                <td class="status-bar-field">
+                    
+                </td>
+            </tr>
+
+
+            <tr>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Graph</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
+            </tr>
+            <tr>
+                <td class="status-bar-field">
+                    <a id="graphLink" href=""><div><b><img id="graph" href=""></img></b></div></a>
                 </td>
                 <td class="status-bar-field">
                     
