@@ -48,6 +48,13 @@ git push heroku master
 ```
 I got this from [this StackOverflow answer](https://stackoverflow.com/a/43881141).
 
+# To rip the `weather.gov` radar
+
+```
+wget -r --level 2 --random-wait --no-clobber --page-requisites -e robots=off --html-extension --convert-links --no-parent "https://radar.weather.gov"
+```
+I got this from [this SuperUser answer](https://superuser.com/a/1403618).
+
 <br></br>
 
 # Project Structure
