@@ -487,6 +487,7 @@
                     document.getElementById('graphLink').setAttribute('href', correctImage);
                 });
 
+                // $.get(proxy + `https://weather.ral.ucar.edu/radar/displayRad.php?icao=${radarStation}&prod=BREF&bkgr=gray&endDate=20220414&endTime=-1&duration=1`, function(data, status){
                 $.get(proxy + `https://weather.ral.ucar.edu/radar/displayRad.php?icao=${radarStation}&prod=BREF&bkgr=gray`, function(data, status){
                     var pictures = [],
                     m;
@@ -509,6 +510,27 @@
                     //console.log(correctImage);
                     document.getElementById('nexradStillRadar').setAttribute('src', theActualImg);
                     document.getElementById('nexradStillRadarLink').setAttribute('href', theActualImg);
+
+                    var dataURI = 'data:text/html,' + encodeURIComponent(data);
+
+                    var req = new XMLHttpRequest();
+                    req.onreadystatechange = function() {
+                        if (req.readyState === 4) {
+                            var response = req.responseText;
+                            console.log(response);
+                            //var matches = response.match(/'images':\s*(\[.+?\])/);
+                            //if (matches){
+                            //    img_arr = JSON.parse(matches[1]);
+                            //    console.log(img_arr);
+                            //}
+                            //else{
+                            //    console.log(':(');
+                            //}
+                        }
+                    };
+
+                    req.open('GET', dataURI, true);
+                    req.send(null);
                 });
 
 
