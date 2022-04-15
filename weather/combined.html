@@ -264,7 +264,9 @@
         </form>
     </p>
 
-    <script>
+    <script type="module">
+        import jsonrepair from 'https://jspm.dev/jsonrepair'
+
         // Listen for the "submit" event on the form
         document.querySelector('form').addEventListener('submit', event => {
 
@@ -535,6 +537,40 @@
                     req.open('GET', ucarRadarURL, true);
                     req.send(null);
                 });
+
+                //const json = '{"img":{"0":900,"1":900,"2":1,"3":"width="900" height="900"","bits":8,"channels":3,"mime":"image/gif"},"lores":[true,false],"err":"false","files":["https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1819.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1825.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1833.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1840.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1847.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1854.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1901.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1908.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1915.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1922.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1929.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1936.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1942.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1948.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.1954.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.2000.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.2006.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.2012.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.2017.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.2023.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.2029.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.2035.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.2041.gif","https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20220415.2047.gif"]}'
+
+                //const repaired = jsonrepair(json)
+                //console.log("repaired: " + repaired)
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var txt = this.responseText
+                        var json = txt.replaceAll('\\', '');
+                        var repaired = jsonrepair(json);
+                        //console.log("repaired: " + repaired);
+                        var jsonParsed = JSON.parse(repaired);
+                        // var stringy = (JSON.stringify(jsonParsed.files));
+                        // var myArray = stringy.split(",");
+                        // console.log(myArray);
+
+                        jQuery(function($) {
+                            $('#codEDU-NEXRAD').scianimator({
+                                'controlPosition': 0,
+                                'images': jsonParsed.files,
+                                'theme': 'dark',
+                                'delay': 300,
+                                'delayStep': 25,
+                                'dwellMultiplier': 4,
+                                'utf8': false
+                            }).scianimator('stop');
+                        });
+                        //console.log("raw: " + repaired);
+                    }
+                };
+                xhttp.open("GET", `https://weather.cod.edu/satrad/nexrad/assets/php/get-files.php?parms=${data.properties.gridId}`, true);
+                xhttp.send();
 
 
                 //
@@ -1118,14 +1154,14 @@
 
             <tr>
                 <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">Cloud Cover</th>
-                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">blank</th>
+                <th class="status-bar-field" style="background-color:rgb(149, 149, 149)">DuPage Meteorology Program NEXRAD&nbsp;&nbsp;&nbsp; <a href="https://weather.cod.edu/satrad/nexrad/">Source</a></th>
             </tr>
             <tr>
                 <td class="status-bar-field">
-                    <div id="cloudCoverLoop"></div>
+                    <div id="cloudCoverLoop" style="max-width: 470px"></div>
                 </td>
                 <td class="status-bar-field">
-                    
+                    <div id="codEDU-NEXRAD" style="max-width: 470px"></div>
                 </td>
             </tr>
 
