@@ -17,14 +17,6 @@ git clone https://github.com/SteepAtticStairs/steepatticstairs.github.io.git
 
 # cd into the project
 cd steepatticstairs.github.io
-
-# add the largefiles submodule
-git submodule init; git submodule update
-```
-
-If you want to automatically checkout to the right submodule branch, do
-```
-git submodule init; git submodule update; cd largefiles; git checkout main; cd ..
 ```
 
 After this, you can open the `steepatticstairs.github.io` directory in the code editor of your choice. I use VSCode, but any editor will work.
