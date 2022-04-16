@@ -1,0 +1,2249 @@
+	
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" /><title>NEXRAD View</title><meta name="DC.title" content="NEXRAD View" /><meta name="DC.description" content="wsr-88d" /><meta name="DC.creator" content="US Department of Commerce, NOAA, National Weather Service" /><meta name="DC.date.created" scheme="ISO8601" content="September 30th 2021 8:33 PM" /><meta name="DC.language" scheme="DCTERMS.RFC1766" content="EN-US" /><meta name="DC.keywords" content="Radar, Level II" /><meta name="DC.publisher" content="NOAA's National Weather Service" /><meta name="DC.contributor" content="National Weather Service" /><meta name="DC.rights" content="http://www.weather.gov/disclaimer.php" /><meta name="rating" content="General" /><meta name="robots" content="index,follow" />
+	
+			<link href="http://www.weather.gov/css/weatherstyle.css" rel="stylesheet" type="text/css" />
+			<link href="http://www.weather.gov/css/template.css" rel="stylesheet" type="text/css" />
+			<link href="http://www.weather.gov/css/myfcst.css" rel="stylesheet" type="text/css" />
+			<link href="http://www.weather.gov/css/ForecastSearch.css" rel="stylesheet" type="text/css" />
+			<link href="http://www.weather.gov/css/pointforecast.css" rel="stylesheet" type="text/css" />
+			<link href="http://www.weather.gov/css/jqueryui10_3_1custom/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" />
+			<link href="http://www.weather.gov/css/widgets.css" rel="stylesheet" type="text/css" />
+			<link href="http://www.weather.gov/css/colorbox/colorbox.css" rel="stylesheet" type="text/css" />
+	
+			<script type="text/javascript" src="http://www.weather.gov/js/jquery-1.10.2.min.js"></script>
+			<script type="text/javascript" src="http://www.weather.gov/js/jquery-ui-1.10.3.custom.min.js"></script>
+			<script type="text/javascript" src="http://www.weather.gov/js/jquery.hoverIntent.minified.js"></script>
+			<script type="text/javascript" src="http://www.weather.gov/js/ForecastSearch.js"></script>
+			<script type="text/javascript" src="http://www.weather.gov/js/federated-analytics.js"></script>	
+			<script type="text/javascript" src="http://www.weather.gov/js/topNavMenu.js"></script>
+			<script type="text/javascript" src="http://www.weather.gov/js/NidsESRI.js"></script>
+			<script type="text/javascript" src="http://www.weather.gov/js/widgets.js"></script>
+			<script type="text/javascript" src="http://www.weather.gov/js/jquery.cycle2.min.js"></script>
+			<script type="text/javascript" src="http://www.weather.gov/js/jquery.colorbox-min.js"></script>
+			<script type="text/javascript" src="http://www.weather.gov/js/nwsexit.js"></script>
+	
+			
+	<script>
+	// ForeSee Production Embed Script v2.01
+	// DO NOT MODIFY BELOW THIS LINE *****************************************
+	;(function (g) {
+	  var d = document, am = d.createElement('script'), h = d.head || d.getElementsByTagName("head")[0], fsr = 'fsReady',
+	  aex = { 
+		"src": "https://gateway.foresee.com/sites/weather-gov/production/gateway.min.js",
+		"type": "text/javascript", 
+		"async": "true", 
+		"data-vendor": "fs", 
+		"data-role": "gateway" 
+	  };
+	  for (var attr in aex) { am.setAttribute(attr, aex[attr]); } h.appendChild(am); g[fsr] || (g[fsr] = function () { var aT = '__' + fsr + '_stk__'; g[aT] = g[aT] || []; g[aT].push(arguments); });
+	})(window);
+	// DO NOT MODIFY ABOVE THIS LINE *****************************************
+	
+	// Un-comment out the function below when you are ready to input your variable
+	/*fsReady(function() { 
+	  FSR.CPPS.set('name','value'); // use single quotes when passing a static-value 
+	  FSR.CPPS.set('name2',somevariable); // don't use quotes for a dynamic value 
+	  FSR.CPPS.set('name3',othervariable); // add as many CPPs as you like in this way 
+	});*/
+	</script>
+		</head>
+	
+		<body>
+					<div class="header">
+				<div class="header-content">
+				<a href="http://www.weather.gov" class="header-nws"><img src="http://www.weather.gov/css/images/header.png"  alt="National Weather Service"/></a>
+				<a href="http://www.commerce.gov" class="header-doc"><img src="http://www.weather.gov/css/images/header_doc.png" alt="United States Department of Commerce"/></a>
+				<a href="http://www.noaa.gov" class="header-noaa" title="National Oceanic and Atmospheric Administration"></a>
+				</div>
+						<div style="clear:both"></div>
+			</div>
+	
+			<div class="header-shadow">
+				<div class="header-shadow-content"></div>
+			</div>
+		
+	
+			<div class="center">
+	
+				
+	
+				<div class="center-content">
+	
+					
+					
+	
+					<div class="full-width-border">
+						<div class="partial-width-borderbottom">
+	
+							<!-- area for the myforecast widget and wwamap data -->
+	
+							<div class="div-full">    
+							<div class="div-full breadcrumb">    <div class="sitename">        <p class="sitename-name">National Level II</p>        <p class="sitename-class">National Program</p>    </div>    <div class="location">        <h1 class='location-pagetitle'>NEXRAD View</h1>        <div class='location-breadcrumb'>            <a href="https://www.weather.gov">Weather.gov</a> &gt; <a href="https://www.weather.gov/nl2">National Level II</a> &gt; NEXRAD View        </div>    </div></div>
+							<div class="div-full">    <div class="subMenuNav">        <ul id="subMenuNav">            <li>                <div class="subMenuNavList section-link">                    <a href="NEXRADView">NEXRAD View</a>                </div>            </li>            <li>                <div class="subMenuNavList section-link">                    <a href="NPNView">NPN View</a>                </div>            </li>            <li>                <div class="subMenuNavList section-link">                    <a href="SPGView">SPG View</a>                </div>            </li>            <li>                <div class="subMenuNavList section-link">                    <a href="ServerView">Server View</a>                </div>            </li>            <li>                <div class="subMenuNavList section-link">                    <a href="ControlView">Control View</a>                </div>            </li>            <li>                <div class="subMenuNavList section-link">                    <a href="LDMView">LDM View</a>                </div>            </li>            <li>                <div class="subMenuNavList section-link">                    <a href="Help">Help</a>                </div>            </li>            <li>                <div class="subMenuNavList section-link">                    <a href="About">About</a>                </div>            </li>        </ul>    </div></div>
+							
+							
+										<div class="div-full">
+					<div class="cms-content"><link href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.20.1/ol.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">.roc-content{ position: relative; height: auto; min-height: 800px; width: 960px; min-width: 960px; margin: 0px auto; padding: 0px; background-color: #CDAF95; font-family: Arial, Helvetica; font-size: 12px; line-height: 1.231; text-align: left; overflow: hidden; }
+	.roc-content button{ height: 25px; vertical-align: middle; border: 1px outset rgba(140,140,140,0.5) !important;}
+	.roc-content .ol-attribution{ display: none; }
+	.roc-content table{ border-collapse: collapse; }
+	.roc-content td:hover, .roc-content tr:hover{ cursor: default; }
+	.roc-content div:hover{ cursor: default; }
+	.roc-content select:hover, .roc-content input, .roc-content button{ cursor:pointer; }
+	.roc-content .topDiv{  width: 960px; margin: 0px 5px; padding: 0px; }
+	.roc-content .topDiv .buttonDiv{ display: inline-block; margin-top: 5px; vertical-align: middle; }
+	.roc-content .topDiv .serverSelectDiv{ position:relative; display: inline-block; font-weight: bold; font-size: 12px; }
+	.roc-content .topDiv .optionDiv{ display: inline-block; float: right; width: 400px; margin-top: 5px; font-weight: bold; vertical-align: middle; }
+	.optionDiv .block{ display:inline-block; margin: 5px 0px 0px 15px; }
+	.roc-content .mainContent{ margin: 10px; }
+	.roc-content #mapdiv{ position: relative; display: inline-block; height: 450px; width: 934px; margin: auto; padding: 0px;  border: 1px solid #000; background-color: #95B9E6; }
+		.roc-content #layerDiv{ position: absolute; top: 5px; right: 0px; height: 15px; width: 60px; padding: 5px; background-color: #EAF8FB; color: #000; z-index: 14; overflow: hidden; }
+		.roc-content #layerDiv:hover{height: 70px; width: 170px; background-color: rgba(234,248,251, 0.9); color: black; box-shadow: -10px 10px 30px #969696; overflow: auto; z-index: 25; }
+		.roc-content #layerDiv .title{ font-size: 120%; font-weight: bold; margin-bottom: 5px; }
+		.roc-content #layerDiv:hover .title{ font-size: 170%; }	
+			.roc-content #NWSregionSpan{  }
+			.roc-content #reflectivitySpan{ }
+		.roc-content #filterDiv{ position: absolute; top: 35px; right: 0px; height: 15px; width: 60px; padding: 5px; overflow: hidden; z-index: 14; }
+		.roc-content #filterDiv:hover{height: 390px; width: 440px; padding-bottom: 5px; background-color: rgba(234,248,251, 0.9); color: black; box-shadow: -10px 10px 30px #969696; overflow: auto; z-index: 25; }
+		.roc-content #filterDiv .title{ font-size: 120%; font-weight: bold; margin-bottom: 5px; }
+		.roc-content #filterDiv:hover .title{ font-size: 170%; }
+		.roc-content #filterDiv .group{ display: inline-block; margin: 5px 15px; vertical-align: top; color: #000; }
+		.roc-content .group .subgroup{ display: inline-block; vertical-align: top; margin: 0px 3px; }
+		.roc-content .group input{ margin: 0px; padding: 0px; }
+		.roc-content .group div{ margin: 2px 0px; cursor: default; }
+		.roc-content .group label{ margin-left: 3px; vertical-align: top; }
+		.roc-content #filterDiv .groupTitle{ font-size: 110%; font-weight: bold; }
+		.roc-content #filterButtonDiv{ margin-top: 10px; text-align: center; background-color: rgba(234,248,251, 0.0); }
+		.roc-content .notFiltered{ background-color: #EAF8FB; color: #000; }
+		.roc-content .filtered{ background-color: #FF0000; color: #FFF; }
+		.roc-content #NWSLegendDiv{ position: absolute; right: 5px; bottom: 5px; height: 160px; width: 90px; background-color: #EAF8FB; border: 0.1em solid #CCC; z-index: 2; }
+			.roc-content #NWSLegendDiv td{ padding: 5px 0px 0px 10px; vertical-align: middle; }
+			.roc-content #NWSLegendTable{ width: 30px; }
+			.roc-content #alaskaSwatch{ background-color: #FFFFBE; }
+			.roc-content #centralSwatch{ background-color: #FFD37F; }
+			.roc-content #easternSwatch{ background-color: #BEE8FF; }
+			.roc-content #pacificSwatch{ background-color: #E8BEFF; }
+			.roc-content #southernSwatch{ background-color: #FFBEBE; }
+			.roc-content #westernSwatch{ background-color: #D3FFBE; }
+		.roc-content #dataLegend{ position: absolute; left: 5px; bottom: 5px; padding: 5px; min-width: 70px; z-index: 2; background-color: #EAF8FB; }
+		.roc-content #statusTimeDiv{ position: absolute; bottom: 0; left: 0px; height: auto; width: 100%; padding-bottom: 0px; text-align: center; font-size: 140%; z-index: 1; }
+		.roc-content #radarTimeDiv{ position: absolute; top: 0; left: 0px; height: auto; width: 100%; padding-bottom: 0px; text-align: center; z-index: 1; }
+		.roc-content .mapLoading{ display: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: url(../images/nl2/ajax-loader.gif) 50% 50% no-repeat; z-index: 900; }	
+	.roc-content #mainInfoDiv{ position: relative; }
+		.roc-content .infoLoading{ display: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: url(../images/nl2/ajax-loader.gif) 50% 50% no-repeat; z-index: 900; }	
+		.roc-content #radarInfoDiv{ height: auto; width: 940px; margin: auto; }
+			.roc-content #tabHeader{ height: 30px; width: 100%; position: relative; background: url(../images/nl2/tabPanel.png); background-size: 500px 30px; background-repeat: repeat no-repeat; -webkit-border-radius: 8px 8px 0px 0px; -moz-border-radius: 8px 8px 0px 0px; border-radius: 8px 8px 0px 0px; }
+			.roc-content #tabPanel{ height: 260px; width: 920px; margin-bottom: 10px; padding: 10px; background-color: #FFF; background-image: url(../images/nl2/NEXRAD_logo.png); background-position: 99% 5%; background-repeat: no-repeat; }
+	.roc-content .loading{ display: block; }
+	.roc-content .roundCorners{ -webkit-border-radius: 5px 5px 5px 5px; -moz-border-radius: 5px 5px 5px 5px; border-radius: 5px 5px 5px 5px; }
+	.roc-content .roundLeftCorners{ -webkit-border-radius: 5px 0px 0px 5px; -moz-border-radius: 5px 0px 0px 5px; border-radius: 5px 0px 0px 5px; }
+	.roc-content #radarStatusTime{ width: 740px; text-align: left; font-size: 130%; }
+	
+	.roc-content .tabDiv{ display: inline-block; bottom: 0; margin: 6px 0px 0px 5px; padding: 3px; font-size: 14px; color: #FFF; background: url(../images/nl2/tabButton.png); background-size: 2px 30px; background-repeat: repeat no-repeat; -webkit-border-radius: 6px 6px 0px 0px; -moz-border-radius: 6px 6px 0px 0px; border-radius: 6px 6px 0px 0px; border: 1px solid rgba(114,204,238,1.0); border-bottom: 0; }
+		.roc-content .tabDiv:hover{ cursor:pointer; }
+	.roc-content .tabDivSelected{ background: url(../images/nl2/tabButtonSelected.png); background-size: 2px 30px; border: 1px solid #A2D764; border-bottom: 0; }
+	.roc-content .dataTable{ width: 780px; border: 1px solid #666699; overflow: visible; }
+	.roc-content .descriptionColumn{ min-width: 200px; vertical-align: middle; padding: 1px 3px 1px 2px; border-left: 1px solid #666699; border-bottom: 1px solid #666699; border-top: 1px solid #666699; }
+	.roc-content .valueColumn{ min-width: 150px; text-align: center; vertical-align: middle; padding: 1px 2px 1px 2px; border-right: 1px solid #666699; border-bottom: 1px solid #666699; border-top: 1px solid #666699; }
+	.roc-content #headerRow{ border-bottom: 1px solid #666699; }
+	.roc-content #alarmTable th{ border-top: 1px solid #666699; }
+	.roc-content .alarmCell{ width: 370px; border-bottom: 1px solid #666699; text-align: left; padding-left: 10px; }
+	.roc-content .alarmText{ width: 390px; }
+	.roc-content .alarmChannel{ width: 90px; }
+	.roc-content .radarDetailsDiv{ height: 245px; width: 780px; overflow: auto; }
+	.roc-content .green{ background-color: #00FF00; color: #000; }
+	/*.roc-content .yellow{ background-color: rgba(255, 245, 53, 1.0); color: #000; }*/
+	/*.roc-content .orange{ background-color: #FF7F27; color: #FFF; }*/
+	.roc-content .orange{ background-color: rgba(255,204,0,1.0); color: #000; }
+	.roc-content .yellow{ background-color: rgba(255,255,0,1.0); color: #000; }
+	.roc-content .lt_blue{ background-color: #00FFFF; color: #000; }
+	.roc-content .purple{ background-color: #800080; color: #000; }
+	.roc-content .red{ background-color: #FF0000; color: #FFF; }
+	.roc-content .black{ background-color: #000; color: #FFF; }
+	.roc-content .lt_purple{ background-color: rgb(205,156,205); color: #FFF; }
+	.roc-content .nodata, .roc-content .grey{ background-color:#C8C8C8; color: #000; }
+	.roc-content .gold{ background-color: #CC9966; color: #FFF; }
+	.roc-content .fuschia{ background-color: #FF69B4; color: #FFF; }
+	.roc-content .blue{ background-color: #0000FF; color: #FFF; }
+	.roc-content .pink{ background-color: #FFC0CB; color: #000; }
+	.roc-content .hunter{ background-color: rgb(0,80,0); color: #FFF; }
+	.roc-content .bronze{ background-color: rgb(153,153,102); color: #FFF; }
+	
+	.roc-content .light_green_alarm{ background-color: #90EE90; }
+	.roc-content .white_alarm{ background-color: #FFF; color: #000; }
+	.roc-content .orange_alarm{ background-color: #FFA500; color: #000; }
+	.roc-content .yellow_alarm{ background-color: #FFFF00; color: #000; }
+	.roc-content .red1_alarm{ background-color: #FF0000; color: #FFF; }
+	.roc-content .status{ display: block; float: left; height: auto; width: 40px; margin: 2px; padding: 1px 2px; border: 1px solid #000; text-align: center; vertical-align: middle; font-size: 12px; }
+	.roc-content .regionButton{ margin: 3px; font-size: 12px; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; }
+	.roc-content .regionButtonSelected{ border: 3px solid #EEEEEE;}
+	.roc-content .circlediv{ height: 12px; width: 12px; margin: 1px 6px; border: 1.5px solid #000; -webkit-border-radius: 7px; -moz-border-radius: 7px; border-radius: 7px; }
+	.roc-content .circledivRed{ height: 12px; width: 12px; margin: 1px 6px; border: 1.5px solid #ff0000; -webkit-border-radius: 7px; -moz-border-radius: 7px; border-radius: 7px; }
+	.roc-content .swatch{ height: 15px; width: 15px; margin: 0; padding: 0;  border: 1px solid #646464; }
+	
+	.roc-content select::-ms-value{ background: none; color: #000; }
+	
+	.roc-content .checkbox{ margin: 0px; padding: 0px; z-index: 6; }
+	.roc-content .checkboxLabel{ vertical-align: top; }
+	.roc-content .popupTable{ }
+	.roc-content .popupTable tr{ height: 11px; margin: 0; padding: 0; line-height: 12px; vertical-align: middle;}
+	.roc-content .radarInfoCell{ width: 105px; vertical-align: middle; }
+	.roc-content .legendTitle{ margin: 0px 10px; font-size: 1.3em; }
+	.roc-content .bold{ font-weight: bold; }
+	.roc-content .center{ text-align: center; }
+	.roc-content .dataStale{ color: red; background-color: yellow; }
+	
+	.roc-content .selectedFTMButton{ font-weight: bold; }
+	/*Popups*/
+	.roc-content .ol-overlaycontainer-stopevent{ z-index: 999 !important; }
+	.roc-content #clickPopup{ z-index: 2 !important; }
+	.roc-content #hoverPopup{ z-index: 3 !important; }
+	/*Popup classes */
+	.roc-content .ol-popup-closer { position: absolute; top: 2px; right: 8px; text-decoration: none; }
+	.roc-content .ol-popup-closer:hover{ cursor: pointer; }
+	.roc-content .ol-popup-closer:after { content: 'X'; }
+	/*Common to all popups */
+	.roc-content .ol-popup-main{ position: absolute; padding: 5px; background-color: #FFF; border: 1px solid #CCC; border-radius: 10px; font-size: 11px; min-width: 210px; }
+	.roc-content .ol-popup-main:after, .ol-popup-main:before{ position: absolute; height: 0; width: 0; border: solid transparent; content: " "; pointer-events: none; }
+	.roc-content .ol-popup-main:after{ border-width: 10px; }
+	.roc-content .ol-popup-main:before{ border-width: 11px; }
+	/*Right of point */
+	.roc-content .ol-popup { bottom: 12px; left: -30px; }
+	.roc-content .ol-popup:after, .ol-popup:before { top: 100%; }
+	.roc-content .ol-popup:after { left: 28px; margin-left: -10px; border-top-color: #FFF; }
+	.roc-content .ol-popup:before { left: 28px; margin-left: -11px; border-top-color: #CCC; }
+	/*right side of map */
+	.roc-content .ol-popup-right { bottom: 12px; left: -190px; }
+	.roc-content .ol-popup-right:after, .ol-popup-right:before { top: 100%; }
+	.roc-content .ol-popup-right:after { left: 190px; margin-left: -10px; border-top-color: #FFF; }
+	.roc-content .ol-popup-right:before { left: 190px; margin-left: -11px; border-top-color: #CCC; }
+	/*top of map */
+	.roc-content .ol-popup-top { top: 12px; left: -20px; }
+	.roc-content .ol-popup-top:after, .ol-popup-top:before { bottom: 100%; }
+	.roc-content .ol-popup-top:after { left: 8px; margin-right: -10px; border-bottom-color: #FFF; }
+	.roc-content .ol-popup-top:before { left: 8px; margin-right: -11px; border-bottom-color: #CCC; }
+	/*top right of map */
+	.roc-content .ol-popup-top-right { top: 12px; left: -190px; }
+	.roc-content .ol-popup-top-right:after, .ol-popup-top-right:before { bottom: 100%; }
+	.roc-content .ol-popup-top-right:after { left: 180px; margin-right: -10px; border-bottom-color: #FFF; }
+	.roc-content .ol-popup-top-right:before { left: 180px;  margin-right: -11px; border-bottom-color: #CCC; }
+	.roc-content .hidden { display: none !important; visibility: hidden; }
+	</style>
+	<div class="roc-content">
+	<div class="topDiv">
+	<div class="buttonDiv"><button class="regionButton regionButtonSelected" id="conus_button" title="Zoom to Conus">Conus</button><button class="regionButton" id="alaska_button" title="Zoom to Alaska">Alaska</button><button class="regionButton" id="hawaii_button" title="Zoom to Hawaii">Hawaii</button><button class="regionButton" id="korea_button" title="Zoom to Korea">Korea</button><button class="regionButton" id="puertorico_button" title="Zoom to Puerto Rico">Puerto Rico</button><button class="regionButton" id="guam_button" title="Zoom to Guam">Guam</button><button class="regionButton" id="japan_button" title="Zoom to Japan">Japan</button></div>
+	
+	<div class="optionDiv">
+	<div class="block">Server: <select class="roundCorners" id="serverSelect" title="Select server to monitor"><option selected="selected" title="LDM 1 (SS)" value="TOC1">LDM1</option><option title="LDM 2 (SS)" value="TOC2">LDM2</option><option title="LDM 3 (Norman)" value="ROC1">LDM3</option><option title="LDM 4 (Norman)" value="ROC2">LDM4</option> </select></div>
+	
+	<div class="block">Radar Variable: <select class="roundCorners" id="radarVariableSelect" title="Select radar variable"><option selected="selected" title="Data Last Received" value="Last Update">Data Last Received</option><option title="Current product latency" value="Current Latency">Current Latency</option><option title="Average product latency" value="Average Latency">Average Latency</option><option title="Max product latency" value="Max Latency">Max Latency</option><option title="Agency" value="Agency">Agency</option><option title="VCP" value="VCP">VCP</option><option title="RDA Status" value="RDA Status">RDA Status</option><option title="LDM Version" value="Version">LDM Version</option><option title="RDA Build" value="RDA Build">RDA Build Number</option><option title="NL2 Path" value="NL2 Path">NL2 Path</option> </select></div>
+	</div>
+	</div>
+	
+	<div class="mainContent">
+	<div class="mapBackground" id="mapdiv">
+	<div class="ol-popup-main" id="clickPopup">
+	<div class="ol-popup-closer" id="clickPopupCloser">&nbsp;</div>
+	
+	<div id="clickPopupContent">&nbsp;</div>
+	</div>
+	
+	<div class="ol-popup-main" id="hoverPopup">
+	<div id="hoverPopupContent">&nbsp;</div>
+	</div>
+	
+	<div class="roundLeftCorners" id="layerDiv">
+	<div class="title">Overlays</div>
+	
+	<div><span id="NWSregionSpan"><input class="checkbox" id="regionCheckbox" type="checkbox" /> <label class="checkboxLabel" title="Show NWS regions on map">NWS Regions</label> </span><br />
+	<span id="reflectivitySpan"><input class="checkbox" id="reflectivityCheckbox" type="checkbox" /> <label class="checkboxLabel" title="Show NWS NEXRAD Base Reflectivity">NEXRAD Base Reflectivity</label> </span></div>
+	</div>
+	
+	<div class="roundLeftCorners notFiltered" id="filterDiv">
+	<div class="title">Filter</div>
+	
+	<div class="group">
+	<div class="groupTitle">Agency</div>
+	
+	<div><input name="Agency" type="checkbox" value="DoD" /><label>DoD</label></div>
+	
+	<div><input name="Agency" type="checkbox" value="FAA" /><label>FAA</label></div>
+	
+	<div><input name="Agency" type="checkbox" value="NWS" /><label>NWS</label></div>
+	</div>
+	
+	<div class="group">
+	<div class="groupTitle">VCP</div>
+	
+	<div class="subgroup">
+	<div><input name="VCP" type="checkbox" value="11" /><label>11</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="12" /><label>12</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="21" /><label>21</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="31" /><label>31</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="32" /><label>32</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="35" /><label>35</label></div>
+	</div>
+	
+	<div class="subgroup">
+	<div><input name="VCP" type="checkbox" value="112" /><label>112</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="121" /><label>121</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="211" /><label>211</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="212" /><label>212</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="215" /><label>215</label></div>
+	
+	<div><input name="VCP" type="checkbox" value="221" /><label>221</label></div>
+	</div>
+	</div>
+	
+	<div class="group">
+	<div class="groupTitle">RDA Status</div>
+	
+	<div><input name="RDA Status" type="checkbox" value="Offline Operate" /><label>Offline</label></div>
+	
+	<div><input name="RDA Status" type="checkbox" value="Standby" /><label>Standby</label></div>
+	
+	<div><input name="RDA Status" type="checkbox" value="Restart" /><label>Restart</label></div>
+	
+	<div><input name="RDA Status" type="checkbox" value="Start-Up" /><label>Start-Up</label></div>
+	
+	<div><input name="RDA Status" type="checkbox" value="Operate" /><label>Operate</label></div>
+	</div>
+	
+	<div class="group">
+	<div class="groupTitle">LDM Version</div>
+	
+	<div><input name="Version" type="checkbox" value="1" /><label>1</label></div>
+	
+	<div><input name="Version" type="checkbox" value="2" /><label>2</label></div>
+	
+	<div><input name="Version" type="checkbox" value="3" /><label>3</label></div>
+	
+	<div><input name="Version" type="checkbox" value="4" /><label>4</label></div>
+	
+	<div><input name="Version" type="checkbox" value="5" /><label>5</label></div>
+	
+	<div><input name="Version" type="checkbox" value="6" /><label>6</label></div>
+	
+	<div><input name="Version" type="checkbox" value="7" /><label>7</label></div>
+	</div>
+	
+	<div class="group">
+	<div class="groupTitle">Current Latency</div>
+	
+	<div><input name="Current Latency" type="checkbox" value="-Infinity:0" /><label>&lt; 0</label></div>
+	
+	<div><input name="Current Latency" type="checkbox" value="0:5" /><label>0 - 5 seconds</label></div>
+	
+	<div><input name="Current Latency" type="checkbox" value="5:30" /><label>5 - 30 seconds</label></div>
+	
+	<div><input name="Current Latency" type="checkbox" value="30:60" /><label>30 - 60 seconds</label></div>
+	
+	<div><input name="Current Latency" type="checkbox" value="60:Infinity" /><label>&ge; 60 seconds</label></div>
+	</div>
+	
+	<div class="group">
+	<div class="groupTitle">Average Latency</div>
+	
+	<div><input name="Average Latency" type="checkbox" value="-Infinity:0" /><label>&lt; 0</label></div>
+	
+	<div><input name="Average Latency" type="checkbox" value="0:5" /><label>0 - 5 seconds</label></div>
+	
+	<div><input name="Average Latency" type="checkbox" value="5:30" /><label>5 - 30 seconds</label></div>
+	
+	<div><input name="Average Latency" type="checkbox" value="30:60" /><label>30 - 60 seconds</label></div>
+	
+	<div><input name="Average Latency" type="checkbox" value="60:Infinity" /><label>&ge; 60 seconds</label></div>
+	</div>
+	
+	<div class="group">
+	<div class="groupTitle">Max Latency</div>
+	
+	<div><input name="Max Latency" type="checkbox" value="-Infinity:0" /><label>&lt; 0</label></div>
+	
+	<div><input name="Max Latency" type="checkbox" value="0:5" /><label>0 - 5 seconds</label></div>
+	
+	<div><input name="Max Latency" type="checkbox" value="5:30" /><label>5 - 30 seconds</label></div>
+	
+	<div><input name="Max Latency" type="checkbox" value="30:60" /><label>30 - 60 seconds</label></div>
+	
+	<div><input name="Max Latency" type="checkbox" value="60:Infinity" /><label>&ge; 60 seconds</label></div>
+	</div>
+	
+	<div id="filterButtonDiv"><button class="roundCorners" id="clearFilterButton" title="Clear all filters">Clear all filters</button></div>
+	</div>
+	
+	<div class="roundCorners hidden" id="NWSLegendDiv">
+	<div class="legendTitle bold">Regions</div>
+	
+	<table id="NWSLegendTable">
+		<tbody>
+			<tr>
+				<td>
+				<div class="swatch" id="alaskaSwatch">&nbsp;</div>
+				</td>
+				<td>Alaska</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="swatch" id="centralSwatch">&nbsp;</div>
+				</td>
+				<td>Central</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="swatch" id="easternSwatch">&nbsp;</div>
+				</td>
+				<td>Eastern</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="swatch" id="pacificSwatch">&nbsp;</div>
+				</td>
+				<td>Pacific</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="swatch" id="southernSwatch">&nbsp;</div>
+				</td>
+				<td>Southern</td>
+			</tr>
+			<tr>
+				<td>
+				<div class="swatch" id="westernSwatch">&nbsp;</div>
+				</td>
+				<td>Western</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+	
+	<div class="hidden" id="radarTimeDiv">&nbsp;</div>
+	
+	<div class="bold" id="statusTimeDiv">&nbsp;</div>
+	
+	<div class="roundCorners" id="dataLegend">
+	<div id="rdaStatusLegend">
+	<div class="legendTitle bold">RDA Status</div>
+	
+	<table>
+		<tbody>
+			<tr class="legendRow">
+				<td>
+				<div class="circlediv">&nbsp;</div>
+				</td>
+				<td>Operate</td>
+			</tr>
+			<tr class="legendRow">
+				<td>
+				<div class="circledivRed">&nbsp;</div>
+				</td>
+				<td>Not Operate</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+	
+	<div>
+	<div class="legendTitle bold" id="legendTitle">&nbsp;</div>
+	
+	<table id="legendTable">
+	</table>
+	</div>
+	</div>
+	
+	<div class="mapLoading loading" id="mapLoading">&nbsp;</div>
+	</div>
+	</div>
+	
+	<div id="mainInfoDiv">
+	<div id="radarInfoDiv">
+	<div id="tabHeader">
+	<div id="selectRadarTabContianerDiv">
+	<div class="tabDiv tabDivSelected" id="selectRadarTab">Select Radar</div>
+	</div>
+	
+	<div class="hidden" id="statusTabContainerDiv">
+	<div class="tabDiv tabDivSelected" id="rdaStatusTab">RDA Status Data</div>
+	
+	<div class="tabDiv" id="perfMaintTab">Performance/Maintenance Data</div>
+	
+	<div class="tabDiv" id="adaptationTab">Adaptation Data</div>
+	
+	<div class="tabDiv" id="alarmTab">Alarms</div>
+	
+	<div class="tabDiv" id="ftmTab">Free Text Message</div>
+	</div>
+	</div>
+	
+	<div id="tabPanel">
+	<div id="radarStatusTime">Select a radar to view its details.</div>
+	
+	<div class="radarDetailsDiv hidden" id="rdaStatusDiv">&nbsp;</div>
+	
+	<div class="radarDetailsDiv hidden" id="perfMaintDiv">&nbsp;</div>
+	
+	<div class="radarDetailsDiv hidden" id="adaptationDiv">&nbsp;</div>
+	
+	<div class="radarDetailsDiv hidden" id="alarmDiv">&nbsp;</div>
+	
+	<div class="radarDetailsDiv hidden" id="ftmDiv">&nbsp;</div>
+	</div>
+	</div>
+	
+	<div class="infoLoading" id="infoLoading">&nbsp;</div>
+	</div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.16/proj4.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.20.1/ol.js"></script><script>
+	//Sizes for the radar dots
+	var LARGE_STYLE_RADIUS = 7,
+		MEDIUM_STYLE_RADIUS = 6,
+		SMALL_STYLE_RADIUS = 5.5;
+	
+	var FILL_COLORS = {
+			"green": "rgba(0,255,0,1.0)",
+			"yellow": "rgba(255,255,0,1.0)",
+			"orange": "rgba(255,204,0,1.0)",
+			"red": "rgba(255,0,0,1.0)",
+			"black": "rgba(0,0,0,1.0)",
+			"grey": "rgba(200,200,200,1.0)",
+			"lt_blue": "rgba(0,255,255,1.0)",
+			"purple": "rgba(128,0,128,1.0)",
+			"gold": "rgba(204,153,102,1.0)",
+			"fuschia": "rgba(255,105,180,1.0)",
+			"blue": "rgba(0,0,255,1.0)",
+			"pink": "rgba(255,192,203,1.0)",
+			"hunter": "rgba(0,80,0,1.0)",
+			"bronze": "rgba(153,153,102,1.0)",
+			"lt_purple": "rgba(205,156,205,1.0)"	
+	};
+		
+	//Label styles
+	var LARGE_LABEL_FONT = '13px helvetica,sans-serif',
+		MEDIUM_LABEL_FONT = '9px helvetica,sans-serif',
+		SMALL_LABEL_FONT = '6px helvetica,sans-serif',
+		LABEL_FILL = new ol.style.Fill({color: "rgba(0, 0, 0, 1.0)"}),
+		LARGE_LABEL_STROKE_RADAR = new ol.style.Stroke({color: 'rgba(255,255,255,1.0)', width: 3}),
+		MEDIUM_LABEL_STROKE_RADAR = new ol.style.Stroke({color: 'rgba(255,255,255,1.0)', width: 2}),
+		SMALL_LABEL_STROKE_RADAR = new ol.style.Stroke({color: 'rgba(255,255,255,1.0)', width: 1});
+		
+	//Strokes
+	var STROKE_COLOR = 'rgba(0,0,0,1.0)',
+		STROKE_COLOR_RED = 'rgba(255,0,0,1.0)';
+	
+	//Style for selected radar
+	var LARGE_RADAR_STROKE_SELECTED = new ol.style.Stroke({color: STROKE_COLOR, lineDash: null, width: 5}),
+		MEDIUM_RADAR_STROKE_SELECTED = new ol.style.Stroke({color: STROKE_COLOR, lineDash: null, width: 4.5}),
+		SMALL_RADAR_STROKE_SELECTED = new ol.style.Stroke({color: STROKE_COLOR, lineDash: null, width: 4}),
+	
+		LARGE_RADAR_STROKE_RED_SELECTED = new ol.style.Stroke({color: STROKE_COLOR_RED, lineDash: null, width: 5}),
+		MEDIUM_RADAR_STROKE_RED_SELECTED = new ol.style.Stroke({color: STROKE_COLOR_RED, lineDash: null, width: 4.5}),
+		SMALL_RADAR_STROKE_RED_SELECTED = new ol.style.Stroke({color: STROKE_COLOR_RED, lineDash: null, width: 4});	
+	
+	//Style for radar sites
+	var	LARGE_STROKE_RADAR = new ol.style.Stroke({color: STROKE_COLOR, lineDash: null, width: 2}),
+		MEDIUM_STROKE_RADAR = new ol.style.Stroke({color: STROKE_COLOR, lineDash: null, width: 1.5}),
+		SMALL_STROKE_RADAR = new ol.style.Stroke({color: STROKE_COLOR, lineDash: null, width: 1}),
+		
+		LARGE_STROKE_RED_RADAR = new ol.style.Stroke({color: STROKE_COLOR_RED, lineDash: null, width: 2.5}),
+		MEDIUM_STROKE_RED_RADAR = new ol.style.Stroke({color: STROKE_COLOR_RED, lineDash: null, width: 2}),
+		SMALL_STROKE_RED_RADAR = new ol.style.Stroke({color: STROKE_COLOR_RED, lineDash: null, width: 1.5});
+		
+	var COLOR_FILLS = {};
+	for (color in FILL_COLORS){
+		COLOR_FILLS[color] = new ol.style.Fill({color: FILL_COLORS[color]});
+	}
+	
+	var styleCacheRadarSelected={};
+	var	styleRadarSelected = function(feature, resolution){
+		var category = get_category(feature),
+			rda_status = feature.get("RDA Status"),
+			style,
+			labelText = '',
+			key = "selected_" + labelText,
+			size = "large";
+		if(resolution < 2500){ 
+			if(rda_status !== undefined && rda_status !== 'Operate'){
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: LARGE_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: LARGE_RADAR_STROKE_RED_SELECTED})})];
+			}
+			else{
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: LARGE_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: LARGE_RADAR_STROKE_SELECTED})})];	
+			} 
+		}
+		else if(resolution < 4900){ 
+			if(rda_status !== undefined && rda_status !== 'Operate'){
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: MEDIUM_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: MEDIUM_RADAR_STROKE_RED_SELECTED})})];    		
+			}
+			else{
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: MEDIUM_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: MEDIUM_RADAR_STROKE_SELECTED})})];	
+			}
+		}
+		else{
+			if(rda_status !== undefined && rda_status !== 'Operate'){
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: SMALL_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: SMALL_RADAR_STROKE_RED_SELECTED})})];    		
+			}
+			else{
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: SMALL_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: SMALL_RADAR_STROKE_SELECTED})})];	
+			}
+		}	    
+		if (!styleCacheRadarSelected[key]){
+			var icao_label = new ol.style.Text({
+				  font: MEDIUM_LABEL_FONT, text: labelText,
+				  textBaseline: "center", textAlign: "left",
+				  offsetX: -12, offsetY: 20, fill: LABEL_FILL, stroke: SMALL_LABEL_STROKE_RADAR
+			});    	
+			styleCacheRadarSelected[key] = new ol.style.Style({"text": icao_label});
+		}
+		var allStyles = [styleCacheRadarSelected[key]];
+		allStyles.push.apply(allStyles, style);
+		return allStyles;
+	}; 
+	 /**
+	  * Determines the color category of the feature based on the
+	  * 	selected radar variable. The feature attribute is
+	  * 	compared to the threshold values for the selected
+	  *		radar variable. Returns the appropriate color.
+	  * @param {Object} feature - Feature to get the color category for. 
+	  */
+	 function get_category(feature){	
+		var thresholds = RADAR_VARIABLES[selectedRadarVariable].thresholds,
+			colors = RADAR_VARIABLES[selectedRadarVariable].colors,
+			featureValue =  feature.get(selectedRadarVariable),
+			color, i;
+		if(featureValue === null || featureValue === undefined || featureValue === "N/A"){
+			return 'grey';
+		}
+		switch (selectedRadarVariable){
+			//Special case for VCP
+			case "VCP":
+				for(i = 0; i < thresholds.length; i++){
+					if(featureValue.substring(1,10) === thresholds[i]){
+						color = colors[i];
+						break;
+					}
+				}
+				break;
+			//Distinct values
+			case "Agency":
+			case "RDA Status":
+			case "NL2 Path":
+			case "Version":
+				for(i = 0; i < thresholds.length; i++){
+					if(featureValue === thresholds[i]){
+						color = colors[i];
+						break;
+					}
+				}
+				break;
+			//Special case for RDA Build
+			case "RDA Build":
+				//All values less than the lowest threshold
+				for(i = 1; i < 2; i++){
+					if(featureValue <= thresholds[i]){
+						color = colors[i];
+						break;
+					}				
+				}
+				//Remaining values
+				for(i = 2; i < thresholds.length; i++){
+					if(featureValue === thresholds[i]){
+						color = colors[i];
+						break;
+					}
+				}
+				break;
+			//Range of values
+			case "Last Update":
+			case "Current Latency":
+			case "Average Latency":
+			case "Max Latency":
+			default:
+				for(i = 0; i < thresholds.length; i++){
+					if(featureValue < thresholds[i]){
+						color = colors[i];
+						break;
+					}
+				}	
+		}
+		return color;
+	}
+	/**
+	 * Filters radar features based on selected checkboxes 
+	 * in the filter pane. If feature attributes match those
+	 * for all selected checkboxes then the passed category is
+	 * returned, otherwise a blank category is passed. 
+	 * @param {Object} feature - Feature to check against selected category
+	 * @param {Object} category - category of the radar feature symbology
+	 * @return {Object} - Passed category or blank category
+	 */
+	function filterFeature(feature, category){
+		var set_filters, filter, count, i, value, cat,
+			latency_regex = new RegExp('Latency'),
+			show = true;
+			
+		set_filters = {};
+		for(filter in filters){
+			set_filters[filter] = true;
+			if(filters[filter].length > 0){
+				if(feature.get(filter) !== undefined){
+					//For latency fields
+					if(latency_regex.test(filter)){
+						set_filters[filter] = false;
+						count = 0;
+						value = feature.get(filter);
+						for(i = 0; i < filters[filter].length; i++){
+							cat = filters[filter][i].split(":");
+							if(value >= Number(cat[0]) && value < Number(cat[1])){
+								set_filters[filter] = true;
+								break;
+							}
+						}					
+					}
+					else if(filter === "VCP"){
+						set_filters[filter] = inArray(feature.get(filter).substring(1,4), filters[filter]);
+					}
+					else{
+						set_filters[filter] = inArray(feature.get(filter), filters[filter]);		
+					}
+				}
+			}
+		}
+		for(filter in set_filters){
+			if(! set_filters[filter]){
+				show = false;
+			}
+		}
+	
+		if(show){
+			return category;
+		}
+		else{
+			return "";
+		}	
+	}
+	/**
+	 * 
+	 */
+	function generateFill(category){
+		var cnv = document.createElement('canvas');
+		  var ctx = cnv.getContext('2d');
+		cnv.width = 6;
+		cnv.height = 6;
+		ctx.fillStyle = FILL_COLORS[category];
+		  
+		for(var i = 0; i < 6; ++i) {
+			ctx.fillRect(i, i, 2, 2);
+		}
+		
+		var pattern = new ol.style.Fill({color: ctx.createPattern(cnv, 'repeat')});
+		
+		return pattern;	
+	}
+	var styleCacheRadar={};
+	var styleRadar = function(feature, resolution){
+		var category = get_category(feature),
+			rda_status = feature.get("RDA Status"),
+			labelText = feature.get("ICAO"),
+			icao_label,
+			style,
+			key;
+	
+		if (filters.count > 0){
+			category = filterFeature(feature, category);
+		}
+		if(category === ""){
+			labelText = "";	
+			return;
+		}
+		if(resolution < 2500){
+			if(rda_status !== undefined && rda_status !== 'Operate'){
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: LARGE_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: LARGE_STROKE_RED_RADAR})})];    		
+			}
+			else{
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: LARGE_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: LARGE_STROKE_RADAR})})];	
+			}
+			key = "large_" + labelText;
+			icao_label = new ol.style.Text({
+				  font: LARGE_LABEL_FONT,
+				  text: labelText,
+				  textBaseline: "center", textAlign: "left",
+				  offsetX: -18, offsetY: 22,
+				  fill: LABEL_FILL, stroke: LARGE_LABEL_STROKE_RADAR
+			});
+		}
+		else if(resolution < 4900){//For EPSG:3857 
+			if(rda_status !== undefined && rda_status !== 'Operate'){
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: MEDIUM_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: MEDIUM_STROKE_RED_RADAR})})];    		
+			}
+			else{
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: MEDIUM_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: MEDIUM_STROKE_RADAR})})];	
+			}
+			key = "medium_" + labelText;
+			icao_label = new ol.style.Text({
+				  font: MEDIUM_LABEL_FONT,
+				  text: labelText,
+				  textBaseline: "center", textAlign: "left",
+				  offsetX: -12, offsetY: 17,
+				  fill: LABEL_FILL, stroke: MEDIUM_LABEL_STROKE_RADAR
+			});
+		}
+		else{
+			if(rda_status !== undefined && rda_status !== 'Operate'){
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: SMALL_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: SMALL_STROKE_RED_RADAR})})];
+			}
+			else{
+				style = [new ol.style.Style({image: new ol.style.Circle({radius: SMALL_STYLE_RADIUS, fill: COLOR_FILLS[category], stroke: SMALL_STROKE_RADAR})})];	
+			}    	
+			key = "small_" + labelText;
+			icao_label = new ol.style.Text({
+				  font: SMALL_LABEL_FONT,
+				  text: '',
+				  textBaseline: "center", textAlign: "left",
+				  offsetX: -12, offsetY: 17,
+				  fill: LABEL_FILL, stroke: SMALL_LABEL_STROKE_RADAR
+			}); 
+		}
+		if (!styleCacheRadar[key]){
+			styleCacheRadar[key] = new ol.style.Style({"text": icao_label});
+		}
+		var allStyles = [styleCacheRadar[key]];
+		allStyles.push.apply(allStyles, style);
+		return allStyles;
+	};
+	
+	var styleCacheRadarHover={};
+	var hoverRadarStyle = function(feature, resolution){
+		var icao = feature.get("ICAO"),
+			labelText = "",
+			style = null,
+			key = "";
+		
+		if (! styleCacheRadarHover[key]){
+			var icao_label = new ol.style.Text({
+				  font: LARGE_LABEL_FONT,
+				  text: labelText,
+				  textBaseline: "center", textAlign: "left",
+				  offsetX: -15, offsetY: -10,
+				  fill: LABEL_FILL, stroke: LARGE_LABEL_STROKE_RADAR
+			});    	
+			styleCacheRadarHover[key] = new ol.style.Style({"text": icao_label});
+		}
+		var allStyles = [styleCacheRadarHover[key]];
+		allStyles.push.apply(allStyles, style);
+		return allStyles;
+	};
+	//Using this function rather than JQuery so that true and false can be returned
+	/**
+	 * Determines if the passed item is in the passed array. Returns
+	 * 	true if the item is found in the array, otherwise false. 
+	 * @param {Object} item - Item to check for
+	 * @param {Object} array - Array to check in
+	 */
+	function inArray(item, array){
+		var i,
+			length = array.length;
+		for (i = 0; i < length; i++){
+			if (array[i] === item){
+				return true;
+			}
+		}
+		return false;
+	}
+	var STATES_STROKE = new ol.style.Stroke({color: 'rgba(150, 150, 150, 1.0)', width: 0.4});
+	var STATES_STROKE_DARK = new ol.style.Stroke({color: 'rgba(100, 100, 100, 1.0)', width: 0.4});
+	var CATEGORIES_NWS_REGIONS = {
+		"AR": [ new ol.style.Style({stroke: STATES_STROKE_DARK, fill: new ol.style.Fill({color: "rgba(255,255,190,1.0)"})})],
+		"CR": [ new ol.style.Style({stroke: STATES_STROKE_DARK, fill: new ol.style.Fill({color: "rgba(255,211,127,1.0)"})})],
+		"ER": [ new ol.style.Style({stroke: STATES_STROKE_DARK, fill: new ol.style.Fill({color: "rgba(190,232,255,1.0)"})})],
+		"PR": [ new ol.style.Style({stroke: STATES_STROKE_DARK, fill: new ol.style.Fill({color: "rgba(232,190,255,1.0)"})})],
+		"SR": [ new ol.style.Style({stroke: STATES_STROKE_DARK, fill: new ol.style.Fill({color: "rgba(255,190,190,1.0)"})})],
+		"WR": [ new ol.style.Style({stroke: STATES_STROKE_DARK, fill: new ol.style.Fill({color: "rgba(211,255,190,1.0)"})})],
+		"NA": [ new ol.style.Style({stroke: STATES_STROKE_DARK, fill: new ol.style.Fill({color: "rgba(230,230,230,1.0)"})})]
+	};
+	
+	//GENERAL_STYLES for general features.  i.e. basic layer of states/countries
+	var IMAGE = new ol.style.Circle({
+	  radius: 6,
+	  fill: new ol.style.Fill({color: 'rgba(255, 0, 0, 1.0)' }),
+	  stroke: new ol.style.Stroke({color: 'rgba(230, 230, 230, 0.0)', width: 1})
+	});
+	
+	var GENERAL_STYLES = {
+	  'Point': [new ol.style.Style({IMAGE: IMAGE})],
+	  'LineString': [new ol.style.Style({stroke: new ol.style.Stroke({color: 'green', width: 1})})],
+	  'MultiLineString': [new ol.style.Style({stroke: new ol.style.Stroke({color: 'green', width: 1})})],
+	  'MultiPoint': [new ol.style.Style({IMAGE: IMAGE})],
+	  'MultiPolygon': [new ol.style.Style({stroke: STATES_STROKE, fill: new ol.style.Fill({color: 'rgba(250, 250, 250, 1.0)'})})],
+	  'Polygon': [new ol.style.Style({stroke: STATES_STROKE, fill: new ol.style.Fill({color: 'rgba(250, 250, 250, 1.0)'})})],
+	  'GeometryCollection': [new ol.style.Style({stroke: new ol.style.Stroke({color: 'magenta', width: 2}), fill: new ol.style.Fill({color: 'magenta'}), IMAGE: new ol.style.Circle({radius: 10, fill: null, stroke: new ol.style.Stroke({color: 'magenta'})})})],
+	  'Circle': [new ol.style.Style({stroke: new ol.style.Stroke({color: 'red', width: 2}), fill: new ol.style.Fill({color: 'rgba(255,0,0,0.2)'})})]
+	};
+	
+	var styleFunction = function(feature, resolution) { return GENERAL_STYLES[feature.getGeometry().getType()]; };
+	
+	var styleCacheStates={};
+	var style_Stateswregion = function(feature, resolution){
+		var value = feature.get("RGN");
+		var style = CATEGORIES_NWS_REGIONS[value];
+		var labelText = "";
+		var key = value + "_" + labelText;
+	
+		if (!styleCacheStates[key]){
+			var text = new ol.style.Text({
+				  font: '10.725px Calibri,sans-serif', text: labelText,
+				  textBaseline: "center", textAlign: "left",
+				  offsetX: 5, offsetY: 3,
+				  fill: new ol.style.Fill({color: "rgba(0, 0, 0, 255)"}),
+				});
+			styleCacheStates[key] = new ol.style.Style({"text": text});
+		}
+		var allStyles = [styleCacheStates[key]];
+		allStyles.push.apply(allStyles, style);
+		return allStyles;
+	};
+	var REST_URL = "https://nids-www-metaws.weather.gov/catalogs";
+	var BORDER_URL = "/largefiles/geojson/borders.geojson";
+	
+	proj4.defs("EPSG:5070", "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=1,1,-1,0,0,0,0 +units=m +no_defs");
+	var MISSING_DATA = "N/A";
+	//External URLs
+	var REFLECTIVITY_URL = 'https://idpgis.ncep.noaa.gov/arcgis/services/NWS_Observations/radar_base_reflectivity/MapServer/WmsServer?';
+	
+	var STALE_THRESHOLD = 600; //Seconds
+	var NODES = { "1" : "TOC1", "2" : "TOC2", "4" : "ROC1", "8" : "ROC2" };
+	
+	var JSON_FORMAT = new ol.format.GeoJSON();
+	var PROJECTION = 'EPSG:4269';
+	var DISPLAY_PROJECTION = 'EPSG:5070';
+	
+	/**
+	 * Update interval for getting radar status
+	 */
+	var UPDATE_INTERVAL = 60000; //milliseconds
+	var REFLECTIVITY_UPDATE_INTERVAL = 300000; //Reflectivity updated every 10 minutes, so going 5 so that data aren't too old
+	
+	var COLORS = ["grey", "orange", "gold", "yellow", "blue", "lt_blue", 
+				  "fuschia", "pink", "purple", "lt_purple", "hunter", "green", "red"];
+	
+	var RADAR_STATUSES = ["grey", "black", "green", "yellow", "orange", "red"];
+	var RADAR_STATUS_LABELS = ["No Data", "Negative Latency", "&lt; 5 seconds", "5 - 30 seconds", "30 - 60 seconds", "&ge; 60 seconds"];
+	
+	var NO_DATAVIEW_RADARS = ["RODN", "RKJK", "RKSG"];
+	
+	var RADAR_VARIABLES = {
+		"Last Update": {"thresholds": [-0, 300, 1800.001, Infinity],
+						"colors": ["grey", "green", "orange", "red"],			
+						"labels": ["No Data", 
+								   "&lt; 5 minutes", 
+								   "5 - 30 minutes",
+								   "&ge; 30 minutes"],
+						"legend title": "Data Last Received"},
+		"Current Latency": {"thresholds": [-Infinity, 0, 5, 30.001, 60.001, Infinity],
+							"colors": RADAR_STATUSES,		
+							"labels": RADAR_STATUS_LABELS
+				},
+		"Average Latency": {"thresholds": [-Infinity, 0, 5, 30.001, 60.001, Infinity],
+							"colors": RADAR_STATUSES,			
+							"labels": RADAR_STATUS_LABELS
+				},
+		"Max Latency": {"thresholds": [-Infinity, 0, 5, 30.001, 60.001, Infinity],
+							"colors": RADAR_STATUSES,			
+							"labels": RADAR_STATUS_LABELS
+					},
+		"NL2 Path": {"thresholds": ["No Data", "Default", "WFO Backup"],//, "Radar Backup", "WFO Backup, Radar Backup"],
+					 "colors": ["grey", "green", "blue"], //, "lt_blue", "yellow"],
+					 "labels": ["No Data", "Default", "WFO Backup"]//, "Radar Backup", "WFO Backup, Radar Backup"]
+		}
+	};
+	var level2MapClickHandle = null;
+	var l2StatusUpdate = false;
+	var reflectivityUpdateHandle = null;
+	var selectedRadarVariable = "Last Update";
+	var selectedServer = null;
+	var view;
+	var map;
+	var siteLayer;
+	var selectedLayer;
+	var reflectivityLayer;
+	var clickPopup;
+	var hoverPopup;
+	var clickPopupElement;
+	var hoverPopupElement;
+	var filters = {"Agency": [], "Region": [], "VCP": [], "RDA Status": [], "Version": [],
+				   "Current Latency": [], "Average Latency": [], "Max Latency": [], count: 0};
+	var dataViewJSON = {"agenda":
+						   {"id":"local","center":[],"zoom": 8,
+							"filter": "WSR-88D", "layer": "bref_raw",
+							"station":"", "transparent": true, "alertsOverlay": true, 
+							"stationIconsOverlay": true},
+						"base": "standard",
+						"county": false,
+						"cwa": false,
+						"state": false,
+						"menu": true,
+						"shortFusedOnly": true
+					   };
+	
+	var lastUpdate;
+	
+	function buildBase64JSONQuery(feature){
+		var url = "";
+		var icao = feature.get("ICAO");
+		var coords = feature.getGeometry().getCoordinates();
+		coords = ol.proj.transform(coords, 'EPSG:5070', 'EPSG:4326');
+		dataViewJSON.agenda.center = coords;
+		dataViewJSON.agenda.station = icao;
+		var jsonString = JSON.stringify(dataViewJSON);
+		url = "?settings=v1_" + btoa(jsonString) + "#/";
+		
+		return url;
+	}
+	
+	/**
+	 * Decision function for building radar data tabs
+	 */
+	function buildStatusTable(){
+		$(".radarDetailsDiv").addClass("hidden");
+		var icao = selectedLayer.getSource().getFeatures()[0].get("ICAO");
+		if($("#ftmTab").hasClass("tabDivSelected")){
+			buildFTMTab(icao);
+			return;
+		}
+		ftmArray = [];
+		if($("#rdaStatusTab").hasClass("tabDivSelected")){
+			buildStatusTableHTML(icao, 'rda data', "rdaStatusDiv", RDA_STATUS_DATA_FIELDS);	
+		}
+		else if($("#perfMaintTab").hasClass("tabDivSelected")){
+			buildStatusTableHTML(icao, 'perf data', "perfMaintDiv", PERF_STATUS_DATA_FIELDS);
+		}
+		else if($("#adaptationTab").hasClass("tabDivSelected")){
+			buildStatusTableHTML(icao, 'adap data', "adaptationDiv", ADAP_STATUS_DATA_FIELDS);
+		}
+		else if($("#alarmTab").hasClass("tabDivSelected")){
+			buildAlarmTableHTML(icao);
+		}
+		else{
+			console.log("No tabs selected");
+		}
+	}
+	/**
+	 * Builds RDA Status, Perf/Main, and Adaptation data tables
+	 * @param {String} icao - Radar to get data for
+	 * @param {String} dataset - Dataset for which data area being retrieved
+	 * @param {String} target - HTML element to place the table
+	 * @param {Array} fieldArray - Array of field names that match the data retrieved
+	 */
+	function buildStatusTableHTML(icao, dataset, target, fieldArray){
+		$("#" + target).removeClass("hidden");
+		$("#infoLoading").addClass("loading");
+		$.getJSON(REST_URL + "/ROC_RDA_DATA/records?s=Doc.site-id==" + icao, {})
+		.done(function(data){
+			if(data[0] === undefined){
+				$("#infoLoading").removeClass("loading");
+				$("#" + target).html("");
+				$("#radarStatusTime").html("No data found for " + icao + ".");			
+				return;
+			}
+			var json = data[0].Doc;
+			$("#infoLoading").removeClass("loading");
+			if($("#" + target).hasClass("hidden")){
+				return;
+			}
+			var data = json[dataset],
+				innerHTML = '<table class="dataTable">',
+				length = fieldArray.length - 1,
+				i, column1Desc, column1Data, column2Desc, column2Data;
+			$("#radarStatusTime").attr("title", json.host);
+			$("#radarStatusTime").html("Status Time: " + new Date(data["Timestamp"] * 1000).toUTCString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Site: " + icao + ", " + selectedLayer.getSource().getFeatures()[0].get("SITE_NAME") );			
+			for (i = 0; i <= length; i+=2){
+				column1Desc = fieldArray[i];
+				column1Data = data[column1Desc];
+				column2Desc = i+1 <= length ? fieldArray[i+1] : "";
+				column2Data = i+1 <= length ? data[column2Desc] : "";
+				if (column1Desc === "NTP Status"){
+						column1Data = column1Data == 0 ? "OK" : "Fail";
+				}
+				if (column2Desc === "NTP Status"){
+						column1Data = column1Data == 0 ? "OK" : "Fail";
+				}			
+				if (column1Desc === "Performance Check Time"){
+					if(column1Data !== "N/A"){
+						column1Data = new Date(column1Data * 1000).toUTCString();
+					}
+				}
+				if (column2Desc === "Performance Check Time"){
+					if(column2Data !== "N/A"){
+						column2Data = new Date(column2Data * 1000).toUTCString();
+					}
+				}
+				innerHTML += '<tr><td class="descriptionColumn">' + column1Desc + "</td>";
+				innerHTML += '<td class="valueColumn">' + column1Data + "</td>";
+				innerHTML += '<td class="descriptionColumn">' + column2Desc + "</td>";
+				innerHTML += '<td class="valueColumn">' + column2Data + "</td></tr>";
+			}
+			innerHTML += "</table>";		
+			if (dataset === 'rda data'){
+				innerHTML += "<br/> Forecast Office: " + selectedLayer.getSource().getFeatures()[0].get("WFO");
+			}
+	
+			$("#" + target).html(innerHTML);
+		})
+		.fail(function(){
+			$("#infoLoading").removeClass("loading");
+			$("#" + target).html("");
+			$("#radarStatusTime").html("An error occurred loading the requested data.");
+		});
+	}
+	/**
+	 * Updates radar features with data received from server.
+	 */
+	/**
+	 * Build the HTML for the radar popup boxes and information div. 
+	 * @param {Object} feature - Radar map feature.
+	 * @return HTML string representation of the feature.
+	 */
+	function buildRadarHTML(feature, click){
+		var current_latency = feature.get("Current Latency") === undefined ? "No Data" : feature.get("Current Latency"),
+			avg_latency = feature.get("Average Latency") === undefined ? "No Data" : feature.get("Average Latency"),
+			max_latency = feature.get("Max Latency") === undefined ? "No Data" : feature.get("Max Latency");
+		if(current_latency !== "No Data" && current_latency !== "N/A"){
+			current_latency += " sec";
+		}
+		if(avg_latency !== "No Data" && avg_latency !== "N/A"){
+			avg_latency += " sec";
+		}
+		if(max_latency !== "No Data" && max_latency !== "N/A"){
+			max_latency += " sec";
+		}
+		var innerHTML = ['<table class="popupTable" >', '<tr><td class="bold radarInfoCell">Radar:</td><td>' + feature.get('ICAO') + "</td></tr>" +
+						 '<tr><td class="bold">Location:</td><td>' + feature.get('SITE_NAME') + "</td></tr>" +
+						 '<tr><td class="bold">Forecast Office:</td><td>' + feature.get('WFO') + "</td></tr>"];
+		if(STATION_TYPE === "WSR-88D" || STATION_TYPE === 'TDWR'){
+			innerHTML.push('<tr><td class="bold">VCP:</td><td>' + (feature.get('VCP') === undefined ? "No Data" : feature.get('VCP')) + "</td></tr>" +
+							 '<tr><td class="bold">RDA Build:</td><td>' + (feature.get('RDA Build') === undefined ? "No Data" : feature.get('RDA Build')) + "</td></tr>" +
+						   '<tr><td class="bold">RDA Status:</td><td>' + (feature.get('RDA Status') === undefined ? "No Data" : feature.get('RDA Status')) + "</td></tr>");				       
+		}
+		innerHTML.push('<tr><td class="bold">NL2 Path:</td><td>' + (feature.get("NL2 Path") === undefined ? "No Data<br>" : feature.get('NL2 Path')) + "</td></tr>" +
+						'<tr><td class="bold">Data Time:</td><td>' + (feature.get("Last Ingest") === undefined ? "No Data" : feature.get('Last Ingest')) + "</td></tr>" + 
+						'<tr><td class="bold">Current Latency:</td><td>' + current_latency + "</td></tr>" +
+						'<tr><td class="bold">Average Latency:</td><td>' + avg_latency + "</td></tr>" +
+						'<tr><td class="bold">Max Latency:</td><td>' + max_latency + "</td></tr>" +
+						'<tr><td class="bold">Max Latency Time:</td><td>' + (feature.get("Max Latency Time") === undefined ? "No Data" : feature.get('Max Latency Time')) + "</td></tr>");	
+		if(click){
+			if($.inArray(feature.get('ICAO'), NO_DATAVIEW_RADARS) === -1){
+				if(STATION_TYPE === "WSR-88D" || STATION_TYPE === "TDWR"){
+					var url = buildBase64JSONQuery(feature);
+					innerHTML.push('<tr><td class="bold">Site Data View</td><td><a target="_blank" href="' + RADAR_URL + url  +'">radar.weather.gov</a></td></tr>');
+				}
+				else if(STATION_TYPE === "Profiler"){
+					innerHTML.push('<tr><td class="bold">Site Data View</td><td><a target="_blank" href="' + RADAR_URL + feature.get("ICAO")  +'">Data View</a></td></tr>');
+				}	
+			}
+		}
+		innerHTML.push("</table>");
+		return innerHTML.join("");	
+	}
+	function nullTest(value){
+		return value === null ? MISSING_DATA : value;
+	}
+	
+	/**
+	 * Update features in source with data from data.
+	 * @param {Object} source - OpenLayers layer source.
+	 * @param {object} data - JSON object containing updated data. 
+	 */
+	function updateFeatures(source, data){
+		var radar;
+		source.forEachFeature(function(feature){
+			radar = data[feature.get("ICAO").substring(0,4)];
+			if(radar){
+				if(STATION_TYPE === "WSR-88D"){
+					feature.set('Version', nullTest(radar["LDM Version"]));
+				}
+				if(STATION_TYPE === "WSR-88D" || STATION_TYPE === "TDWR"){
+					feature.set('VCP', nullTest(radar["VCP"]));
+					feature.set('RDA Status', nullTest(radar["RDA Status"]));
+					feature.set('RDA Build', nullTest(radar['RDA Build']));				
+				}
+				feature.set('NL2 Path', radar["NL2 Path"]);
+				feature.set('Last Ingest', radar["Data Time"] !== 'N/A' ? new Date(radar["Data Time"] * 1000).toUTCString(): MISSING_DATA);
+				feature.set('Current Latency', nullTest(radar["Current Latency"]));
+				feature.set('Average Latency', nullTest(radar["Average Latency"]));
+				feature.set('Max Latency', nullTest(radar["Max Latency"]));
+				feature.set('Max Latency Time', radar["Max Latency Time"] !== 'N/A' && radar["Max Latency Time"] !== null ? new Date(radar["Max Latency Time"] * 1000).toUTCString(): MISSING_DATA);
+				feature.set('Last Update', nullTest(radar['Last Update']));
+			}
+			else{
+				if(STATION_TYPE === "WSR-88D"){
+					feature.set('Version', MISSING_DATA);
+				}
+				if(STATION_TYPE === "WSR-88D" || STATION_TYPE === "TDWR"){
+					feature.set('VCP', MISSING_DATA);
+					feature.set('RDA Status', MISSING_DATA);
+					feature.set('RDA Build', MISSING_DATA);				
+				}
+				feature.set('NL2 Path', MISSING_DATA);
+				feature.set('Last Ingest', MISSING_DATA);
+				feature.set('Current Latency', MISSING_DATA);
+				feature.set('Average Latency', MISSING_DATA);
+				feature.set('Max Latency', MISSING_DATA);	
+				feature.set('Max Latency Time', MISSING_DATA);
+				feature.set('Last Update', MISSING_DATA);
+			}
+		});	
+	}
+	
+	function getStatus(){
+		$.getJSON(REST_URL + '/ROC_MAP_VIEW/records?s=Doc.site-id==' + $("#serverSelect option:selected").val(), {})
+		.done(function(data){
+			var now = new Date().getTime() / 1000;
+			if(data.length === 0){
+				if(now - lastUpdate > STALE_THRESHOLD){
+					$("#statusTimeDiv").addClass("dataStale");
+				}
+			}
+			else{
+				var radarJSON = data[0].Doc;
+				
+				lastUpdate = radarJSON["updateTime"];
+				$("#statusTimeDiv").html("Status Collection Time: " + new Date(radarJSON["updateTime"] * 1000).toUTCString() );
+				$("#statusTimeDiv").prop("title", data[0].Doc.host + "/" + data[0].Doc.mongo);
+				$("#statusTimeDiv").removeClass();
+				
+				if (now - radarJSON["updateTime"] > STALE_THRESHOLD){
+					$("#statusTimeDiv").addClass("dataStale");
+				}
+				else{
+					$("#statusTimeDiv").removeClass("dataStale");			
+				}
+				updateFeatures(siteLayer.getSource(), radarJSON);
+				updateFeatures(selectedLayer.getSource(), radarJSON);
+				updateFeatures(hoverLayer.getSource(), radarJSON);		
+		
+				//If there is a selected radar, the information needs to be updated.
+				selectedLayer.getSource().forEachFeature(function(feature){
+					$("#clickPopupContent").html(buildRadarHTML(feature, true));
+					buildStatusTable();		    			
+				});
+				hoverLayer.getSource().forEachFeature(function(feature){
+					$("#hoverPopupContent").html(buildRadarHTML(feature, false));
+				});
+			}
+			getButonColor();
+			if(RADAR_VARIABLES["RDA Build"]){
+				buildRDARadarVariable();	
+			}
+			setLegend(selectedRadarVariable);
+		})
+		.fail(function(){
+			if(lastUpdate === undefined){
+				$("#statusTimeDiv").html("Current Status Unavailable.");
+				$("#statusTimeDiv").addClass("dataStale");
+			}
+			else{
+				var now = new Date().getTime() / 1000;
+				if(now - lastUpdate > STALE_THRESHOLD){
+					$("#statusTimeDiv").addClass("dataStale");
+				}		
+			}
+		})
+		.always(function(){
+			l2StatusUpdate = window.setTimeout(updateStatus, UPDATE_INTERVAL);
+			$("#mapLoading").removeClass("loading");
+		});	
+	}
+	/**
+	 * Builds the RDA Build object of the RADAR_VARIABLES object.
+	 * 	Sets colors and thresholds based on the actual Build
+	 * 	number found in the data.  Only the 4 highest build numbers
+	 * 	are considered.
+	 */
+	function buildRDARadarVariable(){
+		var builds = [];
+		siteLayer.getSource().forEachFeature(function(feature){
+			build = feature.get("RDA Build");
+			if($.inArray(build, builds) === -1 && build !== "N/A"){
+				builds.push(build);			
+			}
+		});
+		builds.sort();
+		var start = 0;
+		if(builds.length > 4){
+			start = builds.length - 4;
+		}
+		builds = builds.slice(start, builds.length);
+		RADAR_VARIABLES["RDA Build"]["colors"] = ["grey"].concat(RDA_BUILD_COLORS.slice(RDA_BUILD_COLORS.length - builds.length, RDA_BUILD_COLORS.length));
+		RADAR_VARIABLES["RDA Build"]["thresholds"] = ["No Data"].concat(builds);
+		RADAR_VARIABLES["RDA Build"]["labels"] = ["No Data"].concat(builds);
+		if(builds.length > 3){
+			RADAR_VARIABLES["RDA Build"]["labels"][1] = "&le;" + RADAR_VARIABLES["RDA Build"]["labels"][1];
+		}
+	}
+	/**
+	 * Build the tab for displaying Free Text Messages.
+	 * Arguemnts:
+	 * @param {str} icao - Radar identifier. 
+	 */
+	function buildFTMTab(icao){
+		
+		$("#infoLoading").addClass("loading");
+		$("#ftmDiv").removeClass("hidden");
+		$("#radarStatusTime").attr("title", "");
+		var url_icao = icao;
+		if(icao.length === 4){
+			url_icao = icao.substring(1, icao.length);
+		}
+		$.get(FTM_URL + url_icao)
+		.done(function(data){
+			var msgCount = data["@graph"].length; 
+			if(msgCount === 0){
+				$("#radarStatusTime").html("");
+				$("#ftmDiv").html("No Free Text Messages Found For " + icao + ", " + selectedLayer.getSource().getFeatures()[0].get("SITE_NAME"));			
+			}
+			if($("#ftmDiv").hasClass("hidden") || areEqual(ftmArray, data["@graph"])){
+				return;
+			}
+			
+			ftmArray = data["@graph"];
+			if(msgCount == 1){
+				$("#radarStatusTime").html("Site: " + icao + ", " + selectedLayer.getSource().getFeatures()[0].get("SITE_NAME"));
+				getFTM(data["@graph"][0]["@id"]);		
+			}
+			else if(msgCount > 1){
+				if(msgCount > 10){
+					msgCount = 10;
+				}
+				var innerHTML = [];
+				innerHTML.push('<button type="button" class="ftmButton selectedFTMButton" data-url="' + data["@graph"][0]["@id"] + '"  >' + 1 + '</button>');
+				for(var i = 2; i <= msgCount; i++){
+					innerHTML.push('<button type="button" class="ftmButton" data-url="' + data["@graph"][i-1]["@id"] + '"  >' + i + '</button>');
+				}
+				innerHTML.push("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Site: " + icao + ", " + selectedLayer.getSource().getFeatures()[0].get("SITE_NAME"));
+				$(".ftmButton").off("click", ftmButtonHandler);
+				$("#radarStatusTime").html(innerHTML.join(""));
+				$(".ftmButton").on("click", ftmButtonHandler);
+				getFTM(data["@graph"][0]["@id"]);	
+			}
+			else{
+				$("#radarStatusTime").html("");
+				$("#ftmDiv").html("No Free Text Messages Found For " + icao + ", " + selectedLayer.getSource().getFeatures()[0].get("SITE_NAME"));
+			}
+		}).fail(function(response){
+			$("#radarStatusTime").html("Error getting Free Text Messages for " + icao + ", " + selectedLayer.getSource().getFeatures()[0].get("SITE_NAME"));
+			
+		}).always(function(response){
+			$("#infoLoading").removeClass("loading");
+		});
+	}
+	
+	/**
+	 * Builds alarm table
+	 * @param {String} icao - Radar ICAO to get alarm data for
+	 */
+	function buildAlarmTableHTML(icao){
+		$("#alarmDiv").removeClass("hidden");
+		$("#infoLoading").addClass("loading");
+		$.getJSON(REST_URL + '/ROC_ALARM_DATA/records?s=Doc.site-id==' + icao, {})
+		.done(function(data){
+			if(data[0] === undefined){
+				$("#infoLoading").removeClass("loading");
+				$("#radarStatusTime").html("No data found for " + icao + ".");			
+				return;
+			}
+			var json = data[0].Doc;
+			$("#infoLoading").removeClass("loading");
+			//This is to handle the case of someone clicking another tab before the results are returned
+			if($("#alarmDiv").hasClass("hidden")){
+				return;
+			}
+			$("#radarStatusTime").html("Status Time: " + new Date(json["updateTime"] * 1000).toUTCString() + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Site: " + icao + ", " + selectedLayer.getSource().getFeatures()[0].get("SITE_NAME") );
+			$("#radarStatusTime").attr("title", json.host);
+			var data = json["alarm data"],
+				innerHTML,
+				length = data.length,
+				i, message, msg;
+			if (length === 0){
+				$("#alarmDiv").html("No alarms");
+				return;	
+			}
+			innerHTML = '<table id="alarmTable"><tr id="headerRow"><th class="alarmCell alarmText">Alarm</th><th class="alarmCell alarmChannel">Active Channel</th><th class="alarmCell">Alarm Timestamp</th></tr>';
+			for(i = 0; i < length; i++){
+				message = data[i];
+				if(message.length){
+					innerHTML += '<tr class="' + message[0].replace(" ", "_")  + '_alarm">';
+					innerHTML += '<td class="alarmCell alarmText">' + msg[1] + '</td>';
+					innerHTML += '<td class="alarmCell alarmChannel">' + (msg[2] == '0' ? "Single" : msg[1]) + '</td>';
+					innerHTML += '<td class="alarmCell">' + new Date(message[3] * 1000).toUTCString() + '</td>';								
+				}
+				else{
+					msg = message["Alarm"].split(":");
+					innerHTML += '<tr class="' + message["Color"].replace(" ", "_")  + '_alarm">';
+					innerHTML += '<td class="alarmCell alarmText">' + message["Alarm"] + '</td>';
+					innerHTML += '<td class="alarmCell alarmChannel">' + (message["Channel"] == '0' ? "Single" : message["Channel"]) + '</td>';
+					innerHTML += '<td class="alarmCell">' + new Date(message["Timestamp"] * 1000).toUTCString() + '</td>';				
+				}
+				innerHTML += "</tr>";
+			}
+			innerHTML += "</table>";
+			$("#alarmDiv").html(innerHTML);
+		})
+		.fail(function(){
+			//This is to handle the case of someone clicking another tab before the results are returned
+			if($("#alarmDiv").hasClass("hidden")){
+				return;
+			}
+			$("#infoLoading").removeClass("loading");
+			$("#radarStatusTime").html("An error occurred loading the requested data.");
+		});	
+	}
+	/**
+	 * Handler for the numbered Free Text Message buttons. Calls the function
+	 * to get and display the FTM.  
+	 */
+	function ftmButtonHandler(evt){
+		$(".ftmButton").removeClass("selectedFTMButton");
+		$(evt.currentTarget).addClass("selectedFTMButton");
+		getFTM(evt.currentTarget.dataset.url);
+	}
+	var FTM_URL = "https://api.weather.gov/products/types/FTM/locations/";
+	//Variables
+	var ftmArray = [];
+	
+	/**
+	 * Get the Free Text Message from the REST API and display it.
+	 * @param {str} url - REST API URL. 
+	 */
+	function getFTM(url){
+		$("#infoLoading").addClass("loading");
+		if($("#ftmDiv").hasClass("hidden")){
+			return;
+		}
+		$("#ftmDiv").html("");
+		$.get(url)
+		.done(function(data){
+			var text = data.productText;
+			$("#ftmDiv").html(text.split("\n").join("<br/>"));
+		}).fail(function(response){
+			$("#radarStatusTime").html("Error getting Free Text Messages for " + icao + ", " + selectedLayer.getSource().getFeatures()[0].get("SITE_NAME"));
+		}).always(function(response){
+			$("#infoLoading").removeClass("loading");
+		});
+	}
+	
+	/**
+	 * Test 2 arrays to see if they are the same. If the array contains objects then it compares
+	 * the properties of the objects.
+	 * Arguments: 
+	 * @param {array} item1 - First array to compare
+	 * @param {array} item2 - Second array to compare
+	 */
+	function areEqual(item1, item2){
+		if (JSON.stringify(item1) === JSON.stringify(item2)){
+			return true;
+		} 
+		else{
+			return false;
+		}
+	}
+	/************* MAP Functions **************/
+	/**
+	 * Clears the selected radars from the selectedLayerSource 
+	 * 	and selectedRadars array and resets tabs to unselected 
+	 * 	radar state 
+	 */
+	function clearSelectedRadars(){
+		$("#radar-info").html("");
+		$("#radarMessageDiv").html("");
+		selectedLayer.getSource().clear();
+		clickPopup.setPosition(undefined);
+		$(".radarDetailsDiv").empty().addClass("hidden");
+		$("#statusTabContainerDiv").addClass("hidden");
+		$("#selectRadarTabContianerDiv").removeClass("hidden");
+		$("#selectRadarTab").addClass("tabDivSelected");
+		$("#radarStatusTime").html("Select a radar to view its details.");
+		ftmArray = [];
+	}
+	
+	/**
+	 * Handles clicks on the map.  If a radar feature is found where the user clicked then 
+	 * the popup and radar information is displayed, otherwise remove popup. 
+	 * @param {Object} event - Map click event. 
+	 */
+	function level2MapClick(event){	
+		clearSelectedRadars();
+		var features = map.forEachFeatureAtPixel(event.pixel,
+			function(feature, layer){ return feature; }, 
+			{layerFilter: layerFilter, hitTolerance: 2}
+		);	
+		if(features){
+			$("#selectRadarTabContianerDiv").addClass("hidden");
+			$("#statusTabContainerDiv").removeClass("hidden");
+			selectedLayer.getSource().addFeature(features);		
+			buildStatusTable();
+			
+			//hoverPopup.setPosition(undefined);
+			//Position popup based on location clicked in map window
+			$(clickPopupElement).removeClass();							
+			$(clickPopupElement).addClass(getPopupLocation(event.pixel));
+			clickPopup.setPosition(event.coordinate);
+			$("#clickPopupContent").html(buildRadarHTML(features, true));			
+		}
+	}
+	
+	function buildLegendCategories(variable){
+		var catagories = [];
+		var category;
+		siteLayer.getSource().forEachFeature(function(feature){
+			category = feature.get(variable);
+			if (category === 'undefined' || category === undefined){
+				category = "N/A";
+			}
+			if(variable === 'VCP' && category !== "N/A"){
+				category = category.slice(1, 30);
+			}
+			if($.inArray(category, catagories) === -1 && category !== "N/A"){
+				catagories.push(category);			
+			}
+		});
+		catagories.sort();
+		if(catagories.length === 0){
+			catagories.push("No Data");
+		}	
+		var colors = RADAR_VARIABLES[variable]["colors"];
+		var labels = RADAR_VARIABLES[variable]["labels"];
+		var thresholds = RADAR_VARIABLES[variable]["thresholds"];
+		var legendItems = {colors: [], labels: [], thresholds: []};
+		
+		var catagoriesLength = catagories.length;
+		var index;
+		for(var i = 0; i < catagoriesLength; i++){
+			category = 	catagories[i];
+			index = thresholds.indexOf(category);
+			legendItems.colors.push(colors[index]);
+			legendItems.labels.push(labels[index]);
+			legendItems.thresholds.push(thresholds[index]);
+		}
+		return legendItems;	
+	}
+	
+	/**
+	 * Forces a reload of the reflectivity layer from the server by updating the 
+	 * 	'refresh' parameter of the layer
+	 */
+	function refreshReflectivity(){
+		reflectivityLayer.getSource().updateParams({'refresh': Math.random()});
+		$.getJSON("https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Observations/radar_base_reflectivity/MapServer/2/query?where=1%3D1&text=&geometryType=esriGeometryEnvelope&spatialRel=esriSpatialRelIntersects&outFields=idp_filedate&returnGeometry=false&returnIdsOnly=false&returnCountOnly=false&orderByFields=idp_filedate+DESC&returnZ=false&returnM=false&returnDistinctValues=false&f=pjson")
+		.done(function(data){
+			var feature = data.features[0];
+			var radarDate = (new Date(feature.attributes.idp_filedate)).toGMTString();
+			$("#radarTimeDiv").html("This system is for performance monitoring and analysis. It should not be relied upon for accurate or timely weather information.<br />" + "Reflectivity Time: " + radarDate);
+		});
+	}	
+	
+	/**
+	 * Event handler for Reflectivity checkbox. If reflectivity layer is visible 
+	 * 	it is changed to not visible and vice versa.
+	 * @param {Object} evt
+	 */
+	function showHideReflectivity(evt){
+		reflectivityLayer.setVisible(this.checked);
+		if(this.checked){
+			$("#radarTimeDiv").removeClass();
+			refreshReflectivity();
+			reflectivityUpdateHandle = window.setInterval(refreshReflectivity, REFLECTIVITY_UPDATE_INTERVAL);
+		}
+		else{
+			$("#radarTimeDiv").addClass("hidden");
+			clearInterval(reflectivityUpdateHandle);
+		}
+	}
+	
+	/**
+	 * Handles the click of the 'map view' buttons. Recenters the map to the 'view' selected.
+	 * @param {Object} evt - Button click event
+	 */
+	function mapViewClickHandler(evt){
+		$(".regionButton").removeClass("regionButtonSelected");
+		$(this).addClass("regionButtonSelected");
+		$.each(REGIONS, function(i, region){
+			if(region.button === evt.currentTarget.id){
+				view.setZoom(region.zoom);
+				view.setCenter(ol.proj.transform(region.center, PROJECTION, DISPLAY_PROJECTION));
+				if(region.rotation){
+					view.rotate(region.rotation);	
+				}
+				else{
+					view.rotate(0);
+				}
+			}
+		});
+	}
+	/**
+	 * Filter function so that only features from the siteLayer get selected
+	 * @param {Object} layerCandidate - One of the layers that was clicked
+	 * @return {Boolean} Boolean indicating whether the layer should be searched or not.
+	 */ 
+	function layerFilter(layerCandidate){
+		if (layerCandidate === siteLayer){return true;}
+		else{ return false;}
+	}
+	/** 
+	 * Handles the popup when the mouse moves within the map, displaying
+	 * 	a popup if over a feature and removing the popup if not.
+	 * @params {Object} evt - The mouse move event
+	 */
+	function pointerMove(evt){
+		if(evt.dragging){ 
+			return; 
+		}
+		clearHoverRadars();
+		var features = map.forEachFeatureAtPixel(evt.pixel, 
+			function(feature, layer){ return feature; }, 
+			{layerFilter: layerFilter, hitTolerance: 2}
+		);
+		if(features){
+			hoverLayer.getSource().addFeature(features);	    
+			$(hoverPopupElement).removeClass();
+			$(hoverPopupElement).addClass(getPopupLocation(evt.pixel));
+			hoverPopup.setPosition(evt.coordinate);
+			$("#hoverPopupContent").html(buildRadarHTML(features));
+		}
+	}
+	/**
+	 * Given pixel, returns a string of the css class for position of popup. This
+	 * 	prevents the popup from showing up off the screen
+	 * @param  {array} pixel -  X,Y screen coordinates of map click.
+	 * @return {string} String containing the css class for popup positioning.
+	 */
+	function getPopupLocation(pixel){
+		var mapHeight = map.getSize()[0];
+		var mapWidth = map.getSize()[1];
+		var popupClass = "ol-popup-main ol-popup";
+		if(pixel[0] > mapHeight / 2 && pixel[1] < mapWidth / 2){ popupClass = 'ol-popup-main ol-popup-top-right'; }
+		else if(pixel[0] > mapHeight /2){ popupClass = 'ol-popup-main ol-popup-right'; }
+		else if(pixel[1] < mapWidth / 2) { popupClass = 'ol-popup-main ol-popup-top'; }
+	/*	
+		if(pixel[0] > 588 && pixel[1] < 230){ popupClass = 'ol-popup-main ol-popup-top-right'; }
+		else if(pixel[0] > 588){ popupClass = 'ol-popup-main ol-popup-right'; }
+		else if(pixel[1] < 230) { popupClass = 'ol-popup-main ol-popup-top'; }
+	*/	
+		return popupClass;
+	}
+	
+	/**
+	 * Clears radars selected when mouse hovers over them. It also removes the popup.
+	 */
+	function clearHoverRadars(){
+		hoverLayer.getSource().clear();
+		hoverPopup.setPosition(undefined);
+	}
+	/**
+	 * Helper function to compare position of 2 colors in an array of colors. 
+	 * 	Checks the position of color 1 and position of color 2, returning
+	 * 	the color with the higher index. 
+	 * @param {String} color1 - color to compare to second color
+	 * @param {String} color2 - color to compare to first color
+	 * @param {Array} array - array of colors to check for color1 and color2
+	 * @return {String} - The color with the higher index in the array.
+	 */
+	function compareArrayItems(color1, color2, array){
+		if(array.indexOf(color1) > array.indexOf(color2)){
+			return color1;
+		}
+		else{
+			return color2;
+		}
+	}
+	/**
+	 * Handles user clicking the close icon in the feature popup box. Remove the popup and clears the selected radar
+	 */
+	function popupCloseHandler(){
+		clearSelectedRadars(); 
+	}
+	
+	function getICAOPixelLocation(icao, layer){
+		icao = icao.toUpperCase();
+		var source = layer.getSource();
+		var info = {};
+		source.forEachFeature(function(feature){
+			if(feature.get("ICAO") === icao){
+				var pixel, region;
+				var coordinate = feature.getGeometry().getCoordinates();
+				pixel = map.getPixelFromCoordinate(coordinate);
+				region = feature.get("R");
+				info = {pixel: pixel, coordinate: coordinate, region: region};						
+			}
+		});
+		return info;
+	}
+	/**
+	 * Determines and sets the color of each region button based 
+	 * 	on the Last Update attribute and set the region button 
+	 * 	color accordingly.
+	 */
+	function getButonColor(){
+		$(".regionButton").removeClass("grey black green yellow orange red");
+		
+		var features = siteLayer.getSource().getFeatures();
+		var thresholds = RADAR_VARIABLES["Last Update"].thresholds;
+		var colors = RADAR_VARIABLES["Last Update"].colors;
+		var radarColor, hoverText;
+		var stopIndex = colors.indexOf("grey");
+		var	category;
+		var	icao;
+		var region, feature, featureValue;
+		var radars = [];
+		var length = features.length;
+		//Reset region color arrays
+		$.each(REGIONS, function(i, region){
+			region.color = "grey";
+			region.red = [];
+			region.orange = [];
+			region.green = [];
+			region.grey = [];
+		});
+	
+		for(var i = 0; i < length; i++){
+			category = null;
+			feature = features[i];
+			featureValue = feature.get("Last Update");
+			icao = feature.get("ICAO").substring(0,4).toUpperCase();
+			region = feature.get("R");
+	
+			if(featureValue === null){ continue; }
+			
+			//Loop through the thresholds starting with the highest and excluding everything "grey" and below
+			for(var index = thresholds.length - 1; index > stopIndex; index--){
+				if(featureValue < thresholds[index] && featureValue >= thresholds[index-1]){
+					category = colors[index];						
+				}
+				//If found a category we can break the loop and stop looking
+				if(category){ index = 0; }
+			}
+			//If it doesn't have a category then default to grey	    
+			if(!category){
+				category = "grey";
+			}
+			radarColor = compareArrayItems(category, REGIONS[region].color, RADAR_STATUSES);
+			REGIONS[region].color = radarColor;
+			REGIONS[region][category].push(icao);			
+		}
+		$.each(REGIONS, function(i, region){
+			$("#" + region.button).addClass(region.color);
+			hoverText = "";
+			if(region.red.length > 0){
+				hoverText += "--- RED ---," + region.red.toString() + ",";
+			}
+			if(region.orange.length > 0){
+				hoverText += "--- ORANGE ---," +  region.orange.toString() + ",";
+			}
+			if(region.grey.length > 0){
+				hoverText += "---GREY---," +  region.grey.toString();
+			}
+			
+			$("#" + region.button).prop("title", hoverText.replace(/,/g, " \n "));
+		});
+	}
+	
+	/**
+	 * Builds the map legend according to the user selected variable
+	 * @param {String} variable - The radar variable to build the legend for.
+	 */
+	function setLegend(){
+		if($.inArray(selectedRadarVariable, ['VCP', 'Version', 'RDA Build']) > -1){
+			var legendItems = buildLegendCategories(selectedRadarVariable),
+				colors = legendItems.colors,
+				labels = legendItems.labels,
+				length = colors.length,
+				i, element, innerHTML;		
+		}
+		else{
+			var colors = RADAR_VARIABLES[selectedRadarVariable].colors,
+				labels = RADAR_VARIABLES[selectedRadarVariable].labels,
+				length = colors.length,
+				i, element, innerHTML;
+		}
+		var legendTitle = RADAR_VARIABLES[selectedRadarVariable]['legend title'];
+		if(!legendTitle){
+			legendTitle = selectedRadarVariable;
+		}
+			
+		$("#legendTable").empty();
+		$("#legendTitle").html(legendTitle);
+		innerHTML = "";
+		for(i = 0; i < length; i++){
+			innerHTML += '<tr class="legendRow">';
+			innerHTML += '<td><div class="circlediv ' + colors[i] + '"></div></td>';
+			innerHTML += '<td>' + labels[i] + '</td></tr>';		
+		}
+		$("#legendTable").html(innerHTML);
+	}
+	
+	function createVectorLayerFromJSON(title, name, style, featureJSON){
+		if(typeof featureJSON === "string"){
+			var	layer = new ol.layer.Vector({
+				name: name, title: title, style: style,
+				crossOrigin: 'anonymous',
+				source: new ol.source.Vector({ 
+					format: JSON_FORMAT,
+					url: featureJSON
+				})
+			});
+		}
+		else{
+			var	layer = new ol.layer.Vector({
+				name: name, title: title, style: style,
+				source: new ol.source.Vector({ 
+					features: JSON_FORMAT.readFeatures(featureJSON, {
+						dataProjection: PROJECTION,
+						featureProjection: DISPLAY_PROJECTION})
+				})
+			});		
+		}
+		return layer;
+		
+	}
+	
+	function createReflectivityLayer(){
+		var reflectivityLayer =  new ol.layer.Image({
+			crossOrigin: 'anonymous',
+			visible: $("#reflectivityCheckbox").prop('checked'),
+			name: "Reflectivity", title: "Reflectivity",
+			opacity: 0.8,
+			extent: undefined,
+			source: new ol.source.ImageWMS({ 
+				hidpi: false,
+				url: REFLECTIVITY_URL,
+				//version: '1.1.1',
+				projection: DISPLAY_PROJECTION,
+					params:{LAYERS:"1", TRANSPARENT: 'true', HEIGHT: 256, WIDTH: 256, 'refresh': Math.random(), VERSION: '1.1.1' },
+				wrapx: false,
+				extent: borderLayer.getSource().getExtent()
+			 })
+		});
+		return reflectivityLayer;
+	}
+	function setClearStaleState(stale){
+		if(stale){
+			$("#statusTimeDiv").addClass("dataStale");
+		}
+		else{
+			$("#statusTimeDiv").removeClass("dataStale");
+		}
+	}
+	/**
+	 * Handler for timeout.  Called when l2StatusUpdate timer expires.  Checks to see
+	 * if the user has selected a server from the dropdown list. If they have then update 
+	 * using that data, otherwise find out which server is aggregate and then get data 
+	 * for that server.
+	 */
+	function updateStatus(){
+		if(l2StatusUpdate){ 
+			clearTimeout(l2StatusUpdate); 
+		} 
+		$("#mapLoading").addClass("loading");
+		//If the user hasn't selected a server then get the aggregate before getting the data
+		if(selectedServer === null){
+			var pingUpate, stale;
+			$.getJSON(REST_URL + '/ROC_CONTROL_VIEW/records', {})
+			.done(function(data){
+				data = data[0].Doc;
+				$.each(data, function(i, node) {
+					try{
+						pingUpdate = new Date(Date.parse(node.status_date + " " + node.status_time));
+					}
+					catch(err){
+						pingUpdate = 0;
+					}
+					stale = true;
+					if (pingUpdate){
+						stale = new Date() - pingUpdate > 240000;
+					}
+					if(node.aggregate === "YES" && stale === false){
+						$("#serverSelect option[value='" + NODES[i] + "']").prop('selected', true);
+					}
+				});
+				getStatus();
+			})
+			.fail(function(){
+				if(lastUpdate === undefined){
+					$("#statusTimeDiv").html("Current Status Unavailable.");
+					$("#statusTimeDiv").addClass("dataStale");	
+				}
+				else{
+					var now = new Date().getTime() / 1000;
+					if(now - lastUpdate > STALE_THRESHOLD){
+						$("#statusTimeDiv").addClass("dataStale");
+					}
+				}
+				$("#mapLoading").removeClass("loading");
+				l2StatusUpdate = window.setTimeout(updateStatus, UPDATE_INTERVAL);
+			});
+		}
+		else{
+			getStatus();
+		}
+	}
+	
+	function setLayoutCookies(evt){
+		document.cookie = "showregion=" + $("#regionCheckbox").prop("checked")
+						  + ";expires=Fri, 31 Dec 9999 23:59:59 GMT";
+		document.cookie = "showref=" + $("#reflectivityCheckbox").prop("checked")
+						  + ";expires=Fri, 31 Dec 9999 23:59:59 GMT";
+	}
+	
+	function checkCookies(){
+		if (document.cookie.split(';').filter(function(item) {
+			return item.indexOf('showregion=false') >= 0;
+		}).length) {
+			SHOW_REGION_BY_DEFAULT = false;
+		}
+	
+		if (document.cookie.split(';').filter(function(item) {
+			return item.indexOf('showref=true') >= 0;
+		}).length) {
+			SHOW_REFLECTIVITY_BY_DEFAULT = true;
+		}
+	}
+	function checkSearch(layer){
+		var search = window.location.search;
+		if(search){
+			search = search.replace("?", "").toLowerCase().split("&");
+			var re = new RegExp('icao=[a-z]{4}');
+			for(var i = 0; i < search.length; i++){
+				if (re.test(search[i])){
+					var icao = search[i].split("=")[1];
+					var info = getICAOPixelLocation(icao, layer);
+					if(info === null){
+						return;
+					}
+					var key;
+					var buttonId = REGIONS[info.region].button;
+					function delay(callback){
+						var timer = 0;
+						return function(){
+							var context = this;
+							clearTimeout(timer);
+							timer = setTimeout(function() {
+								callback.apply(context);
+							}, 10);
+						};
+					}	
+					function showPopup(){
+						info.pixel = map.getPixelFromCoordinate(info.coordinate); 
+						level2MapClick(info);
+						ol.Observable.unByKey(key);
+					}
+					if(info.region !== START_REGION){
+						key = map.on("moveend", delay(showPopup));
+						$("#" + buttonId).click();					
+					}					
+					else{
+						level2MapClick(info);
+					}					
+				}
+			}	
+		}	
+	}
+	
+	function setupMap(mapCenter, zoom, rotation){
+		checkCookies();
+		$('input:checkbox').removeAttr("checked");
+		//Define the map layers
+		borderLayer = createVectorLayerFromJSON("borders", "Borders", styleFunction, BORDER_URL);
+		siteLayer = createVectorLayerFromJSON(STATION_TYPE, STATION_TYPE, styleRadar, RADAR_FEATURE_URL);
+		selectedLayer = new ol.layer.Vector({ name: 'Selected', source: new ol.source.Vector({}), style: styleRadarSelected, title: "Selected" }); 
+		hoverLayer = new ol.layer.Vector({ name: 'Hover', source: new ol.source.Vector({}), style: hoverRadarStyle, title: "Hover" });
+		reflectivityLayer = createReflectivityLayer();
+		siteLayer.once("render", function(){
+			updateStatus();
+			checkSearch(siteLayer);
+		});		
+		
+		clickPopupElement = document.getElementById("clickPopup");
+		hoverPopupElement = document.getElementById("hoverPopup");
+	
+		clickPopup = new ol.Overlay({positioning: 'bottom-center', element: clickPopupElement, autoPan: false});
+		hoverPopup = new ol.Overlay({positioning: 'bottom-center', element: hoverPopupElement, autoPan: false});	
+		
+		view = new ol.View({
+				projection: DISPLAY_PROJECTION, 
+				  center: mapCenter, 
+				  zoom: zoom, rotation: rotation
+		});
+		
+		map = new ol.Map({
+			target: 'mapdiv',
+			moveTolerance: 6,
+			layers: [borderLayer, reflectivityLayer, siteLayer, hoverLayer, selectedLayer],
+			controls: ol.control.defaults({rotate: false, zoomOptions: {delta: 1.0}}),
+			interactions:  ol.interaction.defaults({altShiftDragRotate: false, pinchRotate: false}),  
+			overlays: [hoverPopup, clickPopup],
+			view: view,
+			wrapx: false
+		});
+	
+		$("#clickPopupCloser").on("click", popupCloseHandler);	
+		//Map interactions
+		level2MapClickHandle = map.on('singleclick', level2MapClick);
+		map.on("pointermove", pointerMove);
+		map.on("moveend", function(evt){ clearHoverRadars(); }); 
+		setLegend();		
+	
+		//HTML events
+		$("#regionCheckbox").change(function(){
+			if(this.checked){
+				borderLayer.setStyle(style_Stateswregion);
+				$("#NWSLegendDiv").removeClass("hidden");
+			}
+			else{
+				borderLayer.setStyle(styleFunction);
+				$("#NWSLegendDiv").addClass("hidden");
+			}
+		});
+		$(".regionButton").on('click', mapViewClickHandler );	
+		$("#reflectivityCheckbox").on('change', showHideReflectivity);	
+	
+		$("#radarVariableSelect").change(function(){
+			selectedRadarVariable = this.value;
+			siteLayer.setStyle(styleRadar);
+			selectedLayer.setStyle(styleRadarSelected);
+			if(this.value === "Last Update"){
+				$("#radarVariableSelect").removeClass("red");
+			}
+			else{
+				$("#radarVariableSelect").addClass("red");
+			}
+			setLegend();
+		});	
+		$("#clearFilterButton").on("click", function(){
+			$("#filterDiv input").removeAttr("checked");
+			$("#filterDiv").addClass("notFiltered");
+			$("#filterDiv").removeClass("filtered");
+			filters = {"Agency": [], "Region": [], "VCP": [], "RDA Status": [], "Version": [],
+						  "Current Latency": [], "Average Latency": [], "Max Latency": [], 
+						  count: 0};	
+			siteLayer.setStyle(styleRadar);			   	   		
+		});	
+		$("#serverSelect").change(function(){
+			selectedServer = this.value;
+			$(this).addClass("red");
+			updateStatus();
+		});	
+		$('select#serverSelect option').removeAttr("selected");
+		//$('select#radarVariableSelect option').removeAttr("selected");
+		$("select#radarVariableSelect option[value='Last Update']").prop('selected', true);
+		$("#regionCheckbox").prop("checked", SHOW_REGION_BY_DEFAULT).change();
+		$("#reflectivityCheckbox").prop('checked', SHOW_REFLECTIVITY_BY_DEFAULT).change();	
+		$("#filterDiv input").change(function(){
+			var group = this.name;
+			var value = this.value;
+			var checked = this.checked;
+			if (checked){
+				filters[group].push(value);
+				filters.count++;
+			}
+			else{
+				var index = filters[group].indexOf(value);
+				if (index > -1){
+					filters[group].splice(index, 1);
+					filters.count--;
+				}
+			}
+			if (filters.count > 0){
+				$("#filterDiv").removeClass("notFiltered");
+				$("#filterDiv").addClass("filtered");
+			}
+			else{
+				$("#filterDiv").addClass("notFiltered");
+				$("#filterDiv").removeClass("filtered");
+			}
+			siteLayer.setStyle(styleRadar);
+		});	
+		$("#statusTimeDiv").dblclick(setLayoutCookies);
+		
+		window.addEventListener("unload", function(){
+			if(l2StatusUpdate){ clearTimeout(l2StatusUpdate); }
+			if(reflectivityUpdateHandle){ clearInterval(reflectivityUpdateHandle); }
+		});	
+	}
+	var RADAR_FEATURE_URL = "/largefiles/geojson/nexrad.geojson";
+	
+	var RDA_STATUS_DATA_FIELDS = ["VCP", "Control Status", "RDA Build Number", "RDA Alarm Summary",
+								  "Operational Mode", "Aux Pwr Gen State", "Super Resolution Status",
+								  "Operability Status", "RDA Status", "Avg XMTR Pwr (W)",
+								  "REF Calib Correction (dB)" ];
+	var PERF_STATUS_DATA_FIELDS = ["Channel", "Radome Air Temp (C)", "Transitional Pwr Source (TPS)", "Horiz SP Noise (dBm)", 
+								   "Elev Encoder Light", "Horiz LP Noise (dBm)",
+								   "Az Encoder Light", "Horiz Noise Temp (K)", 
+								   "Linearity", "XMTR Peak Pwr (kW)",
+								   "XMTR Recycle Count", 
+								   "Receiver Bias", "SP Horiz dBZ0 (dBZ)", "Transmitter Imbalance", 
+								   "LP Horiz dBZ0 (dBZ)", 
+								   "Performance Check Time", "XMTR Leaving Air Temp (C)",  
+								   "Equip Shelt Temp (C)", "Pwr Source", "Dynamic Range (dB)", "NTP Status"];					  
+	var ADAP_STATUS_DATA_FIELDS = ["XMTR Freq (MHz)", 
+								   "PL-WG04 Circulator (dB)", 
+								   "Antenna gain Including Radome (db)", 
+								   "PL-A6 Arc Detector (dB)", 
+								   "Coho Pwr A1J4 (dBm)", 
+								   "AME Horz Test Signal Power", 
+								   "Stalo Pwr A1J2 (dBm)", 
+								   "AME Noise Src Horiz Excess Noise Ratio (dB)", 
+								   "PL-Vert IF Heliax to 4AT16 (dB)", 
+								   "PL-AT4 3dB Atten (dB)", 
+								   "PL-Horz IF Heliax to 4AT17 (dB)", 
+								   "PL-IFDIF Anti-alias Filter (dB)", 
+								   "PL-IFD Burst Anti-Alias Filter (dB)", 
+								   "PL-WG02 Harmonic Filter (dB)", 
+								   "XMTR Pwr Data Watts Factor (W)", 
+								   "PL-Waveguide Klystron to Switch (dB)", 
+								   "Pulse Width XMTR Output SP (ns)", 
+								   "Pulse Width XMTR Output LP (ns)", 
+								   "PL-WG06 Spectrum Filter (dB)", 
+								   "Horz RECV Noise LP (dBm)", 
+								   "Horz RECV Noise SP (dBm)", 
+								   "XMTR Spectrum Filter Installed"];
+	
+	var REGIONS = {"AK": {"color": "grey", "button": "alaska_button", "red": [], "orange": [], "grey": [], "green": [], center: [-152.9, 62.3], zoom: 5.5, rotation: Math.PI / -6},
+				   "HI": {"color": "grey", "button": "hawaii_button", "red": [], "orange": [], "grey": [], "green": [], center: [-157.3, 20.6], zoom: 7, rotation: Math.PI / -6},
+				   "KO": {"color": "grey", "button": "korea_button", "red": [], "orange": [], "grey": [], "green": [], center: [126.8, 36.6], zoom: 7, rotation: Math.PI / -2.1},
+				   "JP": {"color": "grey", "button": "japan_button", "red": [], "orange": [], "grey": [], "green": [], center: [127.88, 26.35], zoom: 9, rotation: Math.PI / -2.1},
+				   "PR": {"color": "grey", "button": "puertorico_button", "red": [], "orange": [], "grey": [], "green": [], center: [-66.2, 18.1], zoom: 8},
+				   "GU": {"color": "grey", "button": "guam_button", "red": [], "orange": [], "grey": [], "green": [], center: [144.797, 13.4], zoom: 10, rotation: Math.PI / -2.5}, 
+				   "US" : {"color": "grey", "button": "conus_button", "red": [], "orange": [], "grey": [], "green": [], center: [-96.85, 38.40], zoom: 4.5}};
+	var START_REGION = "US";
+	
+	RADAR_VARIABLES["Agency"] = {"thresholds": ["FAA", "DoD", "NWS"],
+									 "colors": COLORS.slice(3, 6),
+									 "labels": ["FAA", "DoD", "NWS"]};
+	RADAR_VARIABLES["VCP"] = {"thresholds": ["No Data", "12", "31", "32", "35", "112", "121", "212", "215"],
+								  "colors": COLORS.slice(0, 9),
+								  "labels": ["No Data", "12", "31", "32", "35", "112", "121", "212", "215"]};
+	
+	RADAR_VARIABLES["RDA Status"] = {"thresholds": ["No Data", "Start-Up", "Standby", "Restart", "Operate", "Off-line Operate"],
+					"colors": (COLORS.slice(0,1)).concat(COLORS.slice(8, 12)).concat(COLORS.slice(1,2)),
+					"labels": ["No Data", "Start-Up", "Standby", "Restart", "Operate", "Off-line"]};
+	RADAR_VARIABLES["Version"] = {"thresholds": ["No Data", 1, 2, 3, 4, 5, 6, 7],
+					"colors": COLORS.slice(0, 8),
+					"labels": ["No Data", "1", "2", "3", "4", "5", "6", "7"],
+					"legend title": "LDM Version"};
+					
+	//Default starting values for RDA Build - the remaining will be auto added
+	RADAR_VARIABLES["RDA Build"] = {"thresholds": ["No Data"],
+					"colors": ["grey"],
+					"labels": ["No Data"],
+				};
+	var HAS_TABS = true;
+	
+	var RDA_BUILD_COLORS = ["red", "yellow", "green", "hunter"];
+	var SHOW_REGION_BY_DEFAULT = true;
+	var SHOW_REFLECTIVITY_BY_DEFAULT = false;
+	var STATION_TYPE = "WSR-88D";
+	
+	var RADAR_URL = "https://radar.weather.gov/";
+	
+	
+	$(window).on("load", function(){
+		setupMap(ol.proj.transform(REGIONS[START_REGION].center, PROJECTION, DISPLAY_PROJECTION),
+				 REGIONS[START_REGION].zoom, REGIONS[START_REGION].rotation);
+			
+		$(".tabDiv").on('click', function(){
+			if(this.id === "selectRadarTab"){
+				return;			
+			}
+			$(".tabDiv").removeClass("tabDivSelected");
+			$(this).addClass("tabDivSelected");
+			buildStatusTable();
+		});
+		
+	});
+	
+	
+	
+	
+	
+	</script></div>
+				</div>
+				<div style="clear:both"></div>
+				
+							</div>
+	  
+						</div><!-- end of <div class="partial-width-borderbottom"> -->
+					</div><!-- <div class="full-width-border"> -->
+	
+					<div class="partial-width-borderbottom feature-block">
+						<!-- area for features, frontpage thumbs, and custom page -->
+						
+						
+					</div><!-- end of <div class="partial-width-borderbottom feature-block"> -->
+	
+					<div class="full-width-first">
+						
+					</div>
+	
+	
+					<div style="clear:both;"></div>
+	
+				</div><!-- <div class="center-content"> -->
+	
+			</div><!-- end of <div class="center"> -->
+	
+			<!-- sitemap area -->
+			<div class="footer">
+				
+			</div><!-- end of <div class="footer"> -->
+	
+			<!-- legal footer area -->
+			<div class="footer-legal">
+						<div class="footer-legal">
+				<div class="footer-legal-content">
+	
+					<div class="one-sixth-first" id="footer_legal_gov">
+						<a href="http://www.usa.gov"><img src="http://www.weather.gov/css/images/usa_gov.png" alt="usa.gov" width="110" height="30" /></a>
+					</div>
+	
+					<div class="one-half-first" id="footer_legal_info">
+						<p> 
+							<a href="http://www.commerce.gov">US Dept of Commerce</a><br />
+							<a href="http://www.noaa.gov">National Oceanic and Atmospheric Administration</a><br />
+							<a href="https://www.weather.gov" >National Weather Service</a><br />
+							National Level II<br>NWS Radar Operation Center<br />1200 Westheimer Drive<br>Norman, OK 73069<br /><br /><br /><a href="mailto:roc.eng.sys.comms@noaa.gov">Comments? Questions? Please Contact Us.</a>                    </p>
+					</div><!-- end of <div class="one-half-first" id="footer_legal_info"> -->
+	
+					<div class="one-third-last" id="footer_required_links">
+						<div class="div-half">
+							<a href="https://www.weather.gov/disclaimer">Disclaimer</a><br />
+							<a href="http://www.cio.noaa.gov/services_programs/info_quality.html">Information Quality</a><br />
+							<a href="https://www.weather.gov/help">Help</a><br />
+							<a href="http://www.weather.gov/glossary">Glossary</a>
+						</div>
+	
+						<div class="div-half">
+							<a href="https://www.weather.gov/privacy">Privacy Policy</a><br />
+							<a href="https://www.noaa.gov/foia-freedom-of-information-act">Freedom of Information Act (FOIA)</a><br />
+							<a href="https://www.weather.gov/about">About Us</a><br />
+							<a href="https://www.weather.gov/careers">Career Opportunities</a>
+						</div>
+					</div><!-- end of <div class="one-third-last" id="footer_required_links"> -->
+	
+				</div><!-- end of <div class="footer-legal-content"> -->
+			</div><!-- end of <div class="footer-legal"> -->
+			
+			</div><!-- end of <div class="footer-legal"> -->
+	
+			<script type="text/javascript" src="//www.weather.gov/js/govshutdown.js"></script>
+		</body>
+	</html>
