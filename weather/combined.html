@@ -383,6 +383,8 @@
                 var radarStation = data.properties.radarStation;
                 var gridID = (data.properties.gridId).toLowerCase();
 
+                document.getElementById('replaceradarstation').innerHTML = data.properties.gridId;
+
                 function redirectImg () {
                     window.location.href = `https://www.weather.gov/images/${gridID}/weatherstory.gif`
                 }
@@ -752,6 +754,8 @@
         <br>
         <div><b>Zip Code: </b><a id="replacezip"></a></div>
         <div><b>City Name: </b><a id="replacecity"></a></div>
+        <br>
+        <div><b>Radar Station: </b><a id="replaceradarstation"></a></div>
         <br>
         <div><b>Latitude: </b><a id="replaceziplat"></a></div>
         <div><b>Longitude: </b><a id="replaceziplon"></a></div>
