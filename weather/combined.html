@@ -93,104 +93,9 @@
                             : "NW";
         }
 
-        // if the div contents are shown, hide them
-        function hideGeoUrl() {
-            var GeoUrl = document.getElementById("geourl");
-            if (GeoUrl.style.display === "none") {
-                GeoUrl.style.display = "block";
-            } else {
-                GeoUrl.style.display = "none";
-            }
-        }
-
-        // if the div contents are shown, hide them
-        function hideDataUrl() {
-            var DataUrl = document.getElementById("dataurl");
-            if (DataUrl.style.display === "none") {
-                DataUrl.style.display = "block";
-            } else {
-                DataUrl.style.display = "none";
-            }
-        }
-
-        // if the div contents are shown, hide them
-        function hideLocatorUrl() {
-            var LocUrl = document.getElementById("locurl");
-            if (LocUrl.style.display === "none") {
-                LocUrl.style.display = "block";
-            } else {
-                LocUrl.style.display = "none";
-            }
-        }
-
-        // if the div contents are shown, hide them
-        function hideACCWDataUrl() {
-            var ACCWDataUrl = document.getElementById("ACCWdataurl");
-            if (ACCWDataUrl.style.display === "none") {
-                ACCWDataUrl.style.display = "block";
-            } else {
-                ACCWDataUrl.style.display = "none";
-            }
-        }
-
-        // if the div contents are shown, hide them
-        function hideWDGLocatorUrl() {
-            var WDGLocUrl = document.getElementById("WDGlocurl");
-            if (WDGLocUrl.style.display === "none") {
-                WDGLocUrl.style.display = "block";
-            } else {
-                WDGLocUrl.style.display = "none";
-            }
-        }
-
-        // if the div contents are shown, hide them
-        function hideWDGDataUrl() {
-            var WDGDataUrl = document.getElementById("WDGdataurl");
-            if (WDGDataUrl.style.display === "none") {
-                WDGDataUrl.style.display = "block";
-            } else {
-                WDGDataUrl.style.display = "none";
-            }
-        }
-
-        // reset the text in all of the divs
-        function resetAllDivs () {
-            document.getElementById("replacezip").innerHTML = " ";
-            document.getElementById("replacecity").innerHTML = " ";
-            document.getElementById("replaceziplat").innerHTML = " ";
-            document.getElementById("replaceziplon").innerHTML = " ";
-            document.getElementById("geourl").innerHTML = " ";
-            document.getElementById("dataurl").innerHTML = " ";
-            document.getElementById("alertname0").innerHTML = " ";
-            document.getElementById("alertlocation0").innerHTML = " ";
-            document.getElementById("alertdescription0").innerHTML = " ";
-
-            // if the showURL buttons have already been clicked, hide them
-            // so that another click won't show them again
-            var GeoUrl2 = document.getElementById("geourl");
-            if (GeoUrl2.style.display === "none") {
-                GeoUrl2.style.display = "block";
-            }
-            var DataUrl2 = document.getElementById("dataurl");
-            if (DataUrl2.style.display === "none") {
-                DataUrl2.style.display = "block";
-            }
-            var LocUrl2 = document.getElementById("locurl");
-            if (LocUrl2.style.display === "none") {
-                LocUrl2.style.display = "block";
-            }
-            var ACCWDataUrl2 = document.getElementById("ACCWdataurl");
-            if (ACCWDataUrl2.style.display === "none") {
-                ACCWDataUrl2.style.display = "block";
-            }
-            var WDGLocUrl2 = document.getElementById("WDGlocurl");
-            if (WDGLocUrl2.style.display === "none") {
-                WDGLocUrl2.style.display = "block";
-            }
-            var WDGDataUrl2 = document.getElementById("WDGdataurl");
-            if (WDGDataUrl2.style.display === "none") {
-                WDGDataUrl2.style.display = "block";
-            }
+        function showAPIURLs() {
+            // document.getElementById('apiurls').style.display = "block";
+            $("#apiurls").toggle();
         }
 
         var lat = "";
@@ -275,17 +180,6 @@
             location.reload();
         }
         checkIfPastQuery++;
-
-        // reset all div elements to their original state
-        resetAllDivs();
-
-        // click the buttons to hide the urls
-        $("#buttongeo").click()
-        $("#buttondata").click()
-        $("#buttonACCWdata").click()
-        $("#buttonlocator").click()
-        $("#buttonWDGdata").click()
-        $("#buttonWDGlocator").click()
         
         // Stop the form from refreshing the page
         event.preventDefault()
@@ -704,6 +598,7 @@
                 }
 
                 var alertCheckNumber = 0
+                var finalAlertNumber = 0;
                 function checkAlert () {
                     
                     // if there are no alerts
@@ -755,19 +650,17 @@
         <br>
         <div><b>Latitude: </b><a id="replaceziplat"></a></div>
         <div><b>Longitude: </b><a id="replaceziplon"></a></div>
-        <br>
-        <button id="buttongeo" onclick="hideGeoUrl()">Show OWM Geolocator URL</button>
+        <br><br>
+        <button id="buttonurls" onclick="showAPIURLs()">Show API URLs</button>
+        <br><br>
+        <div id="apiurls">
         <div><b>OWM Geolocator URL: </b><a id="geourl"></a></div>
-        <button id="buttondata" onclick="hideDataUrl()">Show OWM Main Weather Data URL</button>
         <div><b>OWM Main Weather Data URL: </b><a id="dataurl"></a></div>
-        <button id="buttonWDGlocator" onclick="hideWDGLocatorUrl()">Show WDG Point Locator URL</button>
         <div><b>WDG Point Locator URL: </b><a id="WDGlocurl"></a></div>
-        <button id="buttonWDGdata" onclick="hideWDGDataUrl()">Show WDG Main Weather Data URL</button>
         <div><b>WDG Main Weather Data URL: </b><a id="WDGdataurl"></a></div>
-        <button id="buttonlocator" onclick="hideLocatorUrl()">Show ACCW Location Key URL</button>
         <div><b>ACCW Location Key URL: </b><a id="locurl"></a></div>
-        <button id="buttonACCWdata" onclick="hideACCWDataUrl()">Show ACCW Main Weather Data URL</button>
         <div><b>ACCW Main Weather Data URL: </b><a id="ACCWdataurl"></a></div>
+        </div>
         <br>
         <br>
         <br>
@@ -1192,6 +1085,7 @@
     document.getElementById('allOWMHourlyExceptFirst').style.display = "none";
     document.getElementById('allOWMDailyExceptFirst').style.display = "none";
     document.getElementById('allWDGDailyExceptFirst').style.display = "none";
+    document.getElementById('apiurls').style.display = "none";
 </script>
 </body>
 </html>
