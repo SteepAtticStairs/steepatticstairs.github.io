@@ -277,7 +277,7 @@
                 var radarStation = data.properties.radarStation;
                 var gridID = (data.properties.gridId).toLowerCase();
 
-                document.getElementById('replaceradarstation').innerHTML = data.properties.gridId;
+                document.getElementById('replaceradarstation').innerHTML = data.properties.radarStation;
 
                 document.getElementById('mainlink').setAttribute('src', `https://www.weather.gov/wwamap/png/${gridID}.png`);
                 document.getElementById('mainlinkLink').setAttribute('href', `https://www.weather.gov/${gridID}`);
@@ -309,8 +309,12 @@
                 document.getElementById('iastateRadar').setAttribute('src', `https://mesonet.agron.iastate.edu/GIS/radmap.php?tz=EDT&sector=wfo&sector_wfo=${gridID}&layers[]=uscounties&layers[]=cwas&layers[]=watches&layers[]=nexrad&layers[]=county_warnings&layers[]=sbw&`);
                 document.getElementById('iastateRadarLink').setAttribute('href', `https://mesonet.agron.iastate.edu/GIS/radmap.php?tz=EDT&sector=wfo&sector_wfo=${gridID}&layers[]=uscounties&layers[]=cwas&layers[]=watches&layers[]=nexrad&layers[]=county_warnings&layers[]=sbw&`);
 
-                document.getElementById('wundergroundRadar').setAttribute('src', `https://radblast-aa.wunderground.com/cgi-bin/radar/WUNIDS_map?station=${data.properties.gridId}&brand=wui&num=10&delay=60&type=NCR&frame=0&scale=0.999&noclutter=0&t=1621025493&showstorms=0&map.x=400&map.y=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=1&rainsnow=1&lightning=1`);
-                document.getElementById('wundergroundRadarLink').setAttribute('href', `https://radblast-aa.wunderground.com/cgi-bin/radar/WUNIDS_map?station=${data.properties.gridId}&brand=wui&num=10&delay=60&type=NCR&frame=0&scale=0.999&noclutter=0&t=1621025493&showstorms=0&map.x=400&map.y=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=1&rainsnow=1&lightning=1`);
+                document.getElementById('wundergroundRadar').setAttribute('src', `https://radblast-aa.wunderground.com/cgi-bin/radar/WUNIDS_map?station=${data.properties.radarStation.substring(1)}&brand=wui&num=10&delay=60&type=NCR&frame=0&scale=0.999&noclutter=0&t=1621025493&showstorms=0&map.x=400&map.y=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=1&rainsnow=1&lightning=1`);
+                document.getElementById('wundergroundRadarLink').setAttribute('href', `https://radblast-aa.wunderground.com/cgi-bin/radar/WUNIDS_map?station=${data.properties.radarStation.substring(1)}&brand=wui&num=10&delay=60&type=NCR&frame=0&scale=0.999&noclutter=0&t=1621025493&showstorms=0&map.x=400&map.y=240&centerx=400&centery=240&transx=0&transy=0&showlabels=1&severe=1&rainsnow=1&lightning=1`);
+
+
+                // console.log("4letters " + data.properties.radarStation);
+                // console.log("4letters-1 " + data.properties.radarStation.substring(1));
 
                 $.getJSON(WDGdataUrl, function(data) {
                     function printData (day) {
@@ -461,7 +465,7 @@
                         //console.log("raw: " + repaired);
                     }
                 };
-                xhttp.open("GET", `https://weather.cod.edu/satrad/nexrad/assets/php/get-files.php?parms=${data.properties.gridId}`, true);
+                xhttp.open("GET", `https://weather.cod.edu/satrad/nexrad/assets/php/get-files.php?parms=${data.properties.radarStation.substring(1)}`, true);
                 xhttp.send();
 
 
