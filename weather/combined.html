@@ -215,6 +215,14 @@
 
             document.getElementById('geourl').innerHTML = geoUrl;
 
+        $.getJSON(`https://geocode.xyz/${lat},${lon}?geoit=json`, function(data) {
+            var zipcodeFromLatLon = data.postal;
+
+            // https://apollo.nvu.vsc.edu/classes/remote/lecture_notes/radar/88d/88D_locations.html
+            $.getJSON("./radarStations.json", function(json) {
+                console.log("lati: " + json.stations[0].KLWX.lat);
+                console.log("longi: " + json.stations[0].KLWX.lon);
+
 
 
 
@@ -634,7 +642,9 @@
                 checkAlert();
             });
         });
-        })
+    });
+    });
+        });
     </script>
 
 
