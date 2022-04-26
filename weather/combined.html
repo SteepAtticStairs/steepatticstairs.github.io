@@ -109,10 +109,14 @@
             var lat = position.coords.latitude;
             var lon = position.coords.longitude;
 
-            $.getJSON(`https://geocode.xyz/${lat},${lon}?geoit=json`, function(data) {
+            document.getElementById('curlat').innerHTML = lat;
+            document.getElementById('curlon').innerHTML = lon;
+
+            zipcodefromcoordsurl
+            var geocodeFromCoordsURL = `https://geocode.xyz/${lat},${lon}?geoit=json`;
+            $.getJSON(geocodeFromCoordsURL, function(data) {
+                document.getElementById('zipcodefromcoordsurl').innerHTML = geocodeFromCoordsURL;
                 document.getElementById('geocode').innerHTML = data.postal;
-                document.getElementById('curlat').innerHTML = lat;
-                document.getElementById('curlon').innerHTML = lon;
             });
         }
 
@@ -668,6 +672,8 @@
         <button id="buttonurls" onclick="showAPIURLs()"><b>Show API URLs</b></button>
         <br><br>
         <ul id="apiurls" class="tree-view">
+        <div><b>Zip Code from Coordinates URL: </b><a id="zipcodefromcoordsurl"></a></div>
+        <br>
         <div><b>OWM Geolocator URL: </b><a id="geourl"></a></div>
         <br>
         <div><b>OWM Main Weather Data URL: </b><a id="dataurl"></a></div>
