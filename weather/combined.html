@@ -791,6 +791,19 @@
         <br>
         <br>
         <br>
+        <form>
+            <b><label for="radstatzipList">Input Radar Station:</b> (e.g. KLWX)</label>
+            <br>
+            <input list="radstatzipLists" name="radstatzipList" id="radstatzipList">
+            <br>
+            <button id="radstatzipSubmit">Ok</button>
+        </form>
+        <br>
+        <div><b>Zip: <a id="radstatzip"></a></b></div>
+        <div><b>Coords: </b><a id="radstatcoords"></a></div>
+        <br>
+        <br>
+        <br>
         <br>
         <br>
         <div><img width="25%" height="auto" src="/icons/openweathermap_blue.png"></img></div>
@@ -1076,6 +1089,7 @@
         </div>
         <br>
         <br>
+        <br>
 
         <div id="chartImages"></div>
 
@@ -1211,6 +1225,28 @@
     document.getElementById('allOWMDailyExceptFirst').style.display = "none";
     document.getElementById('allWDGDailyExceptFirst').style.display = "none";
     document.getElementById('apiurls').style.display = "none";
+
+    // code to get the zip code from a radar station
+    var radstatzipSubmitBtn = document.getElementById('radstatzipSubmit');
+    radstatzipSubmitBtn.addEventListener('click', function handleClick() {
+        event.preventDefault();
+
+        var radstat = document.querySelector('[name="radstatzipList"]').value;
+        var radstatCoordsURL = `https://api.weather.gov/radar/stations/${radstat}`
+        $.getJSON(radstatCoordsURL, function(data) {
+            var lati = data.geometry.coordinates[1];
+            var longi = data.geometry.coordinates[0];
+
+            //console.log(radstat + ": " + lati + ", " + longi);
+            document.getElementById('radstatcoords').innerHTML = radstat + ": " + lati + ", " + longi;
+
+
+            var geolocURL = `https://geocode.xyz/${lati},${longi}?geoit=json`;
+            $.getJSON(geolocURL, function(data) {
+                document.getElementById('radstatzip').innerHTML = data.postal;
+            });
+        });
+    });
 </script>
 </body>
 </html>
