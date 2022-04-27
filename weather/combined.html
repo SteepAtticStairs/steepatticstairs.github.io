@@ -112,7 +112,7 @@
             document.getElementById('curlat').innerHTML = lat;
             document.getElementById('curlon').innerHTML = lon;
 
-            var geocodeFromCoordsURL = `http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lat}&lng=${lon}&username=steepatticstairs`;
+            var geocodeFromCoordsURL = `https://circumvent-cors.herokuapp.com/http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lat}&lng=${lon}&username=steepatticstairs`;
             $.getJSON(geocodeFromCoordsURL, function(data) {
                 document.getElementById('zipcodefromcoordsurl').innerHTML = geocodeFromCoordsURL;
                 document.getElementById('geocode').innerHTML = data.postalCodes[0].postalCode;
@@ -1240,7 +1240,7 @@
             document.getElementById('radstatcoords').innerHTML = radstat + ": " + lati + ", " + longi;
 
 
-            var geolocURL = `http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lati}&lng=${longi}&username=steepatticstairs`;
+            var geolocURL = `https://circumvent-cors.herokuapp.com/http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lati}&lng=${longi}&username=steepatticstairs`;
             $.getJSON(geolocURL, function(data) {
                 document.getElementById('radstatzip').innerHTML = data.postalCodes[0].postalCode;
             });
