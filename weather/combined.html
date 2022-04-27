@@ -219,13 +219,13 @@
 
             document.getElementById('geourl').innerHTML = geoUrl;
 
-        $.getJSON(`https://geocode.xyz/${lat},${lon}?geoit=json`, function(data) {
-            var zipcodeFromLatLon = data.postal;
-
-            // https://apollo.nvu.vsc.edu/classes/remote/lecture_notes/radar/88d/88D_locations.html
-            $.getJSON("./radarStations.json", function(json) {
-                console.log("lati: " + json.stations[0].KLWX.lat);
-                console.log("longi: " + json.stations[0].KLWX.lon);
+        //$.getJSON(`https://geocode.xyz/${lat},${lon}?geoit=json`, function(data) {
+        //    var zipcodeFromLatLon = data.postal;
+//
+        //    // https://apollo.nvu.vsc.edu/classes/remote/lecture_notes/radar/88d/88D_locations.html
+        //    $.getJSON("./radarStations.json", function(json) {
+        //        console.log("lati: " + json.stations[0].KLWX.lat);
+        //        console.log("longi: " + json.stations[0].KLWX.lon);
 
 
 
@@ -541,7 +541,16 @@
 
                     var msgURL = PARSEDstringjsonwithoutat.ATgraph[0].ATid;
                     $.getJSON(msgURL, function(data) {
-                        document.getElementById('radstatMessage').innerHTML = data.productText;
+                        var radstatMessageIssuanceTime = new Date(data.issuanceTime);
+                        var radstatMessageText = data.productText;
+
+                        var middle = radstatMessageText.slice(
+                            radstatMessageText.indexOf('\n\n') + 1,
+                            radstatMessageText.lastIndexOf('\n\n'),
+                        );
+
+                        document.getElementById('radstatMessage').innerHTML = middle;
+                        document.getElementById('radstatMessageTime').innerHTML = radstatMessageIssuanceTime.toLocaleDateString() + " " + radstatMessageIssuanceTime.toLocaleTimeString();
                     });
                 });
             });
@@ -684,8 +693,8 @@
                 }
                 checkAlert();
             });
-        });
-    });
+//        });
+//    });
 });
     });
         });
@@ -735,6 +744,8 @@
         <br>
         <div><b>Radar Station: </b><a id="radstatStation"></a></div>
         <div><b>Data Last Received: </b><a id="radstatLastData"></a></div>
+        <br>
+        <div><b>Message Time: </b><a id="radstatMessageTime"></a></div>
         <div><b>Message: </b><a id="radstatMessage"></a></div>
         <br>
         <br>
