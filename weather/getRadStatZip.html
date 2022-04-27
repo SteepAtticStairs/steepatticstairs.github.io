@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        
+    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+        
+    <p><form>
+        <label for="thestat">Radar Station:</label><br>
+        <input type="text" id="thestat" name="thestat"><br>
+        <input type="submit" value="Ok">
+    </form></p>
+
+    <div id="replacemecoords"></div>
+    <br>
+    <div id="replacemezip"></div>
+    
+    <script>
+        // Listen for the "submit" event on the form
+        document.querySelector('form').addEventListener('submit', event => {
+
+        // Stop the form from refreshing the page
+        event.preventDefault() 
+
+        // Get the radar station from the input
+        var radstatLowerCase = document.querySelector('[name="thestat"]').value
+        var radstat = radstatLowerCase.toUpperCase();
+
+        var radstatCoordsURL = `https://api.weather.gov/radar/stations/${radstat}`
+        $.getJSON(radstatCoordsURL, function(data) {
+            var lati = data.geometry.coordinates[1];
+            var longi = data.geometry.coordinates[0];
+
+            //console.log(radstat + ": " + lati + ", " + longi);
+            document.getElementById('replacemecoords').innerHTML = radstat + ": " + lati + ", " + longi;
+
+
+            var geolocURL = `https://geocode.xyz/${lati},${longi}?geoit=json`;
+            $.getJSON(geolocURL, function(data) {
+                document.getElementById('replacemezip').innerHTML = data.postal;
+            });
+        });
+    });
+    </script>
+</body>
+</html>
