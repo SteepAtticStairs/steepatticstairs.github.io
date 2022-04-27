@@ -528,6 +528,20 @@
             $.getJSON(radstatURL, function(data) {
 
                 var radstatLastReceivedData = new Date(data.properties.latency.levelTwoLastReceivedTime);
+                var currentTime = new Date();
+                var timeDiff = currentTime - radstatLastReceivedData;
+
+                var radstatELEM = document.getElementById('radstat');
+                // if it has been 15 minutes (900000 ms) since last radar data, radar is down
+                if (timeDiff >= 900000) {
+                    var isRadarDown = true;
+                    radstatELEM.style.color = 'rgb(226, 0, 0)';
+                    document.getElementById('radstat').innerHTML = "DOWN";
+                } else if (timeDiff < 900000) {
+                    var isRadarDown = false;
+                    radstatELEM.style.color = 'rgb(16, 160, 10)';
+                    document.getElementById('radstat').innerHTML = "ONLINE";
+                }
 
                 document.getElementById('radstatStation').innerHTML = radarStation;
                 document.getElementById('radstatLastData').innerHTML = radstatLastReceivedData.toLocaleDateString() + " " + radstatLastReceivedData.toLocaleTimeString();
@@ -759,6 +773,8 @@
         <br>
         <br>
         <div><b>RADAR STATUS</b></div>
+        <br>
+        <div><b>Radar Status: <a id="radstat"></a></b></div>
         <br>
         <div><b>Radar Station: </b><a id="radstatStation"></a></div>
         <div><b>Data Last Received: </b><a id="radstatLastData"></a></div>
