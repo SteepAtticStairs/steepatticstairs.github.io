@@ -524,13 +524,26 @@
             *  RADAR STATUS
             */
             var radstatURL = `https://api.weather.gov/radar/stations/${radarStation}`;
-
             $.getJSON(radstatURL, function(data) {
 
                 var radstatLastReceivedData = new Date(data.properties.latency.levelTwoLastReceivedTime);
 
                 document.getElementById('radstatStation').innerHTML = radarStation;
                 document.getElementById('radstatLastData').innerHTML = radstatLastReceivedData.toLocaleDateString() + " " + radstatLastReceivedData.toLocaleTimeString();
+
+
+                var radmessageURL = `https://api.weather.gov/products/types/FTM/locations/${radarStation.substring(1)}`;
+                $.getJSON(radmessageURL, function(data) {
+
+                    var stringjson = JSON.stringify(data);
+                    var stringjsonwithoutat = stringjson.replace(/@/g, 'AT');
+                    var PARSEDstringjsonwithoutat = JSON.parse(stringjsonwithoutat);
+
+                    var msgURL = PARSEDstringjsonwithoutat.ATgraph[0].ATid;
+                    $.getJSON(msgURL, function(data) {
+                        document.getElementById('radstatMessage').innerHTML = data.productText;
+                    });
+                });
             });
 
 
@@ -722,6 +735,7 @@
         <br>
         <div><b>Radar Station: </b><a id="radstatStation"></a></div>
         <div><b>Data Last Received: </b><a id="radstatLastData"></a></div>
+        <div><b>Message: </b><a id="radstatMessage"></a></div>
         <br>
         <br>
         <br>
