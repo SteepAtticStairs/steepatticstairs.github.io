@@ -574,10 +574,14 @@
                             radstatMessageText.lastIndexOf('\n\n'),
                         );
 
+                        radstatMessageText.replace(/\n/g, '<br>');
+
                         document.getElementById('radstatMessageID').innerHTML = data.id;
                         document.getElementById('radstatMessageName').innerHTML = data.productName;
-                        document.getElementById('radstatMessage').innerHTML = middle;
+                        document.getElementById('radstatMessage').innerHTML = radstatMessageText;
                         document.getElementById('radstatMessageTime').innerHTML = radstatMessageIssuanceTime.toLocaleDateString() + " " + radstatMessageIssuanceTime.toLocaleTimeString();
+
+                        console.log(radstatMessageText);
                     });
                 });
             });
@@ -785,8 +789,9 @@
         <br>
         <div><b>Message ID: </b><a id="radstatMessageID"></a></div>
         <div><b>Message Name: </b><a id="radstatMessageName"></a></div>
-        <div><b>Message Time: <a id="radstatMessageTime"></a></b></div>
-        <div><b>Message: <a id="radstatMessage"></a></b></div>
+        <br>
+        <div><b>Message Time: </b><a id="radstatMessageTime"></a></div>
+        <div style="white-space: pre-wrap;"><b>Message: </b><a id="radstatMessage"></a></div>
         <br>
         <br>
         <br>
@@ -1231,6 +1236,7 @@
         event.preventDefault();
 
         var radstat = document.querySelector('[name="radstatzipList"]').value;
+        radstat = radstat.toUpperCase();
         var radstatCoordsURL = `https://api.weather.gov/radar/stations/${radstat}`
         $.getJSON(radstatCoordsURL, function(data) {
             var lati = data.geometry.coordinates[1];
