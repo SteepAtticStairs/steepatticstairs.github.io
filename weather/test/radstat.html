@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        
+    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+        
+    <script>
+        var allStations = [];
+        var allStationsLat = [];
+        var allStationsLon = [];
+        var myObj = {};
+        var url = `https://api.weather.gov/radar/stations`
+        $.getJSON(url, function(data) {
+            for (let i = 0; i < 208; i++) {
+                var stat = data.features[i].properties.id;
+                myObj[stat] = [data.features[i].geometry.coordinates[1], data.features[i].geometry.coordinates[0]];
+                //allStations.push(data.features[i].properties.id);
+                //allStationsLat.push(data.features[i].geometry.coordinates[1]);
+                //allStationsLon.push(data.features[i].geometry.coordinates[0]);
+                //console.log(data.features[i].properties.id);
+            }
+            //var json = JSON.stringify(myObj);
+            //console.log(json);
+            document.write(JSON.stringify(myObj));
+
+            //allStations.sort();
+            //console.log(allStations);
+            //var perty = JSON.stringify(allStations, null, 4);
+            //document.write(perty);
+        });
+    </script>
+</body>
+</html>

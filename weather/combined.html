@@ -150,7 +150,7 @@
             <button onclick="window.location.href = '/weather/datasources/accw/current.html'"><b><u>A</u>ccuweather Data <i>(incomplete)</i></b></button>
             <br>
             <br>
-            <button onclick="window.location.href = '/weather/getRadStatZip.html'"><b><u>G</u>et Radar Station Zip Code</i></b></button>
+            <button onclick="window.location.href = '/weather/test/getRadStatZip.html'"><b><u>G</u>et Radar Station Zip Code</i></b></button>
             <br><br><br>
             <div><i>NOTE:</i>&nbsp&nbsp&nbsp<u>OWM</u> means OpenWeatherMap, <u>WDG</u> means Weather.gov, and <u>ACCW</u> means Accuweather.</div>
             <br>
@@ -1237,10 +1237,9 @@
 
         var radstat = document.querySelector('[name="radstatzipList"]').value;
         radstat = radstat.toUpperCase();
-        var radstatCoordsURL = `https://api.weather.gov/radar/stations/${radstat}`
-        $.getJSON(radstatCoordsURL, function(data) {
-            var lati = data.geometry.coordinates[1];
-            var longi = data.geometry.coordinates[0];
+        $.getJSON('./radarStations.json', function(data) {
+            var lati = data[radstat][0];
+            var longi = data[radstat][1];
 
             //console.log(radstat + ": " + lati + ", " + longi);
             document.getElementById('radstatcoords').innerHTML = radstat + ": " + lati + ", " + longi;
