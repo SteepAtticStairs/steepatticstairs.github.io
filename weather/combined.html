@@ -1237,18 +1237,15 @@
 
         var radstat = document.querySelector('[name="radstatzipList"]').value;
         radstat = radstat.toUpperCase();
-        $.getJSON('./radarStations.json', function(data) {
-            var lati = data[radstat][0];
-            var longi = data[radstat][1];
+        $.getJSON('./json/radarStations.json', function(data) {
+            var zippy = data[radstat][0];
+            var lati = data[radstat][1];
+            var longi = data[radstat][2];
 
             //console.log(radstat + ": " + lati + ", " + longi);
             document.getElementById('radstatcoords').innerHTML = radstat + ": " + lati + ", " + longi;
 
-
-            var geolocURL = `https://circumvent-cors.herokuapp.com/http://api.geonames.org/findNearbyPostalCodesJSON?lat=${lati}&lng=${longi}&username=steepatticstairs`;
-            $.getJSON(geolocURL, function(data) {
-                document.getElementById('radstatzip').innerHTML = data.postalCodes[0].postalCode;
-            });
+            document.getElementById('radstatzip').innerHTML = zippy;
         });
     });
 </script>

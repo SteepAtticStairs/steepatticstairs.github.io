@@ -9,28 +9,35 @@
 <body>
         
     <script>
-        var allStations = [];
-        var allStationsLat = [];
-        var allStationsLon = [];
-        var myObj = {};
-        var url = `https://api.weather.gov/radar/stations`
-        $.getJSON(url, function(data) {
-            for (let i = 0; i < 208; i++) {
-                var stat = data.features[i].properties.id;
-                myObj[stat] = [data.features[i].geometry.coordinates[1], data.features[i].geometry.coordinates[0]];
-                //allStations.push(data.features[i].properties.id);
-                //allStationsLat.push(data.features[i].geometry.coordinates[1]);
-                //allStationsLon.push(data.features[i].geometry.coordinates[0]);
-                //console.log(data.features[i].properties.id);
-            }
-            //var json = JSON.stringify(myObj);
-            //console.log(json);
-            document.write(JSON.stringify(myObj));
+        var myObj = [];
+        var myObj2 = {}
+        var zipArray = [];
+        $.getJSON('/weather/json/allStations.json', function(data) {
+            var allOfStats = data;
 
-            //allStations.sort();
-            //console.log(allStations);
-            //var perty = JSON.stringify(allStations, null, 4);
-            //document.write(perty);
+            $.getJSON('/weather/json/radarStations.json', function(data) {
+                var allOfCoords = data;
+
+                for (i = 0; i < 208; i++) {
+                    var currentStat = allOfStats[i];
+                    var lati = allOfCoords[currentStat][0];
+                    var longi = allOfCoords[currentStat][1];
+                    //document.write(lati + ", " + longi);
+
+                    getZip(lati, longi, currentStat);
+                }
+
+                function getZip(latt, longg, st) {
+                    var url = `https://circumvent-cors.herokuapp.com/http://api.geonames.org/findNearbyPostalCodesJSON?lat=${latt}&lng=${longg}&username=pufferfishe`;
+                    $.getJSON(url, function(data) {
+                        var zippy = data.postalCodes[0].postalCode;
+                        //console.log(zipArray);
+                        myObj2[st] = [zippy, lati, longi];
+
+                        console.log(myObj2);
+                    });
+                }
+            });
         });
     </script>
 </body>
