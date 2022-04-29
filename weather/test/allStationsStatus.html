@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        
+    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+    <script>
+        console.clear();
+        document.write("Loading...");
+        var array = [];
+
+        $.getJSON('https://api.weather.gov/radar/stations', function(data) {
+            document.body.innerHTML = '';
+            for (let i = 0; i < 208; i++) {
+                var radarStation = data.features[i].properties.id;
+                var radstatLastReceivedData = new Date(data.features[i].properties.latency.levelTwoLastReceivedTime);
+                var currentTime = new Date();
+                var timeDiff = currentTime - radstatLastReceivedData
+
+                if (timeDiff >= 900000) {
+                    var isRadarDown = true;
+                    $('body').append("<div>" + radarStation + "<div style='color: rgb(226, 0, 0)'>DOWN</div></div><br>");
+                } else if (timeDiff < 900000) {
+                    var isRadarDown = false;
+                    $('body').append("<div>" + radarStation + "<div style='color: rgb(16, 160, 10)'>ONLINE</div></div><br>");
+                }
+            }
+
+            //array.sort()
+            //for (val of array) {
+            //    document.write(val);
+            //}
+            //document.write(JSON.stringify(array, null, 4));
+        });
+    </script>
+</body>
+</html>
