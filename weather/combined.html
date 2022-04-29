@@ -546,6 +546,7 @@
                 }
 
                 document.getElementById('radstatStation').innerHTML = radarStation;
+                document.getElementById('radstatName').innerHTML = data.properties.name;
                 document.getElementById('radstatLastData').innerHTML = radstatLastReceivedData.toLocaleDateString() + " " + radstatLastReceivedData.toLocaleTimeString();
 
 
@@ -786,6 +787,7 @@
         <div><i>Radar Status in bulk: </i><a href="/weather/test/allStationsStatus.html">HERE</a></div>
         <br>
         <div><b>Radar Station: </b><a id="radstatStation"></a></div>
+        <div><b>Radar Name: </b><a id="radstatName"></a></div>
         <div><b>Data Last Received: </b><a id="radstatLastData"></a></div>
         <br>
         <div><b>Message ID: </b><a id="radstatMessageID"></a></div>
