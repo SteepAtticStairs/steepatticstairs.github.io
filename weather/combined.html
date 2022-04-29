@@ -434,7 +434,7 @@
                     req.onreadystatechange = function() {
                         if (req.readyState === 4) {
                             var response = req.responseText;
-                            console.log(response);
+                            //console.log(response);
                             //var matches = response.match(/'images':\s*(\[.+?\])/);
                             //if (matches){
                             //    img_arr = JSON.parse(matches[1]);
@@ -562,28 +562,39 @@
                     // re-parse the AT json
                     var PARSEDstringjsonwithoutat = JSON.parse(stringjsonwithoutat);
 
-                    var msgURL = PARSEDstringjsonwithoutat.ATgraph[0].ATid;
-                    document.getElementById('WDGradstatmsgTEXTurl').innerHTML = msgURL;
-                    $.getJSON(msgURL, function(data) {
-                        var radstatMessageIssuanceTime = new Date(data.issuanceTime);
-                        var radstatMessageText = data.productText;
+                    var emptyJsonString = '{"ATcontext":{"ATversion":"1.1"},"ATgraph":[]}';
 
-                        // extract the text in between the \n\n sequences -
-                        // that text is all we need
-                        var middle = radstatMessageText.slice(
-                            radstatMessageText.indexOf('\n\n') + 1,
-                            radstatMessageText.lastIndexOf('\n\n'),
-                        );
+                    if (JSON.stringify(PARSEDstringjsonwithoutat) === emptyJsonString) {
+                        console.log("has no message");
+                        document.getElementById('radstatMessage').innerHTML = "No active message for this radar station.";
+                        document.getElementById('radstatMessageID').innerHTML = "None";
+                        document.getElementById('radstatMessageName').innerHTML = "None";
+                        document.getElementById('radstatMessageTime').innerHTML = "None";
+                    } else {
+                        console.log("has message");
+                        var msgURL = PARSEDstringjsonwithoutat.ATgraph[0].ATid;
+                        document.getElementById('WDGradstatmsgTEXTurl').innerHTML = msgURL;
+                        $.getJSON(msgURL, function(data) {
+                            var radstatMessageIssuanceTime = new Date(data.issuanceTime);
+                            var radstatMessageText = data.productText;
 
-                        radstatMessageText.replace(/\n/g, '<br>');
+                            // extract the text in between the \n\n sequences -
+                            // that text is all we need
+                            var middle = radstatMessageText.slice(
+                                radstatMessageText.indexOf('\n\n') + 1,
+                                radstatMessageText.lastIndexOf('\n\n'),
+                            );
 
-                        document.getElementById('radstatMessageID').innerHTML = data.id;
-                        document.getElementById('radstatMessageName').innerHTML = data.productName;
-                        document.getElementById('radstatMessage').innerHTML = radstatMessageText;
-                        document.getElementById('radstatMessageTime').innerHTML = radstatMessageIssuanceTime.toLocaleDateString() + " " + radstatMessageIssuanceTime.toLocaleTimeString();
+                            radstatMessageText.replace(/\n/g, '<br>');
 
-                        console.log(radstatMessageText);
-                    });
+                            document.getElementById('radstatMessageID').innerHTML = data.id;
+                            document.getElementById('radstatMessageName').innerHTML = data.productName;
+                            document.getElementById('radstatMessage').innerHTML = radstatMessageText;
+                            document.getElementById('radstatMessageTime').innerHTML = radstatMessageIssuanceTime.toLocaleDateString() + " " + radstatMessageIssuanceTime.toLocaleTimeString();
+
+                            console.log(radstatMessageText);
+                        });
+                    }
                 });
             });
 
