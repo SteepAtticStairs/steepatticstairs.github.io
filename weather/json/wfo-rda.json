@@ -1,0 +1,377 @@
+{
+    "ABR": [
+        "KABR"
+    ],
+    "BIS": [
+        "KMBX"
+    ],
+    "BOU": [
+        "KFTG"
+    ],
+    "DMX": [
+        "KDMX"
+    ],
+    "DTX": [
+        "KDTX"
+    ],
+    "DDC": [
+        "KDDC"
+    ],
+    "DLH": [
+        "KDLH"
+    ],
+    "CYS": [
+        "KCYS"
+    ],
+    "LOT": [
+        "KLOT"
+    ],
+    "GLD": [
+        "KGLD"
+    ],
+    "GID": [
+        "KUEX"
+    ],
+    "GJT": [
+        "KGJX"
+    ],
+    "GRR": [
+        "KGRR"
+    ],
+    "FGF": [
+        "KMVX"
+    ],
+    "GRB": [
+        "KGRB"
+    ],
+    "IND": [
+        "KIND"
+    ],
+    "JKL": [
+        "KJKL"
+    ],
+    "ARX": [
+        "KARX"
+    ],
+    "ILX": [
+        "KILX"
+    ],
+    "LMK": [
+        "KLVX"
+    ],
+    "MQT": [
+        "KMQT"
+    ],
+    "MKX": [
+        "KMKX"
+    ],
+    "MPX": [
+        "KMPX"
+    ],
+    "APX": [
+        "KAPX"
+    ],
+    "LBF": [
+        "KLNX"
+    ],
+    "IWX": [
+        "KIWX"
+    ],
+    "OAX": [
+        "KOAX"
+    ],
+    "PAH": [
+        "KHPX"
+    ],
+    "EAX": [
+        "KEAX"
+    ],
+    "PUB": [
+        "KPUX"
+    ],
+    "DVN": [
+        "KDVN"
+    ],
+    "UNR": [
+        "KUDX"
+    ],
+    "RIW": [
+        "KRIW"
+    ],
+    "SGF": [
+        "KSGF"
+    ],
+    "LSX": [
+        "KLSX"
+    ],
+    "FSD": [
+        "KFSD"
+    ],
+    "TOP": [
+        "KTWX"
+    ],
+    "ICT": [
+        "KICT"
+    ],
+    "VWX": [
+        "KVWX"
+    ],
+    "ILM": [
+        "KLTX"
+    ],
+    "CTP": [
+        "KCCX"
+    ],
+    "LWX": [
+        "KLWX"
+    ],
+    "RNK": [
+        "KFCX"
+    ],
+    "RAH": [
+        "KRAX"
+    ],
+    "GYX": [
+        "KGYX"
+    ],
+    "PHI": [
+        "KDIX"
+    ],
+    "PBZ": [
+        "KPBZ"
+    ],
+    "AKQ": [
+        "KDOX"
+    ],
+    "MHX": [
+        "KMHX"
+    ],
+    "GSP": [
+        "KGSP"
+    ],
+    "ILN": [
+        "KILN"
+    ],
+    "CLE": [
+        "KCLE"
+    ],
+    "CAE": [
+        "KCAE"
+    ],
+    "BGM": [
+        "KBGM"
+    ],
+    "ALY": [
+        "KENX"
+    ],
+    "BUF": [
+        "KBUF"
+    ],
+    "BTV": [
+        "KTYX"
+    ],
+    "CAR": [
+        "KCBW"
+    ],
+    "BOX": [
+        "KBOX"
+    ],
+    "OKX": [
+        "KOKX"
+    ],
+    "CHS": [
+        "KCLX"
+    ],
+    "RLX": [
+        "KRLX"
+    ],
+    "BRO": [
+        "KBRO"
+    ],
+    "ABQ": [
+        "KFDX"
+    ],
+    "AMA": [
+        "KAMA"
+    ],
+    "FFC": [
+        "KJGX"
+    ],
+    "EWX": [
+        "KDFX"
+    ],
+    "BMX": [
+        "KMXX"
+    ],
+    "CRP": [
+        "KCRP"
+    ],
+    "FWD": [
+        "KGRK"
+    ],
+    "EPZ": [
+        "KHDX"
+    ],
+    "HGX": [
+        "KHGX"
+    ],
+    "JAX": [
+        "KVAX"
+    ],
+    "KEY": [
+        "KBYX"
+    ],
+    "MRX": [
+        "KMRX"
+    ],
+    "LUB": [
+        "KLBB"
+    ],
+    "LZK": [
+        "KLZK"
+    ],
+    "LCH": [
+        "KPOE",
+        "KLCH"
+    ],
+    "OHX": [
+        "KOHX"
+    ],
+    "MLB": [
+        "KMLB"
+    ],
+    "MEG": [
+        "KNQA"
+    ],
+    "MFL": [
+        "KAMX"
+    ],
+    "MAF": [
+        "KMAF"
+    ],
+    "OUN": [
+        "KVNX"
+    ],
+    "HUN": [
+        "KHTX"
+    ],
+    "MOB": [
+        "KEVX"
+    ],
+    "TAE": [
+        "KEOX"
+    ],
+    "TBW": [
+        "KTBW"
+    ],
+    "SJT": [
+        "KDYX"
+    ],
+    "TSA": [
+        "KINX",
+        "KSRX"
+    ],
+    "LIX": [
+        "KLIX"
+    ],
+    "JAN": [
+        "KGWX"
+    ],
+    "SHV": [
+        "KSHV"
+    ],
+    "SEW": [
+        "KLGX",
+        "KATX"
+    ],
+    "OTX": [
+        "KOTX"
+    ],
+    "TWC": [
+        "KEMX"
+    ],
+    "PSR": [
+        "KYUX",
+        "KIWA"
+    ],
+    "SGX": [
+        "KNKX",
+        "KSOX"
+    ],
+    "MTR": [
+        "KMUX"
+    ],
+    "HNX": [
+        "KHNX"
+    ],
+    "PQR": [
+        "KRTX"
+    ],
+    "PIH": [
+        "KSFX"
+    ],
+    "REV": [
+        "KRGX"
+    ],
+    "STO": [
+        "KBBX"
+    ],
+    "SLC": [
+        "KMTX",
+        "KICX"
+    ],
+    "PDT": [
+        "KPDT"
+    ],
+    "MSO": [
+        "KMSX"
+    ],
+    "VEF": [
+        "KEYX"
+    ],
+    "LOX": [
+        "KVTX"
+    ],
+    "MFR": [
+        "KMAX"
+    ],
+    "FGZ": [
+        "KFSX"
+    ],
+    "GGW": [
+        "KGGW"
+    ],
+    "LKN": [
+        "KLRX"
+    ],
+    "EKA": [
+        "KBHX"
+    ],
+    "TFX": [
+        "KTFX"
+    ],
+    "BOI": [
+        "KCBX"
+    ],
+    "BYZ": [
+        "KBLX"
+    ],
+    "AFC": [
+        "PAIH"
+    ],
+    "AFG": [
+        "PAEC"
+    ],
+    "HFO": [
+        "PHWA"
+    ],
+    "SJU": [
+        "TJUA"
+    ],
+    "AJK": [
+        "PACG"
+    ],
+    "GUM": [
+        "PGUA"
+    ]
+}

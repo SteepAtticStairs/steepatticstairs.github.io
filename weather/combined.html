@@ -294,6 +294,7 @@
                 var gridID = (data.properties.gridId).toLowerCase();
 
                 document.getElementById('replaceradarstation').innerHTML = data.properties.radarStation;
+                document.getElementById('replaceforecastoffice').innerHTML = data.properties.gridId;
 
                 document.getElementById('mainlink').setAttribute('src', `https://www.weather.gov/wwamap/png/${gridID}.png`);
                 document.getElementById('mainlinkLink').setAttribute('href', `https://www.weather.gov/${gridID}`);
@@ -757,6 +758,7 @@
         <div><b>City Name: </b><a id="replacecity"></a></div>
         <br>
         <div><b>Radar Station: </b><a id="replaceradarstation"></a></div>
+        <div><b>Forecast Office: </b><a id="replaceforecastoffice"></a></div>
         <br>
         <div><b>Latitude: </b><a id="replaceziplat"></a></div>
         <div><b>Longitude: </b><a id="replaceziplon"></a></div>
