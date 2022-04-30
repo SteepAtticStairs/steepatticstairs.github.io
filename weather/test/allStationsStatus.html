@@ -18,21 +18,24 @@
                 var radarStation = data.features[i].properties.id;
                 var radstatLastReceivedData = new Date(data.features[i].properties.latency.levelTwoLastReceivedTime);
                 var currentTime = new Date();
-                var timeDiff = currentTime - radstatLastReceivedData
+                var timeDiff = currentTime - radstatLastReceivedData;
+                var formattedLastReceivedData = radstatLastReceivedData.toLocaleDateString() + " " + radstatLastReceivedData.toLocaleTimeString();
 
                 if (timeDiff >= 900000) {
+                    //$('body').append
                     var isRadarDown = true;
-                    $('body').append("<div>" + radarStation + "<div style='color: rgb(226, 0, 0)'>DOWN</div></div><br>");
+                    array.push("<div><b>" + radarStation + "</b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div><br>");
                 } else if (timeDiff < 900000) {
+                    //$('body').append
                     var isRadarDown = false;
-                    $('body').append("<div>" + radarStation + "<div style='color: rgb(16, 160, 10)'>ONLINE</div></div><br>");
+                    array.push("<div><b>" + radarStation + "</b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div><br>");
                 }
             }
 
-            //array.sort()
-            //for (val of array) {
-            //    document.write(val);
-            //}
+            array.sort()
+            for (val of array) {
+                document.write(val);
+            }
             //document.write(JSON.stringify(array, null, 4));
         });
     </script>
