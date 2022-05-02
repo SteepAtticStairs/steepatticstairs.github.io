@@ -45,10 +45,15 @@
         <a>Zoom</a>
         <br>
         <input id="zoomSlider" type="range" min="5" max="20" step="1" value="7">
+        <br>
+        <a>Current Frame</a>
+        <br>
+        <input id="timestampSlider" type="range" min="0" max="10" step="1" value="0">
     </div>
 
     <script>
         function setView(lat, lon, zoom, opac) {
+            var currentTime = new Date();
             var oopaac;
             document.getElementById('weathermap').innerHTML = "<div id='map' style='top: 135px;'></div>";
             
@@ -71,10 +76,14 @@
             //}).addTo(map);
 
             var timeStampe = 
-            ['-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m'];
+            ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m'];
+            var minutesToSubtract = 
+            [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
             timeStampe.reverse();
+            minutesToSubtract.reverse();
+
             var radarLayers = [];
-            for(let i = 0; i <= 11; i++){
+            for (let i = 0; i <= 11; i++) {
                 if (i < 11) {
                     var layer = 'nexrad-n0q-900913' + timeStampe[i];
                     radarLayers[i] = L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
@@ -99,34 +108,72 @@
                 }
             }
 
-            var i = 0;                     //  set your counter to 1
-
-            function myLoop () {           //  create a loop function
-            setTimeout(function () {    //  call a 3s setTimeout when the loop is called
-                    radarLayers.map(function(layer){ layer.setOpacity(0)});
-                    document.getElementById('ts').innerHTML = timeStampe[i];
-                    radarLayers[i].setOpacity(oopaac);
-                    console.log(i);
-                    i++;                 //  increment the counter
-                    if (i < 10) {            //  if the counter < 10, call the loop function
-                        myLoop();             //  ..  again which will trigger another 
-                    } else {
-                        i = 0;
-                        myLoop();
-                    }                      //  ..  setTimeout()
-                }, 500)
-                return i;
-            }
-            myLoop();
+            /*
+            * UNUSED CODE TO LOOP EACH RADAR FRAME
+            */
+            //var i = 0;
+            //function myLoop () {
+            //setTimeout(function () {
+            //        radarLayers.map(function(layer){ layer.setOpacity(0)});
+            //        document.getElementById('ts').innerHTML = timeStampe[i];
+            //        radarLayers[i].setOpacity(oopaac);
+            //        console.log(i);
+            //        i++;
+            //        if (i < 10) {
+            //            myLoop();
+            //        } else {
+            //            i = 0;
+            //            myLoop();
+            //        }
+            //    }, 500)
+            //    return i;
+            //}
+            //myLoop();
 
             $('#zoomSlider').val(zoom);
             //nexradLayer.setOpacity(opac);
             //$('#opacitySlider').val(opac);
             oopaac = 1;
             $('#opacitySlider').val(oopaac);
+
+            /*
+            * PUTS THE FIRST IMAGE ON THE SCREEN
+            */
+            // clears all previous layers
+            radarLayers.map(function(layer){ layer.setOpacity(0)});
+            // gets the time to display, in this case, the current time minus 50 minutes
+            // which is 0th in the minutesToSubtract array
+            var msPerMinute = 60000;
+            var displayedRadarTime = new Date(currentTime - minutesToSubtract[0] * msPerMinute);
+            // formats and prints that time
+            document.getElementById('ts').innerHTML = displayedRadarTime.toLocaleDateString() + " " + displayedRadarTime.toLocaleTimeString();
+            // set the initial layer's opacity value to the default oopaac value
+            radarLayers[0].setOpacity(oopaac);
+            // logs the number, just because
+            console.log(0);
+
+            /*
+            * CHANGES FRAMES BASED ON THE SLIDER VALUE
+            */
+            var timestampSlider = document.querySelector("#timestampSlider");
+            timestampSlider.addEventListener("input", function() {
+                // clears all previous layers
+                radarLayers.map(function(layer){ layer.setOpacity(0)});
+                // gets the time to display, which is the current time minus however many
+                // minutes back this frame is from
+                var displayedRadarTime = new Date(currentTime - minutesToSubtract[this.value] * msPerMinute);
+                // formats and prints that time
+                document.getElementById('ts').innerHTML = displayedRadarTime.toLocaleDateString() + " " + displayedRadarTime.toLocaleTimeString();
+
+                // set the initial layer's opacity value to the oopaac value which changes
+                radarLayers[this.value].setOpacity(oopaac);
+                // logs the current frame index
+                console.log(this.value);
+            });
 //
             var opacitySlider = document.querySelector("#opacitySlider");
             opacitySlider.addEventListener("input", function() {
+                // universal opacity control variable
                 oopaac = this.value;
             });
 //
