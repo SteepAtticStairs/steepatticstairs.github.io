@@ -34,6 +34,7 @@
         </form>
         <div><b>Zip: <a id="radstatzip"></a></b></div>
         <div><b>Coords: </b><a id="radstatcoords"></a></div>
+        <div><b>Timestamp: </b><a id="ts"></a></div>
     </div>
 
     <div style="float: right">
@@ -48,6 +49,7 @@
 
     <script>
         function setView(lat, lon, zoom, opac) {
+            var oopaac;
             document.getElementById('weathermap').innerHTML = "<div id='map' style='top: 135px;'></div>";
             
             var map = 
@@ -60,23 +62,73 @@
                 attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            var nexradLayer = 
-            L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
-                layers: 'nexrad-n0q-900913',
-                format: 'image/png',
-                transparent: true,
-                attribution: "Weather data © 2012 IEM Nexrad"
-            }).addTo(map);
+            //var nexradLayer = 
+            //L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
+            //    layers: 'nexrad-n0q-900913',
+            //    format: 'image/png',
+            //    transparent: true,
+            //    attribution: "Weather data © 2012 IEM Nexrad"
+            //}).addTo(map);
+
+            var timeStampe = 
+            ['-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m']
+            var radarLayers = [];
+            for(let i = 0; i <= 10; i++){
+                if (i < 10) {
+                    var layer = 'nexrad-n0q-900913' + timeStampe[i];
+                    radarLayers[i] = L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
+                        layers: layer,
+                        format: 'image/png',
+                        transparent: true,
+                        opacity: 0.0,
+                    });
+                    //console.log(layer);
+                    radarLayers[i].addTo(map);
+                }
+                if (i == 10) {
+                    var layer = 'nexrad-n0q-900913'
+                    radarLayers[10] = L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
+                    layers: layer,
+                    format: 'image/png',
+                    transparent: true,
+                    opacity: 0.0,
+                });
+                //console.log(layer);
+                radarLayers[i].addTo(map);
+                }
+            }
+
+            var i = 0;                     //  set your counter to 1
+
+            function myLoop () {           //  create a loop function
+            setTimeout(function () {    //  call a 3s setTimeout when the loop is called
+                    radarLayers.map(function(layer){ layer.setOpacity(0)});
+                    document.getElementById('ts').innerHTML = timeStampe[i];
+                    radarLayers[i].setOpacity(oopaac);
+                    console.log(i);
+                    i++;                 //  increment the counter
+                    if (i < 9) {            //  if the counter < 10, call the loop function
+                        myLoop();             //  ..  again which will trigger another 
+                    } else {
+                        i = 0;
+                        myLoop();
+                    }                      //  ..  setTimeout()
+                }, 500)
+                return i;
+            }
+            myLoop();
 
             $('#zoomSlider').val(zoom);
-            nexradLayer.setOpacity(opac);
-            $('#opacitySlider').val(opac);
-
+            //nexradLayer.setOpacity(opac);
+            //$('#opacitySlider').val(opac);
+            oopaac = 1;
+            $('#opacitySlider').val(oopaac);
+//
             var opacitySlider = document.querySelector("#opacitySlider");
             opacitySlider.addEventListener("input", function() {
-                nexradLayer.setOpacity(this.value);
+                oopaac = this.value;
             });
-
+//
             var zoomSlider = document.querySelector("#zoomSlider");
             zoomSlider.addEventListener("input", function() {
                 map.setZoom(this.value);
