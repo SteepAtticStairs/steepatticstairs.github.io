@@ -108,28 +108,6 @@
                 }
             }
 
-            /*
-            * UNUSED CODE TO LOOP EACH RADAR FRAME
-            */
-            //var i = 0;
-            //function myLoop () {
-            //setTimeout(function () {
-            //        radarLayers.map(function(layer){ layer.setOpacity(0)});
-            //        document.getElementById('ts').innerHTML = timeStampe[i];
-            //        radarLayers[i].setOpacity(oopaac);
-            //        console.log(i);
-            //        i++;
-            //        if (i < 10) {
-            //            myLoop();
-            //        } else {
-            //            i = 0;
-            //            myLoop();
-            //        }
-            //    }, 500)
-            //    return i;
-            //}
-            //myLoop();
-
             $('#zoomSlider').val(zoom);
             //nexradLayer.setOpacity(opac);
             //$('#opacitySlider').val(opac);
@@ -144,41 +122,66 @@
             * https://www.eldoradoweather.com/current/misc/maproom/leaflet/leaflet-radar.php
             *
             */
+            var msPerMinute = 60000;
+            function updateLayer(layernum) {
+                // clears all previous layers
+                radarLayers.map(function(layer){ layer.setOpacity(0)});
+                // gets the time to display, which is the current time minus however many
+                // minutes back this frame is from
+                var displayedRadarTime = new Date(currentTime - minutesToSubtract[layernum] * msPerMinute);
+                // formats and prints that time
+                document.getElementById('ts').innerHTML = displayedRadarTime.toLocaleDateString() + " " + displayedRadarTime.toLocaleTimeString();
+
+                // set the initial layer's opacity value to the oopaac value which changes
+                radarLayers[layernum].setOpacity(oopaac);
+                // logs the current frame index
+                console.log(layernum);
+            }
 
             /*
             * PUTS THE FIRST IMAGE ON THE SCREEN
             */
-            // clears all previous layers
-            radarLayers.map(function(layer){ layer.setOpacity(0)});
-            // gets the time to display, in this case, the current time minus 50 minutes
-            // which is 0th in the minutesToSubtract array
-            var msPerMinute = 60000;
-            var displayedRadarTime = new Date(currentTime - minutesToSubtract[0] * msPerMinute);
-            // formats and prints that time
-            document.getElementById('ts').innerHTML = displayedRadarTime.toLocaleDateString() + " " + displayedRadarTime.toLocaleTimeString();
-            // set the initial layer's opacity value to the default oopaac value
-            radarLayers[0].setOpacity(oopaac);
-            // logs the number, just because
-            console.log(0);
+            updateLayer(0);
 
             /*
             * CHANGES FRAMES BASED ON THE SLIDER VALUE
             */
             var timestampSlider = document.querySelector("#timestampSlider");
             timestampSlider.addEventListener("input", function() {
-                // clears all previous layers
-                radarLayers.map(function(layer){ layer.setOpacity(0)});
-                // gets the time to display, which is the current time minus however many
-                // minutes back this frame is from
-                var displayedRadarTime = new Date(currentTime - minutesToSubtract[this.value] * msPerMinute);
-                // formats and prints that time
-                document.getElementById('ts').innerHTML = displayedRadarTime.toLocaleDateString() + " " + displayedRadarTime.toLocaleTimeString();
-
-                // set the initial layer's opacity value to the oopaac value which changes
-                radarLayers[this.value].setOpacity(oopaac);
-                // logs the current frame index
-                console.log(this.value);
+                updateLayer(this.value);
             });
+
+            /*
+            * LOOPS EACH FRAME
+            * https://stackoverflow.com/a/57815554/18758797
+            */
+            function nextStep(i) {
+                // sets the timestamp slider to the loop index
+                // this does NOT update the layer itself
+                $('#timestampSlider').val(i);
+
+                // prints the right radar image based on the loop index
+                updateLayer(i);
+
+                if (i < 11) {
+                    var loopTimeout = window.setTimeout(nextStep, 700, ++i)
+
+                    // stops the loop when timestamp slider is pressed
+                    timestampSlider.addEventListener("input", function() {
+                        window.clearTimeout(loopTimeout);
+                    });
+
+                    // stops the loop when submit button pressed
+                    var radstatzipSubmitBtn = document.getElementById('radstatzipSubmit');
+                    radstatzipSubmitBtn.addEventListener('click', function handleClick() {
+                        window.clearTimeout(loopTimeout);
+                    });
+                } else {
+                    // restart the loop
+                    nextStep(0);
+                }
+            }
+            nextStep(0);
 //
             var opacitySlider = document.querySelector("#opacitySlider");
             opacitySlider.addEventListener("input", function() {
