@@ -19,6 +19,15 @@
             border-radius: 50%;
             margin-left: -250px; /* Half of the width */
         }
+
+        .buttons {
+            margin: 0 auto;
+            display: inline;
+        }
+        .action_btn {
+            margin: 0 auto;
+            display: inline;
+        }
     </style>
 </head>
 <body>
@@ -38,6 +47,14 @@
     </div>
 
     <div style="float: right">
+        <div class="buttons">
+            <button id="back" class="action_btn"><</button>
+            <button id="pause" class="action_btn">Pause</button>
+            <button id="play" class="action_btn">Play</button>
+            <button id="forward" class="action_btn">></button>
+        </div>
+        <br>
+        <br>
         <a>Opacity</a>
         <br>
         <input id="opacitySlider" type="range" min="0" max="1" step="0.1" value="1">
@@ -134,6 +151,9 @@
 
                 // set the initial layer's opacity value to the oopaac value which changes
                 radarLayers[layernum].setOpacity(oopaac);
+                // sets the timestamp slider to the loop index
+                // this does NOT update the layer itself
+                $('#timestampSlider').val(layernum);
                 // logs the current frame index
                 console.log(layernum);
             }
@@ -146,20 +166,17 @@
             /*
             * CHANGES FRAMES BASED ON THE SLIDER VALUE
             */
-            var timestampSlider = document.querySelector("#timestampSlider");
-            timestampSlider.addEventListener("input", function() {
-                updateLayer(this.value);
-            });
+            //var timestampSlider = document.querySelector("#timestampSlider");
+            //timestampSlider.addEventListener("input", function() {
+            //    window.clearTimeout(loopTimeout);
+            //    updateLayer(this.value);
+            //});
 
             /*
             * LOOPS EACH FRAME
             * https://stackoverflow.com/a/57815554/18758797
             */
             function nextStep(i) {
-                // sets the timestamp slider to the loop index
-                // this does NOT update the layer itself
-                $('#timestampSlider').val(i);
-
                 // prints the right radar image based on the loop index
                 updateLayer(i);
 
@@ -169,11 +186,22 @@
                     // stops the loop when timestamp slider is pressed
                     timestampSlider.addEventListener("input", function() {
                         window.clearTimeout(loopTimeout);
+                        updateLayer(this.value);
                     });
 
                     // stops the loop when submit button pressed
                     var radstatzipSubmitBtn = document.getElementById('radstatzipSubmit');
                     radstatzipSubmitBtn.addEventListener('click', function handleClick() {
+                        window.clearTimeout(loopTimeout);
+                    });
+
+                    var pauseBtn = document.getElementById('pause');
+                    pauseBtn.addEventListener('click', function handleClick() {
+                        window.clearTimeout(loopTimeout);
+                        //var stoppedFrame = $('#timestampSlider').val();
+                    });
+                    var playBtn = document.getElementById('play');
+                    playBtn.addEventListener('click', function handleClick() {
                         window.clearTimeout(loopTimeout);
                     });
                 } else {
@@ -182,6 +210,19 @@
                 }
             }
             nextStep(0);
+
+            var playBtn = document.getElementById('play');
+            playBtn.addEventListener('click', function handleClick() {
+                nextStep(parseInt($('#timestampSlider').val()) + 1);
+            });
+            var backBtn = document.getElementById('back');
+            backBtn.addEventListener('click', function handleClick() {
+                updateLayer(parseInt($('#timestampSlider').val()) - 1);
+            });
+            var forwardBtn = document.getElementById('forward');
+            forwardBtn.addEventListener('click', function handleClick() {
+                updateLayer(parseInt($('#timestampSlider').val()) + 1);
+            });
 //
             var opacitySlider = document.querySelector("#opacitySlider");
             opacitySlider.addEventListener("input", function() {
