@@ -107,22 +107,61 @@
             var radarIcon = L.icon({
                 iconUrl: '/icons/radar.png',
             
-                iconSize:     [35, 35], // size of the icon
-                popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
+                iconSize: [35, 35], // size of the icon
+                popupAnchor: [0, -30] // point from which the popup should open relative to the iconAnchor
+            });
+
+            var redMarkerIcon = L.icon({
+                iconUrl: "/icons/leaflet/RED_marker-icon.png",
+                iconRetinaUrl: "/icons/leaflet/RED_marker-icon-2x.png",
+                shadowUrl: "/icons/leaflet/marker-shadow.png",
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                tooltipAnchor: [16, -28],
+                shadowSize: [41, 41]
+            });
+            var greenMarkerIcon = L.icon({
+                iconUrl: "/icons/leaflet/GREEN_marker-icon.png",
+                iconRetinaUrl: "/icons/leaflet/GREEN_marker-icon-2x.png",
+                shadowUrl: "/icons/leaflet/marker-shadow.png",
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                tooltipAnchor: [16, -28],
+                shadowSize: [41, 41]
             });
 
             function showMarkers() {
-                $.getJSON('/weather/json/wdg_radar-stations_05042022.json', function(data) {
+                // $.getJSON('/weather/json/wdg_radar-stations_05042022.json', function(data) {
+                $.getJSON('https://api.weather.gov/radar/stations', function(data) {
                     for (let n = 0; n < 208; n++) {
                         var radarStation = data.features[n].properties.id;
                         var latt = data.features[n].geometry.coordinates[1];
                         var lonn = data.features[n].geometry.coordinates[0];
                         var stationType = data.features[n].properties.stationType;
+
+                        var radstatLastReceivedData = new Date(data.features[n].properties.latency.levelTwoLastReceivedTime);
+                        var currentTimeForStatus = new Date();
+                        var timeDiff = currentTimeForStatus - radstatLastReceivedData;
+                        var formattedLastReceivedData = radstatLastReceivedData.toLocaleDateString() + " " + radstatLastReceivedData.toLocaleTimeString();
                         
                         if (stationType == "WSR-88D") {
                             //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
-                            L.marker([latt, lonn]).addTo(markerLayerGroup)
-                                .bindPopup(radarStation);
+                            //L.marker([latt, lonn]).addTo(markerLayerGroup)
+                            //    .bindPopup(radarStation);
+
+                            if (timeDiff >= 900000) {
+                                //$('body').append
+                                var isRadarDown = true;
+                                L.marker([latt, lonn], {icon: redMarkerIcon}).addTo(markerLayerGroup)
+                                    .bindPopup("<div><b>" + radarStation + "</b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>");
+                            } else if (timeDiff < 900000) {
+                                //$('body').append
+                                var isRadarDown = false;
+                                L.marker([latt, lonn], {icon: greenMarkerIcon}).addTo(markerLayerGroup)
+                                    .bindPopup("<div><b>" + radarStation + "</b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>");
+                            }
                         }
                     }
                 });
@@ -176,8 +215,14 @@
             oopaac = 1;
             $('#opacitySlider').val(oopaac);
             $('#timestampSlider').val(0);
-            $('#labels').prop('checked', false);
-            markerLayerGroup.clearLayers();
+            //$('#labels').prop('checked', false);
+            //markerLayerGroup.clearLayers();
+            var labelCheckbox = document.getElementById("labels");
+            if (labelCheckbox.checked) {
+                showMarkers();
+            } else {
+                markerLayerGroup.clearLayers();
+            }
 
             /*
             *
