@@ -24,6 +24,7 @@
         .buttons {
             margin: 0 auto;
             display: inline;
+            float: right;
         }
         .action_btn {
             margin: 0 auto;
@@ -68,6 +69,12 @@
         <a>Current Frame</a>
         <br>
         <input id="timestampSlider" type="range" min="0" max="10" step="1" value="0">
+        <br>
+        <br>
+        <div style="float: right;">
+            <input type="checkbox" id="labels" name="labels">
+            <label for="labels">Labels</label>
+        </div>
     </div>
 
     <div id="weathermap"></div>
@@ -94,6 +101,32 @@
             L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
+
+            var markerLayerGroup = L.layerGroup().addTo(map);
+
+            var radarIcon = L.icon({
+                iconUrl: '/icons/radar.png',
+            
+                iconSize:     [35, 35], // size of the icon
+                popupAnchor:  [0, -30] // point from which the popup should open relative to the iconAnchor
+            });
+
+            function showMarkers() {
+                $.getJSON('/weather/json/wdg_radar-stations_05042022.json', function(data) {
+                    for (let n = 0; n < 208; n++) {
+                        var radarStation = data.features[n].properties.id;
+                        var latt = data.features[n].geometry.coordinates[1];
+                        var lonn = data.features[n].geometry.coordinates[0];
+                        var stationType = data.features[n].properties.stationType;
+                        
+                        if (stationType == "WSR-88D") {
+                            L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
+                                .bindPopup(radarStation);
+                        }
+                    }
+                });
+            }
+            //showMarkers();
 
             //var nexradLayer = 
             //L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
@@ -142,6 +175,8 @@
             oopaac = 1;
             $('#opacitySlider').val(oopaac);
             $('#timestampSlider').val(0);
+            $('#labels').prop('checked', false);
+            markerLayerGroup.clearLayers();
 
             /*
             *
@@ -246,6 +281,15 @@
                 map.setZoom(this.value);
                 setTimeout(() => { map.setZoom(this.value) }, "200")
                 //map.setZoom(this.value);
+            });
+
+            var labelCheckbox = document.querySelector("#labels");
+            labelCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    showMarkers();
+                } else {
+                    markerLayerGroup.clearLayers();
+                }
             });
         }
 
