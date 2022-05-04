@@ -16,19 +16,22 @@
             document.body.innerHTML = '';
             for (let i = 0; i < 208; i++) {
                 var radarStation = data.features[i].properties.id;
+                var stationType = data.features[i].properties.stationType;
                 var radstatLastReceivedData = new Date(data.features[i].properties.latency.levelTwoLastReceivedTime);
                 var currentTime = new Date();
                 var timeDiff = currentTime - radstatLastReceivedData;
                 var formattedLastReceivedData = radstatLastReceivedData.toLocaleDateString() + " " + radstatLastReceivedData.toLocaleTimeString();
 
-                if (timeDiff >= 900000) {
-                    //$('body').append
-                    var isRadarDown = true;
-                    array.push("<div><b>" + radarStation + "</b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div><br>");
-                } else if (timeDiff < 900000) {
-                    //$('body').append
-                    var isRadarDown = false;
-                    array.push("<div><b>" + radarStation + "</b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div><br>");
+                if (stationType == "WSR-88D") {
+                    if (timeDiff >= 900000) {
+                        //$('body').append
+                        var isRadarDown = true;
+                        array.push("<div><b>" + radarStation + "</b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div><br>");
+                    } else if (timeDiff < 900000) {
+                        //$('body').append
+                        var isRadarDown = false;
+                        array.push("<div><b>" + radarStation + "</b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div><br>");
+                    }
                 }
             }
 
