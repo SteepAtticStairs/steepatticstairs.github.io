@@ -120,7 +120,8 @@
                         var stationType = data.features[n].properties.stationType;
                         
                         if (stationType == "WSR-88D") {
-                            L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
+                            //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
+                            L.marker([latt, lonn]).addTo(markerLayerGroup)
                                 .bindPopup(radarStation);
                         }
                     }
