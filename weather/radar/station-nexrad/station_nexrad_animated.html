@@ -76,7 +76,13 @@
         function setView(lat, lon, zoom, opac) {
             var currentTime = new Date();
             var oopaac;
-            document.getElementById('weathermap').innerHTML = "<div id='map' style='top: 170px'></div>";
+            document.getElementById('weathermap').innerHTML = "<div id='map'></div>";
+
+            if (window.innerHeight > 750) {
+                $("#map").css("top", "250px");
+            } else { 
+                $("#map").css("top", "170px");
+            }
             
             var map = 
             L.map('map',{
