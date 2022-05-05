@@ -11,7 +11,7 @@
             width: 500px;
             /* height: 500px; */
             position: absolute;
-            z-index: 500;
+            z-index: -1;
             text-align: center;
             left: 50%;
             border-style: solid;
@@ -30,6 +30,45 @@
             margin: 0 auto;
             display: inline;
         }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Allows for scrolling of the modal */
+            max-height: calc(100vh - 210px);
+            overflow-y: auto;
+        }
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -47,6 +86,8 @@
             <br><a id="radstatcoords"></a></div>
         <div><b>Timestamp: </b>
             <br><a id="ts"></a></div>
+        <br>
+        <button id="modalBtn">Radar <br>Status</button>
     </div>
 
     <div style="float: right">
@@ -77,9 +118,49 @@
         </div>
     </div>
 
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText">Nothing here yet</p>
+        </div>
+    </div>
+
     <div id="weathermap"></div>
 
     <script>
+        setView(36.8281576, -98.5606744, 4);
+        $("#map").css("border-radius", "0%");
+        $("#map").css("height", "400px");
+        $("#map").css("top", "250px");
+
+        $('#labels').trigger('click');
+
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        // Get the button that opens the modal
+        var btn = document.getElementById("modalBtn");
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        // When the user clicks the button, open the modal 
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        var modalText = document.getElementById('modalText');
+        modalText.innerHTML = "Waiting for the user to input a radar station..."
+
         function setView(lat, lon, zoom, opac) {
             var currentTime = new Date();
             var oopaac;
@@ -358,15 +439,102 @@
                 document.getElementById('radstatcoords').innerHTML = radstat + ": " + lati + ", " + longi;
                 document.getElementById('radstatzip').innerHTML = zippy;
                 setView(lati, longi, 7, 1);
+
+
+
+                /*
+                *  Gets all of the weather information
+                *  WEATHER.GOV
+                *  RADAR STATUS
+                */
+                var modalTextTemplate = 
+                    '<div><b>Radar Status: <a id="radstat"></a></b></div> \
+                    <br> \
+                    <div><b>Radar Station: </b><a id="radstatStation"></a></div> \
+                    <div><b>Radar Name: </b><a id="radstatName"></a></div> \
+                    <div><b>Data Last Received: </b><a id="radstatLastData"></a></div> \
+                    <br> \
+                    <div><b>Message ID: </b><a id="radstatMessageID"></a></div> \
+                    <div><b>Message Name: </b><a id="radstatMessageName"></a></div> \
+                    <br> \
+                    <div><b>Message Time: </b><a id="radstatMessageTime"></a></div> \
+                    <div style="white-space: pre-wrap;"><b>Message: </b><ul><a id="radstatMessage"></a></ul></div>'
+                modalText.innerHTML = modalTextTemplate;
+
+                var radstatURL = `https://api.weather.gov/radar/stations/${radstat}`;
+                $.getJSON(radstatURL, function(data) {
+
+                    var radstatLastReceivedData = new Date(data.properties.latency.levelTwoLastReceivedTime);
+                    var currentTime = new Date();
+                    var timeDiff = currentTime - radstatLastReceivedData;
+
+                    var radstatELEM = document.getElementById('radstat');
+                    // if it has been 15 minutes (900000 ms) since last radar data, radar is down
+                    if (timeDiff >= 900000) {
+                        var isRadarDown = true;
+                        radstatELEM.style.color = 'rgb(226, 0, 0)';
+                        document.getElementById('radstat').innerHTML = "OFFLINE";
+                    } else if (timeDiff < 900000) {
+                        var isRadarDown = false;
+                        radstatELEM.style.color = 'rgb(16, 160, 10)';
+                        document.getElementById('radstat').innerHTML = "ONLINE";
+                    }
+
+                    document.getElementById('radstatStation').innerHTML = radstat;
+                    document.getElementById('radstatName').innerHTML = data.properties.name;
+                    document.getElementById('radstatLastData').innerHTML = radstatLastReceivedData.toLocaleDateString() + " " + radstatLastReceivedData.toLocaleTimeString();
+
+
+                    var radmessageURL = `https://api.weather.gov/products/types/FTM/locations/${radstat.substring(1)}`;
+                    $.getJSON(radmessageURL, function(data) {
+
+                        // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
+                        // @ json to string
+                        var stringjson = JSON.stringify(data);
+                        // replace @ with AT
+                        var stringjsonwithoutat = stringjson.replace(/@/g, 'AT');
+                        // re-parse the AT json
+                        var PARSEDstringjsonwithoutat = JSON.parse(stringjsonwithoutat);
+
+                        var emptyJsonString = '{"ATcontext":{"ATversion":"1.1"},"ATgraph":[]}';
+
+                        if (JSON.stringify(PARSEDstringjsonwithoutat) === emptyJsonString) {
+                            console.log("has no message");
+                            document.getElementById('radstatMessage').innerHTML = "No active message for this radar station.";
+                            document.getElementById('radstatMessageID').innerHTML = "None";
+                            document.getElementById('radstatMessageName').innerHTML = "None";
+                            document.getElementById('radstatMessageTime').innerHTML = "None";
+                        } else {
+                            console.log("has message");
+                            var msgURL = PARSEDstringjsonwithoutat.ATgraph[0].ATid;
+                            $.getJSON(msgURL, function(data) {
+                                var radstatMessageIssuanceTime = new Date(data.issuanceTime);
+                                var radstatMessageText = data.productText;
+
+                                // extract the text in between the \n\n sequences -
+                                // that text is all we need
+                                var middle = radstatMessageText.slice(
+                                    radstatMessageText.indexOf('\n\n') + 1,
+                                    radstatMessageText.lastIndexOf('\n\n'),
+                                );
+
+                                radstatMessageText.replace(/\n/g, '<br>');
+
+                                document.getElementById('radstatMessageID').innerHTML = data.id;
+                                document.getElementById('radstatMessageName').innerHTML = data.productName;
+                                document.getElementById('radstatMessage').innerHTML = radstatMessageText;
+                                document.getElementById('radstatMessageTime').innerHTML = radstatMessageIssuanceTime.toLocaleDateString() + " " + radstatMessageIssuanceTime.toLocaleTimeString();
+
+                                console.log(radstatMessageText);
+                            });
+                        }
+                    });
+                });
+
+
+
             });
         });
-
-        setView(36.8281576, -98.5606744, 4);
-        $("#map").css("border-radius", "0%");
-        $("#map").css("height", "400px");
-        $("#map").css("top", "250px");
-
-        $('#labels').trigger('click');
     </script>
 </body>
 </html>
