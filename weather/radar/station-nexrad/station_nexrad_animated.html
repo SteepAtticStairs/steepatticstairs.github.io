@@ -294,15 +294,6 @@
                 });
             }
 
-            map.on('zoomend', function() {
-                if (map.getZoom() >= 4) {
-                    alertLayerGroup.clearLayers();
-                    showAlertMarkers();
-                } else if (map.getZoom() < 4) {
-                    alertLayerGroup.clearLayers();
-                }
-            });
-
             //var nexradLayer = 
             //L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
             //    layers: 'nexrad-n0q-900913',
