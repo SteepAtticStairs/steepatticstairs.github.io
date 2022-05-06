@@ -137,12 +137,19 @@
     <div id="weathermap"></div>
 
     <script>
+        function printFancyTime(dateObj) {
+            return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
+        }
         setView(36.8281576, -98.5606744, 4);
         $("#map").css("border-radius", "0%");
         $("#map").css("height", "400px");
-        $("#map").css("top", "250px");
+        if (window.innerHeight > 750) {
+            $("#map").css("top", "300px");
+        } else { 
+            $("#map").css("top", "250px");
+        }
 
-        $('#labels').trigger('click');
+        //$('#labels').trigger('click');
         $('#pause').trigger('click');
 
         // Get the modal
@@ -247,7 +254,7 @@
                         var radstatLastReceivedData = new Date(data.features[n].properties.latency.levelTwoLastReceivedTime);
                         var currentTimeForStatus = new Date();
                         var timeDiff = currentTimeForStatus - radstatLastReceivedData;
-                        var formattedLastReceivedData = radstatLastReceivedData.toLocaleDateString() + " " + radstatLastReceivedData.toLocaleTimeString();
+                        var formattedLastReceivedData = printFancyTime(radstatLastReceivedData);
                         
                         if (stationType == "WSR-88D") {
                             //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
@@ -283,11 +290,56 @@
                             var alertHeadline = data.features[n].properties.headline;
                             var alertDescription = data.features[n].properties.description;
 
-                            var alertPopupContent = "<div>" + alertEvent + "<br>" + alertSenderName + "<br><br>" + alertHeadline + "<br>" + alertDescription + "</div";
+                            var alertSeverity = data.features[n].properties.severity;
+                            var alertUrgency = data.features[n].properties.urgency;
+
+                            var alertSentTime = new Date(data.features[n].properties.sent);
+                            var alertEffectiveTime = new Date(data.features[n].properties.effective);
+                            var alertOnsetTime = new Date(data.features[n].properties.onset);
+                            var alertExpiresTime = new Date(data.features[n].properties.expires);
+                            var alertEndsTime = new Date(data.features[n].properties.ends);
+
+                            var alertPopupContent = "<div><b>" + alertEvent + "<br>" + alertSenderName + "</b><br>\
+                                <br><b>Send Time: </b>" + printFancyTime(alertSentTime) + "\
+                                <br><b>Effective Time: </b>" + printFancyTime(alertEffectiveTime) + "\
+                                <br><b>Onset Time: </b>" + printFancyTime(alertOnsetTime) + "\
+                                <br><b>Expires Time: </b>" + printFancyTime(alertExpiresTime) + "\
+                                <br><b>Ends Time: </b>" + printFancyTime(alertEndsTime) + "\
+                                <br><br><u>" + alertSeverity + "</u>, <u>" + alertUrgency + "</u><br><br>" + alertHeadline + "<br>" + alertDescription + "</div";
                             var alertPopup = L.popup({maxHeight: 100}).setContent(alertPopupContent);
 
-                            L.marker([alertLat, alertLon], {icon: yellowMarkerIcon}).addTo(alertLayerGroup)
-                                .bindPopup(alertPopup);
+                            //L.marker([alertLat, alertLon], {icon: yellowMarkerIcon}).addTo(alertLayerGroup)
+                            //    .bindPopup(alertPopup);
+                            var allCoordinates = data.features[n].geometry.coordinates[0];
+                            var coordinateArray = [];
+
+                            for (let x = 0; x < Object.keys(allCoordinates).length; x++) {
+                                coordinateArray.push(allCoordinates[x].reverse());
+                            }
+
+                            //console.log(coordinateArray);
+
+                            var polygon = L.polygon([
+                                coordinateArray
+                            ]).addTo(alertLayerGroup).bindPopup(alertPopup);
+
+                            if (alertUrgency == "Future") {
+                                // grey
+                                polygon.setStyle({color: '#838383'});
+                            } else if (alertUrgency == "Expected") {
+                                // green
+                                polygon.setStyle({color: '#5cc32a'});
+                            } else if (alertUrgency == "Immediate") {
+                                // blue
+                                polygon.setStyle({color: '#327cff'});
+                            }
+                            //console.log(allCoordinates);
+
+                            //console.log(data.features[n].properties.urgency);
+
+                            //console.log("added " + n + " " + alertEvent + " " + alertSenderName);
+
+                            //console.log(n + "Amount of coordinates: " + Object.keys(data.features[n].geometry.coordinates[0]).length);
                         }
                         
                     }
@@ -349,13 +401,15 @@
             $('#timestampSlider').val(0);
             $('#lightning').prop('checked', false);
             $('#alerts').prop('checked', false);
+            $('#labels').prop('checked', false);
             //markerLayerGroup.clearLayers();
-            var labelCheckbox = document.getElementById("labels");
-            if (labelCheckbox.checked) {
-                showMarkers();
-            } else {
-                markerLayerGroup.clearLayers();
-            }
+
+            //var labelCheckbox = document.getElementById("labels");
+            //if (labelCheckbox.checked) {
+            //    showMarkers();
+            //} else {
+            //    markerLayerGroup.clearLayers();
+            //}
 
             /*
             *
@@ -372,7 +426,7 @@
                 // minutes back this frame is from
                 var displayedRadarTime = new Date(currentTime - minutesToSubtract[layernum] * msPerMinute);
                 // formats and prints that time
-                document.getElementById('ts').innerHTML = displayedRadarTime.toLocaleDateString() + " " + displayedRadarTime.toLocaleTimeString();
+                document.getElementById('ts').innerHTML = printFancyTime(displayedRadarTime);
 
                 // set the initial layer's opacity value to the oopaac value which changes
                 radarLayers[layernum].setOpacity(oopaac);
@@ -549,7 +603,7 @@
 
                     document.getElementById('radstatStation').innerHTML = radstat;
                     document.getElementById('radstatName').innerHTML = data.properties.name;
-                    document.getElementById('radstatLastData').innerHTML = radstatLastReceivedData.toLocaleDateString() + " " + radstatLastReceivedData.toLocaleTimeString();
+                    document.getElementById('radstatLastData').innerHTML = printFancyTime(radstatLastReceivedData);
 
 
                     var radmessageURL = `https://api.weather.gov/products/types/FTM/locations/${radstat.substring(1)}`;
@@ -590,7 +644,7 @@
                                 document.getElementById('radstatMessageID').innerHTML = data.id;
                                 document.getElementById('radstatMessageName').innerHTML = data.productName;
                                 document.getElementById('radstatMessage').innerHTML = radstatMessageText;
-                                document.getElementById('radstatMessageTime').innerHTML = radstatMessageIssuanceTime.toLocaleDateString() + " " + radstatMessageIssuanceTime.toLocaleTimeString();
+                                document.getElementById('radstatMessageTime').innerHTML = printFancyTime(radstatMessageIssuanceTime);
 
                                 console.log(radstatMessageText);
                             });
