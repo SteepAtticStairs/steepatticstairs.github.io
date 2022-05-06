@@ -119,6 +119,9 @@
             <br>
             <input type="checkbox" id="lightning" name="lightning">
             <label for="lightning">Lightning</label>
+            <br>
+            <input type="checkbox" id="alerts" name="alerts">
+            <label for="alerts">Alerts</label>
         </div>
     </div>
 
@@ -140,6 +143,7 @@
         $("#map").css("top", "250px");
 
         $('#labels').trigger('click');
+        $('#pause').trigger('click');
 
         // Get the modal
         var modal = document.getElementById("myModal");
@@ -191,6 +195,7 @@
             }).addTo(map);
 
             var markerLayerGroup = L.layerGroup().addTo(map);
+            var alertLayerGroup = L.layerGroup().addTo(map);
             var lightningLayerGroup = L.layerGroup().addTo(map);
 
             var radarIcon = L.icon({
@@ -215,6 +220,15 @@
                 iconRetinaUrl: "/icons/leaflet/GREEN_marker-icon-2x.png",
                 shadowUrl: "/icons/leaflet/marker-shadow.png",
                 iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                tooltipAnchor: [16, -28],
+                shadowSize: [41, 41]
+            });
+            var yellowMarkerIcon = L.icon({
+                iconUrl: "/icons/leaflet/YELLOW_marker-icon.png",
+                iconRetinaUrl: "/icons/leaflet/YELLOW_marker-icon-2x.png",
+                iconSize: [15, 25],
                 iconAnchor: [12, 41],
                 popupAnchor: [1, -34],
                 tooltipAnchor: [16, -28],
@@ -256,6 +270,38 @@
                 });
             }
             //showMarkers();
+
+            function showAlertMarkers() {
+                $.getJSON('https://api.weather.gov/alerts/active', function(data) {
+                    for (let n = 0; n < data.features.length; n++) {
+                        if (data.features[n].geometry != null) {
+                            //console.log(data.features[n].properties.event + ", " + data.features[n].properties.senderName);
+                            var alertLat = data.features[n].geometry.coordinates[0][0][1];
+                            var alertLon = data.features[n].geometry.coordinates[0][0][0];
+                            var alertEvent = data.features[n].properties.event;
+                            var alertSenderName = data.features[n].properties.senderName;
+                            var alertHeadline = data.features[n].properties.headline;
+                            var alertDescription = data.features[n].properties.description;
+
+                            var alertPopupContent = "<div>" + alertEvent + "<br>" + alertSenderName + "<br><br>" + alertHeadline + "<br>" + alertDescription + "</div";
+                            var alertPopup = L.popup({maxHeight: 100}).setContent(alertPopupContent);
+
+                            L.marker([alertLat, alertLon], {icon: yellowMarkerIcon}).addTo(alertLayerGroup)
+                                .bindPopup(alertPopup);
+                        }
+                        
+                    }
+                });
+            }
+
+            map.on('zoomend', function() {
+                if (map.getZoom() >= 4) {
+                    alertLayerGroup.clearLayers();
+                    showAlertMarkers();
+                } else if (map.getZoom() < 4) {
+                    alertLayerGroup.clearLayers();
+                }
+            });
 
             //var nexradLayer = 
             //L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
@@ -311,6 +357,7 @@
             $('#opacitySlider').val(oopaac);
             $('#timestampSlider').val(0);
             $('#lightning').prop('checked', false);
+            $('#alerts').prop('checked', false);
             //markerLayerGroup.clearLayers();
             var labelCheckbox = document.getElementById("labels");
             if (labelCheckbox.checked) {
@@ -439,6 +486,15 @@
                     showLightning();
                 } else {
                     lightningLayerGroup.clearLayers();
+                }
+            });
+
+            var alertsCheckbox = document.querySelector("#alerts");
+            alertsCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    showAlertMarkers();
+                } else {
+                    alertLayerGroup.clearLayers();
                 }
             });
         }
