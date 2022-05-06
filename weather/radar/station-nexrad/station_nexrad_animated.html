@@ -289,6 +289,19 @@
                             var alertSenderName = data.features[n].properties.senderName;
                             var alertHeadline = data.features[n].properties.headline;
                             var alertDescription = data.features[n].properties.description;
+                            var alertInstruction = data.features[n].properties.instruction;
+
+                            var alertWMOidenifier = data.features[n].properties.parameters.WMOidentifier;
+                            var alertVTEC = data.features[n].properties.parameters.VTEC;
+                            var alertNWSheadline = "No headline for this alert."
+
+                            if (alertInstruction == null) {
+                                alertInstruction = "No instruction for this alert."
+                            }
+
+                            if (data.features[n].properties.parameters.hasOwnProperty('NWSheadline')) {
+                                alertNWSheadline = data.features[n].properties.parameters.NWSheadline;
+                            }
 
                             var alertSeverity = data.features[n].properties.severity;
                             var alertUrgency = data.features[n].properties.urgency;
@@ -305,7 +318,13 @@
                                 <br><b>Onset Time: </b>" + printFancyTime(alertOnsetTime) + "\
                                 <br><b>Expires Time: </b>" + printFancyTime(alertExpiresTime) + "\
                                 <br><b>Ends Time: </b>" + printFancyTime(alertEndsTime) + "\
-                                <br><br><u>" + alertSeverity + "</u>, <u>" + alertUrgency + "</u><br><br>" + alertHeadline + "<br>" + alertDescription + "</div";
+                                <br><br><b><i>" + alertSeverity + "</i></b>, <b><i>" + alertUrgency + "</i></b><br><br>\
+                                <b>WMO Identifier:</b> " + alertWMOidenifier + "<br>\
+                                <b>VTEC:</b> " + alertVTEC + "<br>\
+                                <b>NWS Headline:</b> " + alertNWSheadline + "<br><br>\
+                                <b>Headline:</b> " + alertHeadline + "<br>\
+                                <b>Description:</b> " + alertDescription + "<br>\
+                                <b>Instructions:</b> " + alertInstruction + "</div>";
                             var alertPopup = L.popup({maxHeight: 100}).setContent(alertPopupContent);
 
                             //L.marker([alertLat, alertLon], {icon: yellowMarkerIcon}).addTo(alertLayerGroup)
@@ -333,6 +352,8 @@
                                 // blue
                                 polygon.setStyle({color: '#327cff'});
                             }
+
+                            //console.log(alertEvent);
                             //console.log(allCoordinates);
 
                             //console.log(data.features[n].properties.urgency);
