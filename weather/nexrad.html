@@ -190,6 +190,11 @@
                     <br>
                     <input type="checkbox" id="velocity" name="velocity">
                     <label for="velocity">Velocity</label>
+                    <br>
+                    <br>
+                    <br>
+                    <input type="checkbox" id="location" name="location">
+                    <label for="location">Location</label>
                 </ul>
             </div>
         </div>
@@ -279,9 +284,19 @@
             }).addTo(map);
 
             var markerLayerGroup = L.layerGroup().addTo(map);
+            var locationMarkerLayerGroup = L.layerGroup().addTo(map);
             var alertLayerGroup = L.layerGroup().addTo(map);
             var lightningLayerGroup = L.layerGroup().addTo(map);
             var velocityLayerGroup = L.layerGroup().addTo(map);
+
+            function showLocationMarker() {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const { coords: { latitude, longitude }} = position;
+                    var locationMarker = new L.marker([latitude, longitude], {
+                    }).addTo(locationMarkerLayerGroup)
+                    .bindPopup("<b>Current Location:</b><br>" + latitude + "<br>" + longitude);
+                })
+            }
 
             var radarIcon = L.icon({
                 iconUrl: '/icons/radar.png',
@@ -511,6 +526,7 @@
             $('#alerts').prop('checked', false);
             $('#labels').prop('checked', false);
             $('#velocity').prop('checked', false);
+            $('#location').prop('checked', false);
             //markerLayerGroup.clearLayers();
 
             //var labelCheckbox = document.getElementById("labels");
@@ -651,6 +667,15 @@
                     showVelocity(document.getElementById('statti').innerHTML.substring(1));
                 } else {
                     velocityLayerGroup.clearLayers();
+                }
+            });
+
+            var locationCheckbox = document.querySelector("#location");
+            locationCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    showLocationMarker();
+                } else {
+                    locationMarkerLayerGroup.clearLayers();
                 }
             });
 
