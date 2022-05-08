@@ -482,6 +482,21 @@
             //    attribution: "Weather data © 2012 IEM Nexrad"
             //}).addTo(map);
 
+            /*
+            * hvil for echo tops as product
+            * bref_raw for base reflectivity
+            */
+            //function echotopsProduct() {
+            //    var wdgProductLayer = 
+            //    L.tileLayer.wms("https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_hvil/ows?", {
+            //        SERVICE: 'WMS',
+            //        LAYERS: 'klwx_hvil',
+            //        format: 'image/png',
+            //        transparent: true
+            //    }).addTo(productLayerGroup);
+            //}
+            
+
             var timeStampe = 
             ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m'];
             var minutesToSubtract = 
@@ -708,6 +723,7 @@
                     clearProductCheckboxes();
                     $('#echotops').prop('checked', true);
                     showProduct(document.getElementById('statti').innerHTML.substring(1), 'NET');
+                    //echotopsProduct();
                 } else {
                     productLayerGroup.clearLayers();
                 }
