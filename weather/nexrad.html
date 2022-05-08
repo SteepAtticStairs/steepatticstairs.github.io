@@ -188,8 +188,15 @@
                     <input type="checkbox" id="alerts" name="alerts">
                     <label for="alerts">Alerts</label>
                     <br>
+                    <br>
+                    <input type="checkbox" id="reflectivity" name="reflectivity">
+                    <label for="reflectivity">Reflectivity</label>
+                    <br>
                     <input type="checkbox" id="velocity" name="velocity">
                     <label for="velocity">Velocity</label>
+                    <br>
+                    <input type="checkbox" id="echotops" name="echotops">
+                    <label for="echotops">Echo Tops</label>
                     <br>
                     <br>
                     <br>
@@ -287,7 +294,7 @@
             var locationMarkerLayerGroup = L.layerGroup().addTo(map);
             var alertLayerGroup = L.layerGroup().addTo(map);
             var lightningLayerGroup = L.layerGroup().addTo(map);
-            var velocityLayerGroup = L.layerGroup().addTo(map);
+            var productLayerGroup = L.layerGroup().addTo(map);
 
             function showLocationMarker() {
                 navigator.geolocation.getCurrentPosition(position => {
@@ -509,11 +516,12 @@
                 }).addTo(lightningLayerGroup);
             }
 
-            function showVelocity(stationToShow) {
+            function showProduct(stationToShow, product) {
                 var velocityLayer = 
-                L.tileLayer('https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::{station}-N0U-0/{z}/{x}/{y}.png', {
-                    station: stationToShow
-                }).addTo(velocityLayerGroup);
+                L.tileLayer('https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::{station}-{product}-0/{z}/{x}/{y}.png', {
+                    station: stationToShow,
+                    product: product
+                }).addTo(productLayerGroup);
             }
 
             $('#zoomSlider').val(zoom);
@@ -525,7 +533,12 @@
             $('#lightning').prop('checked', false);
             $('#alerts').prop('checked', false);
             $('#labels').prop('checked', false);
-            $('#velocity').prop('checked', false);
+            function clearProductCheckboxes() {
+                $('#reflectivity').prop('checked', false);
+                $('#velocity').prop('checked', false);
+                $('#echotops').prop('checked', false);
+            }
+            clearProductCheckboxes();
             $('#location').prop('checked', false);
             //markerLayerGroup.clearLayers();
 
@@ -661,12 +674,37 @@
                 }
             });
 
+            var reflectivityCheckbox = document.querySelector("#reflectivity");
+            reflectivityCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    productLayerGroup.clearLayers();
+                    clearProductCheckboxes();
+                    $('#reflectivity').prop('checked', true);
+                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
+                } else {
+                    productLayerGroup.clearLayers();
+                }
+            });
             var velocityCheckbox = document.querySelector("#velocity");
             velocityCheckbox.addEventListener("change", function() {
                 if (this.checked) {
-                    showVelocity(document.getElementById('statti').innerHTML.substring(1));
+                    productLayerGroup.clearLayers();
+                    clearProductCheckboxes();
+                    $('#velocity').prop('checked', true);
+                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U');
                 } else {
-                    velocityLayerGroup.clearLayers();
+                    productLayerGroup.clearLayers();
+                }
+            });
+            var echotopsCheckbox = document.querySelector("#echotops");
+            echotopsCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    productLayerGroup.clearLayers();
+                    clearProductCheckboxes();
+                    $('#echotops').prop('checked', true);
+                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'NET');
+                } else {
+                    productLayerGroup.clearLayers();
                 }
             });
 
