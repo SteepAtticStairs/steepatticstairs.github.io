@@ -181,13 +181,13 @@
                 <ul class="items">
                     <!-- <li><input type="checkbox" />Apple </li> -->
                     <input type="checkbox" id="labels" name="labels">
-                    <label for="labels">Stations</label>
+                    <label id="stationLabel" for="labels">Stations</label>
                     <br>
                     <input type="checkbox" id="lightning" name="lightning">
                     <label for="lightning">Lightning</label>
                     <br>
                     <input type="checkbox" id="alerts" name="alerts">
-                    <label for="alerts">Alerts</label>
+                    <label id="alertsLabel" for="alerts">Alerts</label>
                     <br>
                     <br>
                     <input type="checkbox" id="reflectivity" name="reflectivity">
@@ -351,6 +351,7 @@
             });
 
             function showMarkers() {
+                document.getElementById('stationLabel').innerHTML = "<i>Loading...</i>"
                 // $.getJSON('/weather/json/wdg_radar-stations_05042022.json', function(data) {
                 $.getJSON('https://api.weather.gov/radar/stations', function(data) {
                     for (let n = 0; n < 208; n++) {
@@ -382,11 +383,15 @@
                             }
                         }
                     }
+                }).done(function (result) {
+                    console.log("finished station");
+                    document.getElementById('stationLabel').innerHTML = "Stations"
                 });
             }
             //showMarkers();
 
             function showAlertMarkers() {
+                document.getElementById('alertsLabel').innerHTML = "<i>Loading...</i>";
                 $.getJSON('https://api.weather.gov/alerts/active', function(data) {
                     for (let n = 0; n < data.features.length; n++) {
                         if (data.features[n].geometry != null) {
@@ -472,8 +477,9 @@
                         }
                         
                     }
-                }).done(function( result) {
-                    console.log("finished");
+                }).done(function (result) {
+                    console.log("finished alerts");
+                    document.getElementById('alertsLabel').innerHTML = "Alerts"
                 });
             }
 
