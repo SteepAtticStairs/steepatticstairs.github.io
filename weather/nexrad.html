@@ -199,6 +199,9 @@
                     <input type="checkbox" id="echotops" name="echotops">
                     <label for="echotops">Echo Tops</label>
                     <br>
+                    <input type="checkbox" id="vil" name="vil">
+                    <label for="vil">VIL</label>
+                    <br>
                     <br>
                     <br>
                     <input type="checkbox" id="location" name="location">
@@ -482,21 +485,6 @@
             //    attribution: "Weather data © 2012 IEM Nexrad"
             //}).addTo(map);
 
-            /*
-            * hvil for echo tops as product
-            * bref_raw for base reflectivity
-            */
-            //function echotopsProduct() {
-            //    var wdgProductLayer = 
-            //    L.tileLayer.wms("https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_hvil/ows?", {
-            //        SERVICE: 'WMS',
-            //        LAYERS: 'klwx_hvil',
-            //        format: 'image/png',
-            //        transparent: true
-            //    }).addTo(productLayerGroup);
-            //}
-            
-
             var timeStampe = 
             ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m'];
             var minutesToSubtract = 
@@ -544,6 +532,23 @@
                 }).addTo(productLayerGroup);
             }
 
+            /*
+            * hvil for vil as product
+            * bref_raw for base reflectivity
+            */
+            function wdgProduct(stationToShow, product, theOpacity) {
+                var urlToGet = `https://opengeo.ncep.noaa.gov/geoserver/${stationToShow.toLowerCase()}/${stationToShow.toLowerCase()}_${product}/ows?`;
+                var theService = `${stationToShow.toLowerCase()}_${product}`;
+                var wdgProductLayer = 
+                L.tileLayer.wms(urlToGet, {
+                    SERVICE: 'WMS',
+                    LAYERS: theService,
+                    format: 'image/png',
+                    transparent: true
+                }).addTo(productLayerGroup);
+                wdgProductLayer.setOpacity(theOpacity);
+            }
+
             $('#zoomSlider').val(zoom);
             //nexradLayer.setOpacity(opac);
             //$('#opacitySlider').val(opac);
@@ -557,6 +562,7 @@
                 $('#reflectivity').prop('checked', false);
                 $('#velocity').prop('checked', false);
                 $('#echotops').prop('checked', false);
+                $('#vil').prop('checked', false);
             }
             clearProductCheckboxes();
             $('#location').prop('checked', false);
@@ -694,13 +700,16 @@
                 }
             });
 
+
+
             var reflectivityCheckbox = document.querySelector("#reflectivity");
             reflectivityCheckbox.addEventListener("change", function() {
                 if (this.checked) {
                     productLayerGroup.clearLayers();
                     clearProductCheckboxes();
                     $('#reflectivity').prop('checked', true);
-                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
+                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
+                    wdgProduct(document.getElementById('statti').innerHTML, "bref_raw", 1);
                 } else {
                     productLayerGroup.clearLayers();
                 }
@@ -711,7 +720,7 @@
                     productLayerGroup.clearLayers();
                     clearProductCheckboxes();
                     $('#velocity').prop('checked', true);
-                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U');
+                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U', 1);
                 } else {
                     productLayerGroup.clearLayers();
                 }
@@ -722,12 +731,26 @@
                     productLayerGroup.clearLayers();
                     clearProductCheckboxes();
                     $('#echotops').prop('checked', true);
-                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'NET');
-                    //echotopsProduct();
+                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'NET');
+                    wdgProduct(document.getElementById('statti').innerHTML, "beet", 1);
                 } else {
                     productLayerGroup.clearLayers();
                 }
             });
+            var vilCheckbox = document.querySelector("#vil");
+            vilCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    productLayerGroup.clearLayers();
+                    clearProductCheckboxes();
+                    $('#vil').prop('checked', true);
+                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'NET');
+                    wdgProduct(document.getElementById('statti').innerHTML, "hvil", 0.5);
+                } else {
+                    productLayerGroup.clearLayers();
+                }
+            });
+
+
 
             var locationCheckbox = document.querySelector("#location");
             locationCheckbox.addEventListener("change", function() {
