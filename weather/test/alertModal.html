@@ -1,0 +1,38 @@
+<p>
+    <b>SUMMARY -</b> The alerts bound to polygons on the map are alerts for which an explicit bounding box was provided. 
+    Alerts bound to markers, which are grouped in markerclusters at low zooms, are alerts for which a bounding box was
+    <u>not</u> provided, but the marker coordinates are taken from the forecast zone to which the alert was issued.
+    <br><br><br>
+    <b>EXPLANATION -</b> The alerts on this webpage are generated from the weather.gov page for every alert,
+    which is <a href="https://weather.gov/alerts/active">https://weather.gov/alerts/active</a>.
+    Most alerts are provided with an array of coordinates, which can be made into a polygon
+    drawn on the leaflet map, like this:
+</p>
+<p>
+    <div style="margin: 0 auto; display: inline;">
+        <img src="/icons/leaflet/polygon1.png" alt="polygon1" style="width:20%">
+    </div>
+    <div style="margin: 0 auto; display: inline;">
+        <img src="/icons/leaflet/polygon2.png" alt="polygon2" style="width:20%">
+    </div>
+</p>
+<p>
+    However, some alerts do not have a bounding box provided. In such cases, I will
+    navigate to the appropriate forecast zone, e.g. for my area -
+    <a href="https://api.weather.gov/zones/forecast/VAZ054">https://api.weather.gov/zones/forecast/VAZ054</a>.
+    This will give me a coordinate array for that forecast zone, which if printed
+    to the map, would be a good solution for alerts that don't have a polygon provided.
+    <br><br>
+    However, this makes the map very slow, because generally the polygons drawn from forecast zones
+    are very complex and large, and drawing near 600 of them would not be a solution that would work.
+    This lead me to modify the code slightly to take only the first coordinate set from the forecast zone
+    polygon array, and place those coordinates down in the form of a marker. This worked out in my head,
+    but it turns out that 600 markers, even without shadows, slow down the map significantly, to the point
+    where you cannot zoom it.
+    <br><br>
+    This is where the wonderful leaflet plugin
+    <a href="https://github.com/Leaflet/Leaflet.markercluster">Leaflet.markercluster</a> comes in.
+    You probably understand the rest of the story by now, but using this plugin, I make it so that
+    the amount of markers being rendered is reduced drastically. This makes for a much more usable map,
+    and a much more enjoyable experience.
+</p>
