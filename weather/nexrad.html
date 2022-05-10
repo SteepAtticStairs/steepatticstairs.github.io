@@ -62,7 +62,7 @@
             width: 80%;
             /* Allows for scrolling of the modal */
             /* https://stackoverflow.com/a/34897879 */
-            max-height: calc(95vh - 210px);
+            max-height: calc(100vh - 210px);
             overflow-y: auto;
         }
         /* The Close Button */
@@ -588,38 +588,115 @@
             //    attribution: "Weather data © 2012 IEM Nexrad"
             //}).addTo(map);
 
-            var timeStampe = 
-            ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m'];
-            var minutesToSubtract = 
-            [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
-            timeStampe.reverse();
-            minutesToSubtract.reverse();
+            function setIsuLayers(stati, produ) {
+                var empty = "empty";
+                var curTime = new Date();
+                var yesterday = new Date(curTime - 1440 * 60000);
+                var isuCurTime = new Date(curTime.toString().split('GMT')[0]+' UTC').toISOString().split('.')[0] + "Z";
+                var isuYesterday = new Date(yesterday.toString().split('GMT')[0]+' UTC').toISOString().split('.')[0] + "Z";
+                var isuRadarTsURL = `http://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${stati}&product=${produ}&start=${isuYesterday}&end=${isuCurTime}`;
 
-            var radarLayers = [];
-            for (let i = 0; i <= 11; i++) {
-                if (i < 11) {
-                    var layer = 'nexrad-n0q-900913' + timeStampe[i];
-                    radarLayers[i] = L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
+                function getSomething(){
+                    var output = null;
+                    var actualTimeStampe = [];
+                    var year = null;
+                    var month = null;
+                    var day = null;
+                    $.ajax({
+                        async: false,
+                        url: isuRadarTsURL,
+                        dataType: "json",
+                        success: function(data){
+                            for (let y = 1; y < 12; y++) {
+                                //result = data;
+                                var latestScan = data.scans[data.scans.length - y].ts;
+                                year = latestScan.substring(0, 4);
+                                month = latestScan.substring(5, 7);
+                                day = latestScan.substring(8, 10);
+                                var ts = latestScan.substring(11, 16);
+                                ts = ts.replace(/:/g, '');
+                                actualTimeStampe.push(ts);
+                            }
+                        }
+                    });
+                    return {year, month, day, actualTimeStampe};
+                }
+
+                var myData = getSomething();
+                myData.actualTimeStampe.reverse();
+
+                var radarLayers = [];
+                for (let i = 0; i <= 11; i++) {
+                    radarLayers[i] = L.tileLayer.wms('https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/ridge.cgi', {
+                        service: 'wms',
+                        version: '1.1.1',
+                        request: 'GetMap',
+                        format: 'png',
+                        transparent: true,
+                        sector: stati,
+                        prod: produ,
+                        layers: 'single-archive',
+                        year: myData.year,
+                        month: myData.month,
+                        day: myData.day,
+                        time: myData.actualTimeStampe[i],
+                        opacity: 0.0
+                    });
+                    //console.log(layer);
+                    radarLayers[i].addTo(productLayerGroup);
+                }
+                return {radarLayers, empty};
+            }
+
+            function normalLayers() {
+                var timeStampe = 
+                ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m'];
+                var minutesToSubtract = 
+                [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+                timeStampe.reverse();
+                minutesToSubtract.reverse();
+
+                var radarLayers = [];
+                for (let i = 0; i <= 11; i++) {
+                    if (i < 11) {
+                        var layer = 'nexrad-n0q-900913' + timeStampe[i];
+                        radarLayers[i] = L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
+                            layers: layer,
+                            format: 'image/png',
+                            transparent: true,
+                            opacity: 0.0,
+                        });
+                        //console.log(layer);
+                        radarLayers[i].addTo(productLayerGroup);
+                    }
+                    if (i == 11) {
+                        var layer = 'nexrad-n0q-900913'
+                        radarLayers[11] = L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
                         layers: layer,
                         format: 'image/png',
                         transparent: true,
                         opacity: 0.0,
                     });
                     //console.log(layer);
-                    radarLayers[i].addTo(map);
+                    radarLayers[i].addTo(productLayerGroup);
+                    }
                 }
-                if (i == 11) {
-                    var layer = 'nexrad-n0q-900913'
-                    radarLayers[11] = L.tileLayer.wms("https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi", {
-                    layers: layer,
-                    format: 'image/png',
-                    transparent: true,
-                    opacity: 0.0,
-                });
-                //console.log(layer);
-                radarLayers[i].addTo(map);
-                }
+                return {radarLayers, minutesToSubtract};
             }
+
+            function normal() {
+                var normalDataReturned = normalLayers();
+                radarLayers = normalDataReturned.radarLayers;
+                minutesToSubtract = normalDataReturned.minutesToSubtract;
+            }
+            
+
+            function isu(statio, produc) {
+                var normalDataReturned = setIsuLayers(statio, produc);
+                radarLayers = normalDataReturned.radarLayers;
+            }
+
+            normal();
 
             function showLightning() {
                 var lightningLayer = 
@@ -694,7 +771,6 @@
                 var displayedRadarTime = new Date(currentTime - minutesToSubtract[layernum] * msPerMinute);
                 // formats and prints that time
                 document.getElementById('ts').innerHTML = printFancyTime(displayedRadarTime);
-
                 // set the initial layer's opacity value to the oopaac value which changes
                 radarLayers[layernum].setOpacity(oopaac);
                 // sets the timestamp slider to the loop index
@@ -823,9 +899,14 @@
                     productLayerGroup.clearLayers();
                     clearProductCheckboxes();
                     $('#velocity').prop('checked', true);
-                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U', 1);
+                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U', 1);
+
+                    isu(document.getElementById('statti').innerHTML.substring(1), "N0U");
+                    updateLayer(0);
                 } else {
                     productLayerGroup.clearLayers();
+                    normal();
+                    updateLayer(0);
                 }
             });
             var echotopsCheckbox = document.querySelector("#echotops");
