@@ -440,6 +440,13 @@
             */
             function showAlertMarkers() {
                 document.getElementById('alertsLabel').innerHTML = "<i>Loading...</i>";
+                //var wdgAlertLayer = 
+                //L.tileLayer.wms('https://opengeo.ncep.noaa.gov/geoserver/wwa/hazards/ows', {
+                //    SERVICE: 'WMS',
+                //    LAYERS: 'hazards',
+                //    format: 'image/png',
+                //    transparent: true
+                //}).addTo(alertLayerGroup);
                 $.getJSON('https://api.weather.gov/alerts/active', function(data) {
                     for (let n = 0; n < data.features.length; n++) {
                         if (data.features[n].geometry != null) {
@@ -723,6 +730,7 @@
                 L.tileLayer.wms(urlToGet, {
                     SERVICE: 'WMS',
                     LAYERS: theService,
+                    //TIME: '2022-05-10T18:06:55.583Z',
                     format: 'image/png',
                     transparent: true
                 }).addTo(productLayerGroup);
