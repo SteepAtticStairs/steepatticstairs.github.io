@@ -14,8 +14,6 @@
 	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 	<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js"></script>
 
-    <script src="https://momentjs.com/downloads/moment.js"></script>
-
     <style>
         #map {
             width: 500px;
@@ -64,7 +62,7 @@
             width: 80%;
             /* Allows for scrolling of the modal */
             /* https://stackoverflow.com/a/34897879 */
-            max-height: calc(100vh - 210px);
+            max-height: calc(95vh - 210px);
             overflow-y: auto;
         }
         /* The Close Button */
@@ -590,49 +588,12 @@
             //    attribution: "Weather data © 2012 IEM Nexrad"
             //}).addTo(map);
 
-            var curTime = new Date();
-            var yesterday = new Date(curTime - 1440 * 60000);
-            var isuCurTime = moment.utc(curTime).format('YYYY-MM-DDThh:mm:ss') + "Z";
-            var isuYesterday = moment.utc(yesterday).format('YYYY-MM-DDThh:mm:ss') + "Z";
-            var isuRadarTsURL = `http://mesonet.agron.iastate.edu/json/radar?operation=list&radar=LWX&product=N0Q&start=${isuYesterday}&end=${isuCurTime}`;
-
-            function getSomething(){
-                var output = null;
-                var actualTimeStampe = [];
-                var year = null;
-                var month = null;
-                var day = null;
-                $.ajax({
-                    async: false,
-                    url: isuRadarTsURL,
-                    dataType: "json",
-                    success: function(data){
-                        for (let y = 1; y < 12; y++) {
-                            //result = data;
-                            var latestScan = data.scans[data.scans.length - y].ts;
-                            year = latestScan.substring(0, 4);
-                            month = latestScan.substring(5, 7);
-                            day = latestScan.substring(8, 10);
-                            var ts = latestScan.substring(11, 16);
-                            ts = ts.replace(/:/g, '');
-                            actualTimeStampe.push(ts);
-                        }
-                    }
-                });
-                return {year, month, day, actualTimeStampe};
-            }
-
-            var myData = getSomething();
-            //myData.reverse();
-            console.log(myData.year);
-
             var timeStampe = 
             ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m'];
             var minutesToSubtract = 
             [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
             timeStampe.reverse();
             minutesToSubtract.reverse();
-            myData.actualTimeStampe.reverse();
 
             var radarLayers = [];
             for (let i = 0; i <= 11; i++) {
@@ -658,27 +619,6 @@
                 //console.log(layer);
                 radarLayers[i].addTo(map);
                 }
-            }
-
-            var isuLayers = [];
-            for (let i = 0; i <= 11; i++) {
-                isuLayers[i] = L.tileLayer.wms('https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/ridge.cgi', {
-                    service: 'wms',
-                    version: '1.1.1',
-                    request: 'GetMap',
-                    format: 'png',
-                    transparent: true,
-                    sector: 'LWX',
-                    prod: 'N0Q',
-                    layers: 'single-archive',
-                    year: myData.year,
-                    month: myData.month,
-                    day: myData.day,
-                    time: myData.actualTimeStampe[i],
-                    opacity: 0.0
-                });
-                //console.log(layer);
-                isuLayers[i].addTo(map);
             }
 
             function showLightning() {
@@ -746,14 +686,9 @@
             *
             */
             var msPerMinute = 60000;
-            function updateLayer(layernum, layerType) {
-                if (layerType == 'radOverlay') {
-                    tipe = radarLayers;
-                } else if (layerType == 'isuOverlay') {
-                    tipe = isuLayers;
-                }
+            function updateLayer(layernum) {
                 // clears all previous layers
-                tipe.map(function(layer){ layer.setOpacity(0)});
+                radarLayers.map(function(layer){ layer.setOpacity(0)});
                 // gets the time to display, which is the current time minus however many
                 // minutes back this frame is from
                 var displayedRadarTime = new Date(currentTime - minutesToSubtract[layernum] * msPerMinute);
@@ -761,7 +696,7 @@
                 document.getElementById('ts').innerHTML = printFancyTime(displayedRadarTime);
 
                 // set the initial layer's opacity value to the oopaac value which changes
-                tipe[layernum].setOpacity(oopaac);
+                radarLayers[layernum].setOpacity(oopaac);
                 // sets the timestamp slider to the loop index
                 // this does NOT update the layer itself
                 $('#timestampSlider').val(layernum);
@@ -772,7 +707,7 @@
             /*
             * PUTS THE FIRST IMAGE ON THE SCREEN
             */
-            updateLayer(0, 'radOverlay');
+            updateLayer(0);
 
             /*
             * CHANGES FRAMES BASED ON THE SLIDER VALUE
@@ -789,7 +724,7 @@
             */
             function nextStep(i) {
                 // prints the right radar image based on the loop index
-                updateLayer(i, 'radOverlay');
+                updateLayer(i);
 
                 if (i < 11) {
                     var loopTimeout = window.setTimeout(nextStep, 700, ++i)
@@ -797,7 +732,7 @@
                     // stops the loop when timestamp slider is pressed
                     timestampSlider.addEventListener("input", function() {
                         window.clearTimeout(loopTimeout);
-                        updateLayer(this.value, 'radOverlay');
+                        updateLayer(this.value);
                     });
 
                     // stops the loop when submit button pressed
@@ -829,18 +764,18 @@
             });
             var backBtn = document.getElementById('back');
             backBtn.addEventListener('click', function handleClick() {
-                updateLayer(parseInt($('#timestampSlider').val()) - 1, 'radOverlay');
+                updateLayer(parseInt($('#timestampSlider').val()) - 1);
             });
             var forwardBtn = document.getElementById('forward');
             forwardBtn.addEventListener('click', function handleClick() {
-                updateLayer(parseInt($('#timestampSlider').val()) + 1, 'radOverlay');
+                updateLayer(parseInt($('#timestampSlider').val()) + 1);
             });
 //
             var opacitySlider = document.querySelector("#opacitySlider");
             opacitySlider.addEventListener("input", function() {
                 // universal opacity control variable
                 oopaac = this.value;
-                updateLayer($('#timestampSlider').val(), 'radOverlay');
+                updateLayer($('#timestampSlider').val());
             });
 //
             var zoomSlider = document.querySelector("#zoomSlider");
