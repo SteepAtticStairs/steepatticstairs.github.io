@@ -204,6 +204,7 @@
                     <label id="alertsLabel" for="alerts">Alerts <button id="modalBtn" onclick="toggleAlertModal()">?</button></label>
                     <br>
                     <br>
+                    <div><b>Animated</b></div>
                     <div id="data" style="display: block">
                         <input type="checkbox" id="datacheck" name="data">
                         <label id="datatext" for="data">Products</label>
@@ -220,6 +221,25 @@
                         <br>
                         <input type="checkbox" id="vil" name="vil">
                         <label for="vil">VIL</label>
+                    </div>
+                    <br>
+                    <div><b>Single</b></div>
+                    <div id="singimg" style="display: block">
+                        <input type="checkbox" id="singimgcheck" name="singimgcheck">
+                        <label id="singimg" for="singimg">Frame</label>
+                    </div>
+                    <div id="singimgprods" style="display: none">
+                        <input type="checkbox" id="singimgreflectivity" name="singimgreflectivity">
+                        <label for="singimgreflectivity">Reflectivity</label>
+                        <br>
+                        <input type="checkbox" id="singimgvelocity" name="singimgvelocity">
+                        <label for="singimgvelocity">Velocity</label>
+                        <br>
+                        <input type="checkbox" id="singimgechotops" name="singimgechotops">
+                        <label for="singimgechotops">Echo Tops</label>
+                        <br>
+                        <input type="checkbox" id="singimgvil" name="singimgvil">
+                        <label for="singimgvil">VIL</label>
                     </div>
                     <br>
                     <br>
@@ -815,9 +835,19 @@
                 $('#vil').prop('checked', false);
             }
             clearProductCheckboxes();
+            function clearSingImgProductCheckboxes() {
+                $('#singimgreflectivity').prop('checked', false);
+                $('#singimgvelocity').prop('checked', false);
+                $('#singimgechotops').prop('checked', false);
+                $('#singimgvil').prop('checked', false);
+            }
+            clearSingImgProductCheckboxes();
             $('#location').prop('checked', false);
             document.getElementById('data').style.display = 'block';
             document.getElementById('prods').style.display = 'none';
+
+            document.getElementById('singimg').style.display = 'block';
+            document.getElementById('singimgprods').style.display = 'none';
             //markerLayerGroup.clearLayers();
 
             //var labelCheckbox = document.getElementById("labels");
@@ -954,6 +984,8 @@
             var dataCheckbox = document.querySelector("#datacheck");
             dataCheckbox.addEventListener("change", function() {
                 document.getElementById('datatext').innerHTML = "<i>Loading...</i>"
+                document.getElementById('singimgprods').style.visibility = 'none';
+                document.getElementById('prods').style.visibility = 'block';
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
@@ -1020,6 +1052,13 @@
                 xhttp.send();
             });
 
+            var singleImageCheckbox = document.querySelector('#singimgcheck');
+            singleImageCheckbox.addEventListener("change", function() {
+                $('#singimgcheck').prop('checked', false);
+                document.getElementById('singimgprods').style.display = 'block';
+                document.getElementById('singimg').style.display = 'none';
+            });
+
 
 
             var reflectivityCheckbox = document.querySelector("#reflectivity");
@@ -1027,6 +1066,7 @@
                 if (this.checked) {
                     productLayerGroup.clearLayers();
                     clearProductCheckboxes();
+                    clearSingImgProductCheckboxes();
                     $('#reflectivity').prop('checked', true);
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
                     //wdgProduct(document.getElementById('statti').innerHTML, "bref_raw", 1);
@@ -1044,6 +1084,7 @@
                 if (this.checked) {
                     productLayerGroup.clearLayers();
                     clearProductCheckboxes();
+                    clearSingImgProductCheckboxes();
                     $('#velocity').prop('checked', true);
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U', 1);
 
@@ -1060,6 +1101,7 @@
                 if (this.checked) {
                     productLayerGroup.clearLayers();
                     clearProductCheckboxes();
+                    clearSingImgProductCheckboxes();
                     $('#echotops').prop('checked', true);
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'NET');
                     //wdgProduct(document.getElementById('statti').innerHTML, "beet", 1);
@@ -1077,12 +1119,74 @@
                 if (this.checked) {
                     productLayerGroup.clearLayers();
                     clearProductCheckboxes();
+                    clearSingImgProductCheckboxes();
                     $('#vil').prop('checked', true);
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'NET');
                     //wdgProduct(document.getElementById('statti').innerHTML, "hvil", 0.5);
 
                     wdg('hvil');
                     updateLayer(0);
+                } else {
+                    productLayerGroup.clearLayers();
+                    normal();
+                    updateLayer(0);
+                }
+            });
+
+            var singimgReflectivityCheckbox = document.querySelector("#singimgreflectivity");
+            singimgReflectivityCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    productLayerGroup.clearLayers();
+                    clearProductCheckboxes();
+                    clearSingImgProductCheckboxes();
+                    $('#singimgreflectivity').prop('checked', true);
+                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
+                    wdgProduct(document.getElementById('statti').innerHTML, "bref_raw", 1);
+                } else {
+                    productLayerGroup.clearLayers();
+                    normal();
+                    updateLayer(0);
+                }
+            });
+            var singimgVelocityCheckbox = document.querySelector("#singimgvelocity");
+            singimgVelocityCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    productLayerGroup.clearLayers();
+                    clearProductCheckboxes();
+                    clearSingImgProductCheckboxes();
+                    $('#singimgvelocity').prop('checked', true);
+                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
+                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U', 1);
+                } else {
+                    productLayerGroup.clearLayers();
+                    normal();
+                    updateLayer(0);
+                }
+            });
+            var singimgEchoTopsCheckbox = document.querySelector("#singimgechotops");
+            singimgEchoTopsCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    productLayerGroup.clearLayers();
+                    clearProductCheckboxes();
+                    clearSingImgProductCheckboxes();
+                    $('#singimgechotops').prop('checked', true);
+                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
+                    wdgProduct(document.getElementById('statti').innerHTML, "beet", 1);
+                } else {
+                    productLayerGroup.clearLayers();
+                    normal();
+                    updateLayer(0);
+                }
+            });
+            var singimgVilCheckbox = document.querySelector("#singimgvil");
+            singimgVilCheckbox.addEventListener("change", function() {
+                if (this.checked) {
+                    productLayerGroup.clearLayers();
+                    clearProductCheckboxes();
+                    clearSingImgProductCheckboxes();
+                    $('#singimgvil').prop('checked', true);
+                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
+                    wdgProduct(document.getElementById('statti').innerHTML, "hvil", 0.5);
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
