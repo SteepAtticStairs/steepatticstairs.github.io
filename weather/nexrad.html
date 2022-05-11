@@ -1076,6 +1076,8 @@
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
+                    oopaac = 1;
+                    $('#opacitySlider').val(oopaac);
                     updateLayer(0);
                 }
             });
@@ -1089,6 +1091,8 @@
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U', 1);
 
                     isu();
+                    oopaac = 1;
+                    $('#opacitySlider').val(oopaac);
                     updateLayer(0);
                 } else {
                     productLayerGroup.clearLayers();
@@ -1107,6 +1111,8 @@
                     //wdgProduct(document.getElementById('statti').innerHTML, "beet", 1);
 
                     wdg('beet');
+                    oopaac = 1;
+                    $('#opacitySlider').val(oopaac);
                     updateLayer(0);
                 } else {
                     productLayerGroup.clearLayers();
@@ -1125,6 +1131,8 @@
                     //wdgProduct(document.getElementById('statti').innerHTML, "hvil", 0.5);
 
                     wdg('hvil');
+                    oopaac = 0.5;
+                    $('#opacitySlider').val(oopaac);
                     updateLayer(0);
                 } else {
                     productLayerGroup.clearLayers();
