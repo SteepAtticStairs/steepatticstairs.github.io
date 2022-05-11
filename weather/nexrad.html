@@ -143,6 +143,10 @@
         <div style="display: none"><b>bref array: </b><a id="bref_rawarr"></a></div>
         <div style="display: none"><b>beet array: </b><a id="beetarr"></a></div>
         <div style="display: none"><b>hvil array: </b><a id="hvilarr"></a></div>
+        <div style="display: none"><b>isu array: </b><a id="isuarr"></a></div>
+        <div style="display: none"><b>isu year: </b><a id="isuyear"></a></div>
+        <div style="display: none"><b>isu month: </b><a id="isumonth"></a></div>
+        <div style="display: none"><b>isu day: </b><a id="isuday"></a></div>
         <div><b>Coords: </b>
             <br><a id="radstatcoords"></a></div>
         <div><b>Timestamp: </b>
@@ -201,8 +205,8 @@
                     <br>
                     <br>
                     <div id="data" style="display: block">
-                        <input type="checkbox" id="data" name="data">
-                        <label for="data">Data</label>
+                        <input type="checkbox" id="datacheck" name="data">
+                        <label id="datatext" for="data">Products</label>
                     </div>
                     <div id="prods" style="display: none">
                         <input type="checkbox" id="reflectivity" name="reflectivity">
@@ -655,43 +659,12 @@
             //    attribution: "Weather data © 2012 IEM Nexrad"
             //}).addTo(map);
 
-            function setIsuLayers(stati, produ) {
-                var empty = "empty";
-                var curTime = new Date();
-                var yesterday = new Date(curTime - 1440 * 60000);
-                var isuCurTime = new Date(curTime.toString().split('GMT')[0]+' UTC').toISOString().split('.')[0] + "Z";
-                var isuYesterday = new Date(yesterday.toString().split('GMT')[0]+' UTC').toISOString().split('.')[0] + "Z";
-                var isuRadarTsURL = `http://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${stati}&product=${produ}&start=${isuYesterday}&end=${isuCurTime}`;
-
-                function getSomething(){
-                    var output = null;
-                    var actualTimeStampe = [];
-                    var year = null;
-                    var month = null;
-                    var day = null;
-                    $.ajax({
-                        async: false,
-                        url: isuRadarTsURL,
-                        dataType: "json",
-                        success: function(data){
-                            for (let y = 1; y < 12; y++) {
-                                //result = data;
-                                var latestScan = data.scans[data.scans.length - y].ts;
-                                year = latestScan.substring(0, 4);
-                                month = latestScan.substring(5, 7);
-                                day = latestScan.substring(8, 10);
-                                var ts = latestScan.substring(11, 16);
-                                ts = ts.replace(/:/g, '');
-                                actualTimeStampe.push(ts);
-                            }
-                        }
-                    });
-                    return {year, month, day, actualTimeStampe};
-                }
-
-                var myData = getSomething();
-                myData.actualTimeStampe.reverse();
-
+            function setIsuLayers() {
+                var theYear = document.getElementById('isuyear').innerHTML;
+                var theMonth = document.getElementById('isumonth').innerHTML;
+                var theDay = document.getElementById('isuday').innerHTML;
+                var theIsuArray = document.getElementById('isuarr').innerHTML.split(',');
+                theIsuArray.reverse();
                 var radarLayers = [];
                 for (let i = 0; i <= 11; i++) {
                     radarLayers[i] = L.tileLayer.wms('https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/ridge.cgi', {
@@ -700,19 +673,19 @@
                         request: 'GetMap',
                         format: 'png',
                         transparent: true,
-                        sector: stati,
-                        prod: produ,
+                        sector: document.getElementById('statti').innerHTML.substring(1),
+                        prod: 'N0U',
                         layers: 'single-archive',
-                        year: myData.year,
-                        month: myData.month,
-                        day: myData.day,
-                        time: myData.actualTimeStampe[i],
+                        year: theYear,
+                        month: theMonth,
+                        day: theDay,
+                        time: theIsuArray[i],
                         opacity: 0.0
                     });
                     //console.log(layer);
                     radarLayers[i].addTo(productLayerGroup);
                 }
-                return {radarLayers, empty};
+                return radarLayers;
             }
 
             function normalLayers() {
@@ -783,9 +756,9 @@
             }
             
 
-            function isu(statio, produc) {
-                var normalDataReturned = setIsuLayers(statio, produc);
-                radarLayers = normalDataReturned.radarLayers;
+            function isu() {
+                var normalDataReturned = setIsuLayers();
+                radarLayers = normalDataReturned;
             }
 
             function wdg(pr) {
@@ -843,6 +816,8 @@
             }
             clearProductCheckboxes();
             $('#location').prop('checked', false);
+            document.getElementById('data').style.display = 'block';
+            document.getElementById('prods').style.display = 'none';
             //markerLayerGroup.clearLayers();
 
             //var labelCheckbox = document.getElementById("labels");
@@ -976,8 +951,9 @@
                 }
             });
 
-            var dataCheckbox = document.querySelector("#data");
+            var dataCheckbox = document.querySelector("#datacheck");
             dataCheckbox.addEventListener("change", function() {
+                document.getElementById('datatext').innerHTML = "<i>Loading...</i>"
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
@@ -1008,8 +984,36 @@
 
                         console.log(document.getElementById('bref_rawarr').innerHTML.split(','));
 
-                        document.getElementById('data').style.display = 'none';
-                        document.getElementById('prods').style.display = 'block';
+                        var actualTimeStampe = [];
+                        var curTime = new Date();
+                        var yesterday = new Date(curTime - 1440 * 60000);
+                        var isuCurTime = new Date(curTime.toString().split('GMT')[0]+' UTC').toISOString().split('.')[0] + "Z";
+                        var isuYesterday = new Date(yesterday.toString().split('GMT')[0]+' UTC').toISOString().split('.')[0] + "Z";
+                        var isuRadarTsURL = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0U&start=${isuYesterday}&end=${isuCurTime}`;
+
+                        $.getJSON(isuRadarTsURL, function(data) {
+                            for (let y = 1; y < 12; y++) {
+                                //result = data;
+                                var latestScan = data.scans[data.scans.length - y].ts;
+                                var year = latestScan.substring(0, 4);
+                                var month = latestScan.substring(5, 7);
+                                var day = latestScan.substring(8, 10);
+                                var ts = latestScan.substring(11, 16);
+                                ts = ts.replace(/:/g, '');
+                                actualTimeStampe.push(ts);
+                            }
+                            document.getElementById('isuyear').innerHTML = year;
+                            document.getElementById('isumonth').innerHTML = month;
+                            document.getElementById('isuday').innerHTML = day;
+                            document.getElementById('isuarr').innerHTML = actualTimeStampe;
+
+                            console.log(document.getElementById('isuarr').innerHTML.split(','));
+
+                            $('#datacheck').prop('checked', false);
+                            document.getElementById('datatext').innerHTML = "Products"
+                            document.getElementById('data').style.display = 'none';
+                            document.getElementById('prods').style.display = 'block';
+                        });
                     }
                 };
                 xhttp.open("GET", `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`, true);
@@ -1043,7 +1047,7 @@
                     $('#velocity').prop('checked', true);
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U', 1);
 
-                    isu(document.getElementById('statti').innerHTML.substring(1), "N0U");
+                    isu();
                     updateLayer(0);
                 } else {
                     productLayerGroup.clearLayers();
