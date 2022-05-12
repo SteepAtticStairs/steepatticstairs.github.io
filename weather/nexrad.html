@@ -888,7 +888,7 @@
             /*
             * PUTS THE FIRST IMAGE ON THE SCREEN
             */
-            updateLayer(0);
+            updateLayer(10);
 
             /*
             * CHANGES FRAMES BASED ON THE SLIDER VALUE
@@ -936,7 +936,7 @@
                     nextStep(0);
                 }
             }
-            nextStep(0);
+            nextStep(10);
             $('#pause').trigger('click');
 
             var playBtn = document.getElementById('play');
@@ -1076,13 +1076,13 @@
                     //wdgProduct(document.getElementById('statti').innerHTML, "bref_raw", 1);
 
                     wdg('bref_raw');
-                    updateLayer(0);
+                    updateLayer(10);
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
                     oopaac = 1;
                     $('#opacitySlider').val(oopaac);
-                    updateLayer(0);
+                    updateLayer(10);
                 }
             });
             var velocityCheckbox = document.querySelector("#velocity");
@@ -1097,11 +1097,11 @@
                     isu();
                     oopaac = 1;
                     $('#opacitySlider').val(oopaac);
-                    updateLayer(0);
+                    updateLayer(10);
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
-                    updateLayer(0);
+                    updateLayer(10);
                 }
             });
             var echotopsCheckbox = document.querySelector("#echotops");
@@ -1117,11 +1117,11 @@
                     wdg('beet');
                     oopaac = 1;
                     $('#opacitySlider').val(oopaac);
-                    updateLayer(0);
+                    updateLayer(10);
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
-                    updateLayer(0);
+                    updateLayer(10);
                 }
             });
             var vilCheckbox = document.querySelector("#vil");
@@ -1137,11 +1137,11 @@
                     wdg('hvil');
                     oopaac = 0.5;
                     $('#opacitySlider').val(oopaac);
-                    updateLayer(0);
+                    updateLayer(10);
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
-                    updateLayer(0);
+                    updateLayer(10);
                 }
             });
 
@@ -1157,7 +1157,7 @@
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
-                    updateLayer(0);
+                    updateLayer(10);
                 }
             });
             var singimgVelocityCheckbox = document.querySelector("#singimgvelocity");
@@ -1172,7 +1172,7 @@
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
-                    updateLayer(0);
+                    updateLayer(10);
                 }
             });
             var singimgEchoTopsCheckbox = document.querySelector("#singimgechotops");
@@ -1187,7 +1187,7 @@
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
-                    updateLayer(0);
+                    updateLayer(10);
                 }
             });
             var singimgVilCheckbox = document.querySelector("#singimgvil");
@@ -1202,7 +1202,7 @@
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
-                    updateLayer(0);
+                    updateLayer(10);
                 }
             });
 
