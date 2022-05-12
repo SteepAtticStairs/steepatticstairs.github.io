@@ -1022,8 +1022,9 @@
                         var actualTimeStampe = [];
                         var curTime = new Date();
                         var yesterday = new Date(curTime - 1440 * 60000);
-                        var isuCurTime = new Date(curTime.toString().split('GMT')[0]+' UTC').toISOString().split('.')[0] + "Z";
-                        var isuYesterday = new Date(yesterday.toString().split('GMT')[0]+' UTC').toISOString().split('.')[0] + "Z";
+                        // https://stackoverflow.com/a/68514256
+                        var isuCurTime = curTime.toISOString().substr(0,curTime.toISOString().indexOf(".")) + "Z";
+                        var isuYesterday = yesterday.toISOString().substr(0,yesterday.toISOString().indexOf(".")) + "Z";
                         var isuRadarTsURL = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0U&start=${isuYesterday}&end=${isuCurTime}`;
 
                         $.getJSON(isuRadarTsURL, function(data) {
