@@ -749,11 +749,11 @@
 
             function wdgLayers(pro) {
                 if (pro == 'bref_raw') {
-                    var tsArray = document.getElementById('bref_rawarr').innerHTML.split(',');
+                    var tsArray = document.getElementById('bref_rawarr').innerHTML.split(',').slice(-11);
                 } else if (pro == 'beet') {
-                    var tsArray = document.getElementById('beetarr').innerHTML.split(',');
+                    var tsArray = document.getElementById('beetarr').innerHTML.split(',').slice(-11);
                 } else if (pro == 'hvil') {
-                    var tsArray = document.getElementById('hvilarr').innerHTML.split(',');
+                    var tsArray = document.getElementById('hvilarr').innerHTML.split(',').slice(-11);
                 }
                 var urlToGet = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/${document.getElementById('statti').innerHTML.toLowerCase()}_${pro}/ows?`;
                 var theService = `${document.getElementById('statti').innerHTML.toLowerCase()}_${pro}`;
