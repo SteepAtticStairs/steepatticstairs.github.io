@@ -1048,66 +1048,67 @@
                 document.getElementById('datatext').innerHTML = "<i>Loading...</i>"
                 document.getElementById('singimgprods').style.visibility = 'none';
                 document.getElementById('prods').style.visibility = 'block';
-                var xhttpWDG = new XMLHttpRequest();
-                xhttpWDG.onreadystatechange = function() {
+
+                var actualTimeStampe = [];
+                var curTime = new Date();
+                var yesterday = new Date(curTime - 1440 * 60000);
+                // https://stackoverflow.com/a/68514256
+                var isuCurTime = curTime.toISOString().substr(0,curTime.toISOString().indexOf(".")) + "Z";
+                var isuYesterday = yesterday.toISOString().substr(0,yesterday.toISOString().indexOf(".")) + "Z";
+                var isuRadarTsURL = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0U&start=${isuYesterday}&end=${isuCurTime}`;
+                console.log(isuRadarTsURL);
+
+                var xhttpISU = new XMLHttpRequest();
+                xhttpISU.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                        var xmlStr = this.responseText;
+                        var resptxt = this.responseText;
+                        var data = JSON.parse(resptxt);
 
-                        var xmlDoc = parseXml(xmlStr);
-                        var theJson = xmlToJson(xmlDoc);
+                        for (let y = 1; y < 12; y++) {
+                            var latestScan = data.scans[data.scans.length - y].ts;
+                            var year = latestScan.substring(0, 4);
+                            var month = latestScan.substring(5, 7);
+                            var day = latestScan.substring(8, 10);
+                            var ts = latestScan.substring(11, 16);
+                            ts = ts.replace(/:/g, '');
+                            actualTimeStampe.push(ts);
+                        }
+                        document.getElementById('isuyear').innerHTML = year;
+                        document.getElementById('isumonth').innerHTML = month;
+                        document.getElementById('isuday').innerHTML = day;
+                        document.getElementById('isuarr').innerHTML = actualTimeStampe;
 
-                        // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
-                        // @ json to string
-                        var stringjson = JSON.stringify(theJson);
-                        // replace @ with AT
-                        var stringjsonwithouthash = stringjson.replace(/#/g, 'hash');
-                        // re-parse the AT json
-                        var nohashjson = JSON.parse(stringjsonwithouthash);
+                        console.log(document.getElementById('isuarr').innerHTML.split(','));
 
-                        var notTsArray = nohashjson.WMS_Capabilities.Capability.Layer.Layer[5].Dimension.hashtext;
-                        tsArray = notTsArray.split(',');
-                        document.getElementById('bref_rawarr').innerHTML = tsArray;
-
-                        var notTsArray = nohashjson.WMS_Capabilities.Capability.Layer.Layer[3].Dimension.hashtext;
-                        tsArray = notTsArray.split(',');
-                        document.getElementById('beetarr').innerHTML = tsArray;
-
-                        var notTsArray = nohashjson.WMS_Capabilities.Capability.Layer.Layer[11].Dimension.hashtext;
-                        tsArray = notTsArray.split(',');
-                        document.getElementById('hvilarr').innerHTML = tsArray;
-
-                        console.log(document.getElementById('bref_rawarr').innerHTML.split(','));
-
-                        var actualTimeStampe = [];
-                        var curTime = new Date();
-                        var yesterday = new Date(curTime - 1440 * 60000);
-                        // https://stackoverflow.com/a/68514256
-                        var isuCurTime = curTime.toISOString().substr(0,curTime.toISOString().indexOf(".")) + "Z";
-                        var isuYesterday = yesterday.toISOString().substr(0,yesterday.toISOString().indexOf(".")) + "Z";
-                        var isuRadarTsURL = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0U&start=${isuYesterday}&end=${isuCurTime}`;
-                        console.log(isuRadarTsURL);
-
-                        var xhttpISU = new XMLHttpRequest();
-                        xhttpISU.onreadystatechange = function() {
+                        var xhttpWDG = new XMLHttpRequest();
+                        xhttpWDG.onreadystatechange = function() {
                             if (this.readyState == 4 && this.status == 200) {
-                                var resptxt = this.responseText;
-                                var data = JSON.parse(resptxt);
-
-                                for (let y = 1; y < 12; y++) {
-                                    var latestScan = data.scans[data.scans.length - y].ts;
-                                    var year = latestScan.substring(0, 4);
-                                    var month = latestScan.substring(5, 7);
-                                    var day = latestScan.substring(8, 10);
-                                    var ts = latestScan.substring(11, 16);
-                                    ts = ts.replace(/:/g, '');
-                                    actualTimeStampe.push(ts);
-                                }
-                                document.getElementById('isuyear').innerHTML = year;
-                                document.getElementById('isumonth').innerHTML = month;
-                                document.getElementById('isuday').innerHTML = day;
-                                document.getElementById('isuarr').innerHTML = actualTimeStampe;
-
-                                console.log(document.getElementById('isuarr').innerHTML.split(','));
+                                var xmlStr = this.responseText;
+        
+                                var xmlDoc = parseXml(xmlStr);
+                                var theJson = xmlToJson(xmlDoc);
+        
+                                // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
+                                // @ json to string
+                                var stringjson = JSON.stringify(theJson);
+                                // replace @ with AT
+                                var stringjsonwithouthash = stringjson.replace(/#/g, 'hash');
+                                // re-parse the AT json
+                                var nohashjson = JSON.parse(stringjsonwithouthash);
+        
+                                var notTsArray = nohashjson.WMS_Capabilities.Capability.Layer.Layer[5].Dimension.hashtext;
+                                tsArray = notTsArray.split(',');
+                                document.getElementById('bref_rawarr').innerHTML = tsArray;
+        
+                                var notTsArray = nohashjson.WMS_Capabilities.Capability.Layer.Layer[3].Dimension.hashtext;
+                                tsArray = notTsArray.split(',');
+                                document.getElementById('beetarr').innerHTML = tsArray;
+        
+                                var notTsArray = nohashjson.WMS_Capabilities.Capability.Layer.Layer[11].Dimension.hashtext;
+                                tsArray = notTsArray.split(',');
+                                document.getElementById('hvilarr').innerHTML = tsArray;
+        
+                                console.log(document.getElementById('bref_rawarr').innerHTML.split(','));
 
                                 $('#datacheck').prop('checked', false);
                                 document.getElementById('datatext').innerHTML = "Products"
@@ -1115,24 +1116,24 @@
                                 document.getElementById('prods').style.display = 'block';
                             }
                         };
-                        xhttpISU.addEventListener('progress', function (f) {
+                        xhttpWDG.addEventListener('progress', function (e) {
                             //var percent_complete = (e.loaded / e.total) * 100;
                             //document.querySelector('#download-progress').style.width = percent_complete + '%';
-                            document.getElementById('isuloaded').innerHTML = formatBytes(f.loaded);
-                            console.log("isu: " + formatBytes(f.loaded));
+                            document.getElementById('wdgloaded').innerHTML = formatBytes(e.loaded);
+                            console.log("wdg: " + formatBytes(e.loaded));
                         });
-                        xhttpISU.open("GET", isuRadarTsURL, true);
-                        xhttpISU.send();
+                        xhttpWDG.open("GET", `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`, true);
+                        xhttpWDG.send();
                     }
                 };
-                xhttpWDG.addEventListener('progress', function (e) {
+                xhttpISU.addEventListener('progress', function (f) {
                     //var percent_complete = (e.loaded / e.total) * 100;
                     //document.querySelector('#download-progress').style.width = percent_complete + '%';
-                    document.getElementById('wdgloaded').innerHTML = formatBytes(e.loaded);
-                    console.log("wdg: " + formatBytes(e.loaded));
+                    document.getElementById('isuloaded').innerHTML = formatBytes(f.loaded);
+                    console.log("isu: " + formatBytes(f.loaded));
                 });
-                xhttpWDG.open("GET", `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`, true);
-                xhttpWDG.send();
+                xhttpISU.open("GET", isuRadarTsURL, true);
+                xhttpISU.send();
             });
 
             var singleImageCheckbox = document.querySelector('#singimgcheck');
