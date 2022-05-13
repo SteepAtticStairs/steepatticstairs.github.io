@@ -27,7 +27,7 @@
             left: 0; right: 0; bottom: 0; top: 0px; font-size: var(--fontsize);
         }
         #windowBody {
-            height: calc(100vh - 55px);
+            height: calc(var(--vh, 1vh) * 100 - 55px);
         }
 
         #map {
@@ -303,6 +303,20 @@
     <div id="weathermap"></div>
 
     <script>
+        function setHeight() {
+            /*
+            * https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+            */
+
+            // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+            let vh = window.innerHeight * 0.01;
+            // Then we set the value in the --vh custom property to the root of the document
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        window.addEventListener('resize', function(event) {
+            setHeight();
+        }, true);
+        setHeight();
         /*
         * https://stackoverflow.com/a/47297180
         */
