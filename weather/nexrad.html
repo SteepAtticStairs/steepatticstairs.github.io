@@ -589,12 +589,12 @@
                                 //$('body').append
                                 var isRadarDown = true;
                                 L.marker([latt, lonn], {icon: redMarkerIcon}).addTo(markerLayerGroup)
-                                    .bindPopup("<div><b>" + radarStation + "</b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>");
+                                    .bindPopup("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>");
                             } else if (timeDiff < 900000) {
                                 //$('body').append
                                 var isRadarDown = false;
                                 L.marker([latt, lonn], {icon: greenMarkerIcon}).addTo(markerLayerGroup)
-                                    .bindPopup("<div><b>" + radarStation + "</b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>");
+                                    .bindPopup("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>");
                             }
                         }
                     }
@@ -1454,6 +1454,20 @@
 
             });
         });
+    </script>
+    <script>
+        function getDownStation() {
+            var downStationDiv = document.getElementById('downRadarStation');
+            console.log(downStationDiv.innerHTML);
+            document.getElementById('radstatzipList').value = downStationDiv.innerHTML;
+            $('#radstatzipSubmit').trigger('click');
+        }
+        function getUpStation() {
+            var upStationDiv = document.getElementById('upRadarStation');
+            console.log(upStationDiv.innerHTML);
+            document.getElementById('radstatzipList').value = upStationDiv.innerHTML;
+            $('#radstatzipSubmit').trigger('click');
+        }
     </script>
     </div>
     </div>
