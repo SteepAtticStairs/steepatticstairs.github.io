@@ -281,6 +281,12 @@
                     <br>
                     <input type="checkbox" id="location" name="location">
                     <label for="location">Location</label>
+                    <br>
+                    <br>
+                    <div style="display: flex; align-items: center; justify-content: center">
+                        <button onclick="toggleForecastModal()">Forecast</button>
+                    </div>
+                    <br>
                 </ul>
             </div>
         </div>
@@ -300,6 +306,16 @@
         <div class="modal-content">
             <span id="close" class="close">&times;</span>
             <p id="alertModalText">Nothing here yet</p>
+        </div>
+    </div>
+
+    <div id="myModalForecast" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span id="closeForecast" class="close">&times;</span>
+            <p id="forecastModalText">
+                <iframe id="forecastIframe" src="/weather/combined.html" style="height: 50vh; width: 100%"></iframe>
+            </p>
         </div>
     </div>
 
@@ -448,6 +464,26 @@
             window.onclick = function (event) {
                 if (event.target == alertmodal) {
                     alertmodal.style.display = "none";
+                }
+            }
+        }
+        function toggleForecastModal() {
+            // resets the iframe
+            document.getElementById('forecastIframe').src += '';
+            // Get the modal
+            var forecastmodal = document.getElementById("myModalForecast");
+            // Get the <span> element that closes the modal
+            var forecastspan = document.getElementById("closeForecast");
+            // When the user clicks the button, open the modal 
+            forecastmodal.style.display = "block";
+            // When the user clicks on <span> (x), close the modal
+                forecastspan.onclick = function () {
+                forecastmodal.style.display = "none";
+            }
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == forecastmodal) {
+                    forecastmodal.style.display = "none";
                 }
             }
         }
