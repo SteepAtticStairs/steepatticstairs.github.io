@@ -495,6 +495,22 @@
                 attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            // var applemapsLayer = 
+            // L.tileLayer.wms('https://{s}.apple-mapkit.com/ti/tile?x={x}&y={y}&z={z}', {
+            //     attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+            //     style: 0,
+            //     size: 1,
+            //     scale: 2,
+            //     lang: 'en',
+            //     v: 2205152,
+            //     poi: 0,
+            //     accessKey: '1652643964_2363654940696277058_/_IErJ36c3BiIJd8BvPMpOP6/YYd6BZyKTYozWSrYUbpc=',
+            //     labels: 1,
+            //     tint: 'dark',
+            //     emphasis: 'standard',
+            //     subdomains: ['cdn','cdn1','cdn2','cdn3','cdn4']
+            // }).addTo(map);
+
             var tileLayers = L.layerGroup([]);
             var markerLayerGroup = L.layerGroup().addTo(map);
             var locationMarkerLayerGroup = L.layerGroup().addTo(map);
