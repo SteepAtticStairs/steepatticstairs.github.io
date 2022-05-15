@@ -14,6 +14,9 @@
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
     <!-- https://github.com/mutsuyuki/Leaflet.SmoothWheelZoom -->
     <script src="/weather/assets/js/SmoothWheelZoom.js"></script>
+    <!-- https://github.com/jbccollins/leaflet-tile-loading-progress-control -->
+    <script src="/weather/assets/js/Control.TileLoadingProgress.js"></script>
+    <link rel="stylesheet" href="/weather/assets/css/Control.TileLoadingProgress.css" />
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
 	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
@@ -399,12 +402,14 @@
             return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
         }
         setView(36.8281576, -98.5606744, 4);
-        $("#map").css("border-radius", "0%");
-        $("#map").css("height", "400px");
-        if (window.innerHeight > 750) {
-            $("#map").css("top", "300px");
-        } else { 
-            $("#map").css("top", "250px");
+        function setMapDimensions() {
+            $("#map").css("border-radius", "0%");
+            $("#map").css("height", "400px");
+            if (window.innerHeight > 750) {
+                $("#map").css("top", "300px");
+            } else { 
+                $("#map").css("top", "250px");
+            }
         }
 
         //$('#labels').trigger('click');
@@ -465,15 +470,15 @@
             var currentTime = new Date();
             var oopaac;
             document.getElementById('weathermap').innerHTML = "<div id='map'></div>";
-            $("#map").css("border-radius", "50%");
-            $("#map").css("height", "500px");
-            $("#map").css("top", "0px");
-
-            if (window.innerHeight > 750) {
-                $("#map").css("top", "250px");
-            } else { 
-                $("#map").css("top", "170px");
-            }
+            // $("#map").css("border-radius", "50%");
+            // $("#map").css("height", "500px");
+            // $("#map").css("top", "0px");
+            // if (window.innerHeight > 750) {
+            //     $("#map").css("top", "250px");
+            // } else { 
+            //     $("#map").css("top", "170px");
+            // }
+            setMapDimensions();
             
             var map = 
             L.map('map',{
@@ -490,6 +495,7 @@
                 attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            var tileLayers = L.layerGroup([]);
             var markerLayerGroup = L.layerGroup().addTo(map);
             var locationMarkerLayerGroup = L.layerGroup().addTo(map);
             var alertLayerGroup = L.layerGroup().addTo(map);
@@ -762,6 +768,7 @@
                         opacity: 0.0
                     });
                     //console.log(layer);
+                    tileLayers.addLayer(radarLayers[i]);
                     radarLayers[i].addTo(productLayerGroup);
                 }
                 return radarLayers;
@@ -786,6 +793,7 @@
                             opacity: 0.0,
                         });
                         //console.log(layer);
+                        tileLayers.addLayer(radarLayers[i]);
                         radarLayers[i].addTo(productLayerGroup);
                     }
                     if (i == 11) {
@@ -797,6 +805,7 @@
                         opacity: 0.0,
                     });
                     //console.log(layer);
+                    tileLayers.addLayer(radarLayers[i]);
                     radarLayers[i].addTo(productLayerGroup);
                     }
                 }
@@ -823,6 +832,7 @@
                         transparent: true,
                     });
                     //console.log(layer);
+                    tileLayers.addLayer(radarLayers[i]);
                     radarLayers[i].addTo(productLayerGroup);
                 }
                 return radarLayers;
@@ -846,6 +856,9 @@
             }
 
             normal();
+            var tileProgressBarControl = new L.Control.TileLoadingProgress({
+                leafletElt: tileLayers
+            }).addTo(map);
 
             function showLightning() {
                 var lightningLayer = 
@@ -858,7 +871,9 @@
                 L.tileLayer('https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::{station}-{product}-0/{z}/{x}/{y}.png', {
                     station: stationToShow,
                     product: product
-                }).addTo(productLayerGroup);
+                });
+                tileLayers.addLayer(velocityLayer);
+                velocityLayer.addTo(productLayerGroup);
             }
 
             /*
@@ -874,7 +889,9 @@
                     LAYERS: theService,
                     format: 'image/png',
                     transparent: true
-                }).addTo(productLayerGroup);
+                });
+                tileLayers.addLayer(wdgProductLayer);
+                wdgProductLayer.addTo(productLayerGroup);
                 wdgProductLayer.setOpacity(theOpacity);
             }
 
