@@ -83,6 +83,16 @@
             max-height: calc(100vh - 210px);
             overflow-y: auto;
         }
+        .modal-content-xp {
+            margin: auto;
+            width: 80%;
+        }
+        .modal-content-xp-scrollable {
+            /* Allows for scrolling of the modal */
+            /* https://stackoverflow.com/a/34897879 */
+            max-height: calc(100vh - 210px);
+            overflow-y: auto;
+        }
         /* The Close Button */
         .close {
             color: #aaaaaa;
@@ -152,7 +162,7 @@
 <body>
     <div class="window" id="content">
         <div class="title-bar">
-            <div class="title-bar-text">Exploring - Weather Data</div>
+            <div class="title-bar-text">Exploring - Weather Radar</div>
             <div class="title-bar-controls">
                 <button aria-label="Minimize"></button>
                 <button aria-label="Maximize"></button>
@@ -292,30 +302,57 @@
         </div>
     </div>
 
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
+    <!-- https://github.com/SteepAtticStairs/steepatticstairs.github.io/blob/d9d7f728fc0cc04a844c8313140b5483597506c0/weather/nexrad.html#L295 -->
+    <!-- <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <p id="modalText">Nothing here yet</p>
+        </div>
+    </div> -->
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="window glass modal-content-xp">
+            <div class="title-bar">
+                <div class="title-bar-text">Radar Status</div>
+                <div class="title-bar-controls">
+                    <button onclick="document.getElementById('myModal').style.display = 'none'" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <p id="modalText">Nothing here yet</p>
+            </div>
         </div>
     </div>
 
     <div id="myModalAlert" class="modal">
         <!-- Modal content -->
-        <div class="modal-content">
-            <span id="close" class="close">&times;</span>
-            <p id="alertModalText">Nothing here yet</p>
+        <div class="window glass modal-content-xp">
+            <div class="title-bar">
+                <div class="title-bar-text">Alerts Description</div>
+                <div class="title-bar-controls">
+                    <button onclick="document.getElementById('myModalAlert').style.display = 'none'" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body modal-content-xp-scrollable">
+                <p id="alertModalText">Nothing here yet</p>
+            </div>
         </div>
     </div>
 
     <div id="myModalForecast" class="modal">
         <!-- Modal content -->
-        <div class="modal-content">
-            <span id="closeForecast" class="close">&times;</span>
-            <p id="forecastModalText">
-                <iframe id="forecastIframe" src="/weather/combined.html" style="height: 50vh; width: 100%"></iframe>
-            </p>
+        <div class="window glass modal-content-xp">
+            <div class="title-bar">
+                <div class="title-bar-text">Weather Data</div>
+                <div class="title-bar-controls">
+                    <button onclick="document.getElementById('myModalForecast').style.display = 'none'" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body modal-content-xp-scrollable">
+                <iframe id="forecastIframe" src="/weather/combined.html" style="height: 50vh; width: 97%"></iframe>
+            </div>
         </div>
     </div>
 
@@ -438,10 +475,12 @@
             var span = document.getElementsByClassName("close")[0];
             // When the user clicks the button, open the modal 
             modal.style.display = "block";
+
             // When the user clicks on <span> (x), close the modal
-            span.onclick = function () {
-                modal.style.display = "none";
-            }
+            // span.onclick = function () {
+            //     modal.style.display = "none";
+            // }
+
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function (event) {
                 if (event.target == modal) {
@@ -456,10 +495,12 @@
             var alertspan = document.getElementById("close");
             // When the user clicks the button, open the modal 
             alertmodal.style.display = "block";
+
             // When the user clicks on <span> (x), close the modal
-            alertspan.onclick = function () {
-                alertmodal.style.display = "none";
-            }
+            // alertspan.onclick = function () {
+            //     alertmodal.style.display = "none";
+            // }
+
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function (event) {
                 if (event.target == alertmodal) {
@@ -476,10 +517,12 @@
             var forecastspan = document.getElementById("closeForecast");
             // When the user clicks the button, open the modal 
             forecastmodal.style.display = "block";
+
             // When the user clicks on <span> (x), close the modal
-                forecastspan.onclick = function () {
-                forecastmodal.style.display = "none";
-            }
+            // forecastspan.onclick = function () {
+            //     forecastmodal.style.display = "none";
+            // }
+
             // When the user clicks anywhere outside of the modal, close it
             window.onclick = function (event) {
                 if (event.target == forecastmodal) {
