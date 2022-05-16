@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/dump/7css/7.css" />
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
@@ -313,8 +314,8 @@
     <!-- The Modal -->
     <div id="myModal" class="modal">
         <!-- Modal content -->
-        <div class="window glass modal-content-xp">
-            <div class="title-bar">
+        <div class="window glass modal-content-xp" id="myModalBody">
+            <div class="title-bar" style="cursor: move" id="myModalBodyDrag">
                 <div class="title-bar-text">Radar Status</div>
                 <div class="title-bar-controls">
                     <button onclick="document.getElementById('myModal').style.display = 'none'" aria-label="Close"></button>
@@ -328,8 +329,8 @@
 
     <div id="myModalAlert" class="modal">
         <!-- Modal content -->
-        <div class="window glass modal-content-xp">
-            <div class="title-bar">
+        <div class="window glass modal-content-xp" id="myModalAlertBody">
+            <div class="title-bar" style="cursor: move" id="myModalAlertBodyDrag">
                 <div class="title-bar-text">Alerts Description</div>
                 <div class="title-bar-controls">
                     <button onclick="document.getElementById('myModalAlert').style.display = 'none'" aria-label="Close"></button>
@@ -343,15 +344,15 @@
 
     <div id="myModalForecast" class="modal">
         <!-- Modal content -->
-        <div class="window glass modal-content-xp">
-            <div class="title-bar">
+        <div class="window glass modal-content-xp" id="myModalForecastBody">
+            <div class="title-bar" style="cursor: move" id="myModalForecastBodyDrag">
                 <div class="title-bar-text">Weather Data</div>
                 <div class="title-bar-controls">
                     <button onclick="document.getElementById('myModalForecast').style.display = 'none'" aria-label="Close"></button>
                 </div>
             </div>
             <div class="window-body modal-content-xp-scrollable">
-                <iframe id="forecastIframe" src="/weather/combined.html" style="height: 50vh; width: 97%"></iframe>
+                <iframe id="forecastIframe" src="/weather/combined.html" style="height: 70vh; width: 97%"></iframe>
             </div>
         </div>
     </div>
@@ -359,6 +360,15 @@
     <div id="weathermap"></div>
 
     <script>
+        $("#myModalBody").draggable({
+            handle: "#myModalBodyDrag"
+        });
+        $("#myModalAlertBody").draggable({
+            handle: "#myModalAlertBodyDrag"
+        });
+        $("#myModalForecastBody").draggable({
+            handle: "#myModalForecastBodyDrag"
+        });
         function setHeight() {
             /*
             * https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
