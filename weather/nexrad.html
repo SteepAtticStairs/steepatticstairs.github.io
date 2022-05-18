@@ -1178,8 +1178,11 @@
                 // https://stackoverflow.com/a/68514256
                 var isuCurTime = curTime.toISOString().substr(0,curTime.toISOString().indexOf(".")) + "Z";
                 var isuYesterday = yesterday.toISOString().substr(0,yesterday.toISOString().indexOf(".")) + "Z";
-                var isuRadarTsURL = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0U&start=${isuYesterday}&end=${isuCurTime}`;
-                console.log(isuRadarTsURL);
+
+                var wdgTsUrl = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`;
+                var isuTsUrl = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0U&start=${isuYesterday}&end=${isuCurTime}`;
+                // document.getElementById('wdgloaded').href = wdgTsUrl;
+                // document.getElementById('isuloaded').href = isuTsUrl;
 
                 var xhttpISU = new XMLHttpRequest();
                 xhttpISU.onreadystatechange = function() {
@@ -1243,9 +1246,10 @@
                             //var percent_complete = (e.loaded / e.total) * 100;
                             //document.querySelector('#download-progress').style.width = percent_complete + '%';
                             document.getElementById('wdgloaded').innerHTML = formatBytes(e.loaded);
+                            document.getElementById('wdgloaded').href = wdgTsUrl;
                             console.log("wdg: " + formatBytes(e.loaded));
                         });
-                        xhttpWDG.open("GET", `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`, true);
+                        xhttpWDG.open("GET", wdgTsUrl, true);
                         xhttpWDG.send();
                     }
                 };
@@ -1253,9 +1257,10 @@
                     //var percent_complete = (e.loaded / e.total) * 100;
                     //document.querySelector('#download-progress').style.width = percent_complete + '%';
                     document.getElementById('isuloaded').innerHTML = formatBytes(f.loaded);
+                    document.getElementById('isuloaded').href = isuTsUrl;
                     console.log("isu: " + formatBytes(f.loaded));
                 });
-                xhttpISU.open("GET", isuRadarTsURL, true);
+                xhttpISU.open("GET", isuTsUrl, true);
                 xhttpISU.send();
             });
 
