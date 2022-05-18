@@ -657,40 +657,57 @@
 
             function showMarkers() {
                 document.getElementById('stationLabel').innerHTML = "<i>Loading...</i>"
-                // $.getJSON('/weather/json/wdg_radar-stations_05042022.json', function(data) {
-                $.getJSON('https://api.weather.gov/radar/stations', function(data) {
+                $.getJSON('/weather/json/wdg_radar-stations_05042022.json', function(data) {
                     for (let n = 0; n < 208; n++) {
                         var radarStation = data.features[n].properties.id;
                         var latt = data.features[n].geometry.coordinates[1];
                         var lonn = data.features[n].geometry.coordinates[0];
                         var stationType = data.features[n].properties.stationType;
-
-                        var radstatLastReceivedData = new Date(data.features[n].properties.latency.levelTwoLastReceivedTime);
-                        var currentTimeForStatus = new Date();
-                        var timeDiff = currentTimeForStatus - radstatLastReceivedData;
-                        var formattedLastReceivedData = printFancyTime(radstatLastReceivedData);
                         
                         if (stationType == "WSR-88D") {
                             //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
                             //L.marker([latt, lonn]).addTo(markerLayerGroup)
                             //    .bindPopup(radarStation);
 
-                            if (timeDiff >= 900000) {
-                                //$('body').append
-                                var isRadarDown = true;
-                                L.marker([latt, lonn], {icon: redMarkerIcon}).addTo(markerLayerGroup)
-                                    .bindPopup("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>");
-                            } else if (timeDiff < 900000) {
-                                //$('body').append
-                                var isRadarDown = false;
-                                L.marker([latt, lonn], {icon: greenMarkerIcon}).addTo(markerLayerGroup)
-                                    .bindPopup("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>");
-                            }
+                            L.marker([latt, lonn]).addTo(markerLayerGroup)
+                                .bindPopup("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>");
                         }
                     }
-                }).done(function (result) {
-                    console.log("finished station");
-                    document.getElementById('stationLabel').innerHTML = "Stations"
+                    $.getJSON('https://api.weather.gov/radar/stations', function(data) {
+                        markerLayerGroup.clearLayers();
+                        for (let n = 0; n < 208; n++) {
+                            var radarStation = data.features[n].properties.id;
+                            var latt = data.features[n].geometry.coordinates[1];
+                            var lonn = data.features[n].geometry.coordinates[0];
+                            var stationType = data.features[n].properties.stationType;
+
+                            var radstatLastReceivedData = new Date(data.features[n].properties.latency.levelTwoLastReceivedTime);
+                            var currentTimeForStatus = new Date();
+                            var timeDiff = currentTimeForStatus - radstatLastReceivedData;
+                            var formattedLastReceivedData = printFancyTime(radstatLastReceivedData);
+                            
+                            if (stationType == "WSR-88D") {
+                                //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
+                                //L.marker([latt, lonn]).addTo(markerLayerGroup)
+                                //    .bindPopup(radarStation);
+
+                                if (timeDiff >= 900000) {
+                                    //$('body').append
+                                    var isRadarDown = true;
+                                    L.marker([latt, lonn], {icon: redMarkerIcon}).addTo(markerLayerGroup)
+                                        .bindPopup("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>");
+                                } else if (timeDiff < 900000) {
+                                    //$('body').append
+                                    var isRadarDown = false;
+                                    L.marker([latt, lonn], {icon: greenMarkerIcon}).addTo(markerLayerGroup)
+                                        .bindPopup("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>");
+                                }
+                            }
+                        }
+                    }).done(function (result) {
+                        console.log("finished station");
+                        document.getElementById('stationLabel').innerHTML = "Stations"
+                    });
                 });
             }
             //showMarkers();
@@ -1561,6 +1578,12 @@
             var upStationDiv = document.getElementById('upRadarStation');
             console.log(upStationDiv.innerHTML);
             document.getElementById('radstatzipList').value = upStationDiv.innerHTML;
+            $('#radstatzipSubmit').trigger('click');
+        }
+        function getStation() {
+            var stationDiv = document.getElementById('radarStationDiv');
+            console.log(stationDiv.innerHTML);
+            document.getElementById('radstatzipList').value = stationDiv.innerHTML;
             $('#radstatzipSubmit').trigger('click');
         }
     </script>
