@@ -823,7 +823,7 @@
                                 var alertExpiresTime = new Date(data.features[n].properties.expires);
                                 var alertEndsTime = new Date(data.features[n].properties.ends);
 
-                                var alertPopupContent = "<div><b><a style='cursor: pointer' onclick='clickOnPolygonBtn()'>Draw Polygon</a><br>" + alertEvent + "<br>" + alertSenderName + "</b><br>\
+                                var alertPopupContent = "<div><b><a style='cursor: pointer' onclick='clickOnPolygonBtn()'>Draw Polygon</a><div id='noPolygonPopup'>" + alertEvent + "<br>" + alertSenderName + "</b><br>\
                                     <br><b>Send Time: </b>" + printFancyTime(alertSentTime) + "\
                                     <br><b>Effective Time: </b>" + printFancyTime(alertEffectiveTime) + "\
                                     <br><b>Onset Time: </b>" + printFancyTime(alertOnsetTime) + "\
@@ -836,7 +836,7 @@
                                     <b>ID:</b><div id='alertNameDiv'> " + alertID + "</div><br>\
                                     <b>Headline:</b> " + alertHeadline + "<br>\
                                     <b>Description:</b> " + alertDescription + "<br>\
-                                    <b>Instructions:</b> " + alertInstruction + "</div>";
+                                    <b>Instructions:</b> " + alertInstruction + "<div></div>";
                                 var alertPopup = L.popup({maxHeight: 100}).setContent(alertPopupContent);
 
                                 var singleCoordinateLat = data2.geometry.coordinates[0][0][1];
@@ -1143,6 +1143,7 @@
             drawPolygonBtn.addEventListener('click', function handleClick() {
                 console.log('pls draw polygon');
                 var alertDiv = document.getElementById('alertNameDiv');
+                var fullPopup = document.getElementById('noPolygonPopup');
                 console.log(alertDiv.innerHTML);
                 $.getJSON(alertDiv.innerHTML, function(data) {
                     $.getJSON(data.properties.affectedZones[0], function(data) {
@@ -1153,9 +1154,12 @@
                             coordinateArray2.push(allCoordinates2[x].reverse());
                         }
 
+                        var alertPopupNoPolygon = L.popup({maxHeight: 100}).setContent(fullPopup.innerHTML);
+
                         var polygon2 = L.polygon([
                             coordinateArray2
-                        ]).addTo(alertLayerGroup);
+                        ]).addTo(alertLayerGroup)
+                        .bindPopup(alertPopupNoPolygon);
                         // grey
                         polygon2.setStyle({color: '#838383'});
                     });
