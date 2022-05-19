@@ -180,6 +180,7 @@
             <input name="radstatzipList" id="radstatzipList">
             <br>
             <button id="radstatzipSubmit">Ok</button>
+            <button style="display: none" id="polygon">draw</button>
         </form>
         <div><b>Zip: </b><a id="radstatzip"></a></div>
         <div style="display: none"><b>Stat: </b><a id="statti"></a></div>
@@ -822,7 +823,7 @@
                                 var alertExpiresTime = new Date(data.features[n].properties.expires);
                                 var alertEndsTime = new Date(data.features[n].properties.ends);
 
-                                var alertPopupContent = "<div><b>" + alertEvent + "<br>" + alertSenderName + "</b><br>\
+                                var alertPopupContent = "<div><b><a style='cursor: pointer' onclick='clickOnPolygonBtn()'>Draw Polygon</a><br>" + alertEvent + "<br>" + alertSenderName + "</b><br>\
                                     <br><b>Send Time: </b>" + printFancyTime(alertSentTime) + "\
                                     <br><b>Effective Time: </b>" + printFancyTime(alertEffectiveTime) + "\
                                     <br><b>Onset Time: </b>" + printFancyTime(alertOnsetTime) + "\
@@ -832,7 +833,7 @@
                                     <b>WMO Identifier:</b> " + alertWMOidenifier + "<br>\
                                     <b>VTEC:</b> " + alertVTEC + "<br>\
                                     <b>NWS Headline:</b> " + alertNWSheadline + "<br>\
-                                    <b>ID:</b> " + alertID + "<br><br>\
+                                    <b>ID:</b><div id='alertNameDiv'> " + alertID + "</div><br>\
                                     <b>Headline:</b> " + alertHeadline + "<br>\
                                     <b>Description:</b> " + alertDescription + "<br>\
                                     <b>Instructions:</b> " + alertInstruction + "</div>";
@@ -1119,6 +1120,29 @@
                     var radstatzipSubmitBtn = document.getElementById('radstatzipSubmit');
                     radstatzipSubmitBtn.addEventListener('click', function handleClick() {
                         window.clearTimeout(loopTimeout);
+                    });
+
+                    var drawPolygonBtn = document.getElementById('polygon');
+                    drawPolygonBtn.addEventListener('click', function handleClick() {
+                        console.log('pls draw polygon');
+                        var alertDiv = document.getElementById('alertNameDiv');
+                        console.log(alertDiv.innerHTML);
+                        $.getJSON(alertDiv.innerHTML, function(data) {
+                            $.getJSON(data.properties.affectedZones[0], function(data) {
+                                var allCoordinates2 = data.geometry.coordinates[0];
+                                var coordinateArray2 = [];
+
+                                for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
+                                    coordinateArray2.push(allCoordinates2[x].reverse());
+                                }
+
+                                var polygon2 = L.polygon([
+                                    coordinateArray2
+                                ]).addTo(alertLayerGroup);
+                                // grey
+                                polygon2.setStyle({color: '#838383'});
+                            });
+                        });
                     });
 
                     var pauseBtn = document.getElementById('pause');
@@ -1585,6 +1609,10 @@
             console.log(stationDiv.innerHTML);
             document.getElementById('radstatzipList').value = stationDiv.innerHTML;
             $('#radstatzipSubmit').trigger('click');
+        }
+        
+        function clickOnPolygonBtn() {
+            $('#polygon').trigger('click');
         }
     </script>
     </div>
