@@ -180,8 +180,8 @@
             <input name="radstatzipList" id="radstatzipList">
             <br>
             <button id="radstatzipSubmit">Ok</button>
-            <button style="display: none" id="polygon">draw</button>
         </form>
+        <button style="display: none" id="polygon">draw</button>
         <div><b>Zip: </b><a id="radstatzip"></a></div>
         <div style="display: none"><b>Stat: </b><a id="statti"></a></div>
         <div style="display: none"><b>bref array: </b><a id="bref_rawarr"></a></div>
@@ -1122,29 +1122,6 @@
                         window.clearTimeout(loopTimeout);
                     });
 
-                    var drawPolygonBtn = document.getElementById('polygon');
-                    drawPolygonBtn.addEventListener('click', function handleClick() {
-                        console.log('pls draw polygon');
-                        var alertDiv = document.getElementById('alertNameDiv');
-                        console.log(alertDiv.innerHTML);
-                        $.getJSON(alertDiv.innerHTML, function(data) {
-                            $.getJSON(data.properties.affectedZones[0], function(data) {
-                                var allCoordinates2 = data.geometry.coordinates[0];
-                                var coordinateArray2 = [];
-
-                                for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
-                                    coordinateArray2.push(allCoordinates2[x].reverse());
-                                }
-
-                                var polygon2 = L.polygon([
-                                    coordinateArray2
-                                ]).addTo(alertLayerGroup);
-                                // grey
-                                polygon2.setStyle({color: '#838383'});
-                            });
-                        });
-                    });
-
                     var pauseBtn = document.getElementById('pause');
                     pauseBtn.addEventListener('click', function handleClick() {
                         window.clearTimeout(loopTimeout);
@@ -1161,6 +1138,29 @@
             }
             nextStep(10);
             $('#pause').trigger('click');
+
+            var drawPolygonBtn = document.getElementById('polygon');
+            drawPolygonBtn.addEventListener('click', function handleClick() {
+                console.log('pls draw polygon');
+                var alertDiv = document.getElementById('alertNameDiv');
+                console.log(alertDiv.innerHTML);
+                $.getJSON(alertDiv.innerHTML, function(data) {
+                    $.getJSON(data.properties.affectedZones[0], function(data) {
+                        var allCoordinates2 = data.geometry.coordinates[0];
+                        var coordinateArray2 = [];
+
+                        for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
+                            coordinateArray2.push(allCoordinates2[x].reverse());
+                        }
+
+                        var polygon2 = L.polygon([
+                            coordinateArray2
+                        ]).addTo(alertLayerGroup);
+                        // grey
+                        polygon2.setStyle({color: '#838383'});
+                    });
+                });
+            });
 
             var playBtn = document.getElementById('play');
             playBtn.addEventListener('click', function handleClick() {
