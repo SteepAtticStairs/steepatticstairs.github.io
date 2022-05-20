@@ -222,7 +222,7 @@
         <br>
         <a>Map Zoom</a>
         <br>
-        <input id="zoomSlider" type="range" min="5" max="20" step="1" value="7">
+        <input id="zoomSlider" type="range" min="3" max="20" step="0.1" value="7">
         <br>
         <a>Current Frame</a>
         <br>
@@ -589,6 +589,7 @@
                 scrollWheelZoom: false,
                 smoothWheelZoom: true,
                 smoothSensitivity: 1,
+                zoomSnap: 0.1,
             }).setView([lat, lon], zoom);
             map.scrollWheelZoom = true;
 
@@ -860,10 +861,10 @@
                                 .bindPopup(alertPopup)
                                 alertClusterGroup.addLayer(alertMarker)
 
-                                alertMarker.on('popupclose', (e)=>{
-                                    console.log("closed");
-                                    geojsonAlertLayerGroup.clearLayers();
-                                })
+                                //alertMarker.on('popupclose', (e)=>{
+                                //    console.log("closed");
+                                //    geojsonAlertLayerGroup.clearLayers();
+                                //})
                                 //map.addLayer(alertClusterGroup);
                             });
                         }
@@ -1188,8 +1189,8 @@
                             };
                             
                             var options = {
-                                maxZoom: 20,
-                                tolerance: 3,
+                                maxZoom: 24,
+                                tolerance: 100,
                                 debug: 0,
                                 style: geojsonStyle
                             };
