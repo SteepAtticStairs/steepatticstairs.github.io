@@ -190,6 +190,7 @@
             <button id="radstatzipSubmit">Ok</button>
         </form>
         <button style="display: none" id="polygon">draw</button>
+        <button style="display: none" id="clearpolygon">clear</button>
         <div><b>Zip: </b><a id="radstatzip"></a></div>
         <div style="display: none"><b>Stat: </b><a id="statti"></a></div>
         <div style="display: none"><b>bref array: </b><a id="bref_rawarr"></a></div>
@@ -835,7 +836,10 @@
                                 var alertExpiresTime = new Date(data.features[n].properties.expires);
                                 var alertEndsTime = new Date(data.features[n].properties.ends);
 
-                                var alertPopupContent = "<div><b><a style='cursor: pointer' onclick='clickOnPolygonBtn()'>Draw Polygon</a><div id='noPolygonPopup'>" + alertEvent + "<br>" + alertSenderName + "</b><br>\
+                                var alertPopupContent = "<div><b>\
+                                    <a style='cursor: pointer' onclick='clickOnPolygonBtn()'>Draw Polygon</a>&nbsp;&nbsp;&nbsp;&nbsp;\
+                                    <a style='cursor: pointer' onclick='clearPolygons()'>Clear</a>\
+                                    <div id='noPolygonPopup'>" + alertEvent + "<br>" + alertSenderName + "</b><br>\
                                     <br><b>Send Time: </b>" + printFancyTime(alertSentTime) + "\
                                     <br><b>Effective Time: </b>" + printFancyTime(alertEffectiveTime) + "\
                                     <br><b>Onset Time: </b>" + printFancyTime(alertOnsetTime) + "\
@@ -1198,6 +1202,10 @@
                         });
                     }
                 });
+            });
+            var drawPolygonBtn = document.getElementById('clearpolygon');
+            drawPolygonBtn.addEventListener('click', function handleClick() {
+                geojsonAlertLayerGroup.clearLayers();
             });
 
             var playBtn = document.getElementById('play');
@@ -1651,6 +1659,9 @@
         
         function clickOnPolygonBtn() {
             $('#polygon').trigger('click');
+        }
+        function clearPolygons() {
+            $('#clearpolygon').trigger('click');
         }
     </script>
     </div>
