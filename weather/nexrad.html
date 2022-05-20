@@ -1164,7 +1164,7 @@
                             var alertPopupNoPolygon = L.popup({maxHeight: 100}).setContent(fullPopup.innerHTML);
 
                             var polygon2 = L.polygon(
-                                [coordinateArray2], {smoothFactor: 10}
+                                [coordinateArray2], {smoothFactor: 15}
                             ).addTo(alertLayerGroup)
                             .bindPopup(alertPopupNoPolygon);
                             // grey
