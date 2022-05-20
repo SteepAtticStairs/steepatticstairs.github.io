@@ -617,6 +617,7 @@
             var markerLayerGroup = L.layerGroup().addTo(map);
             var locationMarkerLayerGroup = L.layerGroup().addTo(map);
             var alertLayerGroup = L.layerGroup().addTo(map);
+            var geojsonAlertLayerGroup = L.layerGroup().addTo(map);
             var lightningLayerGroup = L.layerGroup().addTo(map);
             var productLayerGroup = L.layerGroup().addTo(map);
             var alertClusterGroup = L.markerClusterGroup().addTo(map);
@@ -854,10 +855,15 @@
                                 var singleCoordinateLon = data2.geometry.coordinates[0][0][0];
                                 var coordinateArray = [];
 
-                                alertClusterGroup.addLayer(
-                                    L.marker([singleCoordinateLat, singleCoordinateLon], {icon: yellowMarkerIcon})
-                                        .bindPopup(alertPopup)
-                                );
+                                var alertMarker = 
+                                L.marker([singleCoordinateLat, singleCoordinateLon], {icon: yellowMarkerIcon})
+                                .bindPopup(alertPopup)
+                                alertClusterGroup.addLayer(alertMarker)
+
+                                alertMarker.on('popupclose', (e)=>{
+                                    console.log("closed");
+                                    geojsonAlertLayerGroup.clearLayers();
+                                })
                                 //map.addLayer(alertClusterGroup);
                             });
                         }
@@ -1188,7 +1194,7 @@
                                 style: geojsonStyle
                             };
                             var canvasLayer = L.geoJson.vt(data.geometry, options)
-                            .addTo(alertLayerGroup);
+                            .addTo(geojsonAlertLayerGroup);
                         });
                     }
                 });
