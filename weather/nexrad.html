@@ -27,6 +27,11 @@
 	<link rel="stylesheet" href="/weather/assets/css/MarkerCluster.Default.css" />
 	<script src="/weather/assets/js/leaflet.markercluster-src.js"></script>
 
+    <!-- https://github.com/mapbox/geojson-vt -->
+    <script src="/weather/assets/js/geojson-vt.js"></script>
+    <!-- https://github.com/iamtekson/leaflet-geojson-vt -->
+    <script src="/weather/assets/js/leaflet-geojson-vt.js"></script>
+
     <style>
         body, html {
             margin: 0; padding: 0; height: 100%;
@@ -1154,21 +1159,36 @@
                 $.getJSON(alertDiv.innerHTML, function(data) {
                     for (let r = 0; r < data.properties.affectedZones.length; r++) {
                         $.getJSON(data.properties.affectedZones[r], function(data) {
-                            var allCoordinates2 = data.geometry.coordinates[0];
-                            var coordinateArray2 = [];
+                            //var allCoordinates2 = data.geometry.coordinates[0];
+                            //var coordinateArray2 = [];
+                            //
+                            //for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
+                            //    coordinateArray2.push(allCoordinates2[x].reverse());
+                            //}
+                            //var alertPopupNoPolygon = L.popup({maxHeight: 100}).setContent(fullPopup.innerHTML);
+                            //
+                            //var polygon2 = L.polygon(
+                            //    [coordinateArray2]
+                            //).addTo(alertLayerGroup)
+                            //.bindPopup(alertPopupNoPolygon);
+                            //// grey
+                            //polygon2.setStyle({color: '#838383'});
 
-                            for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
-                                coordinateArray2.push(allCoordinates2[x].reverse());
-                            }
-
-                            var alertPopupNoPolygon = L.popup({maxHeight: 100}).setContent(fullPopup.innerHTML);
-
-                            var polygon2 = L.polygon(
-                                [coordinateArray2], {smoothFactor: 15}
-                            ).addTo(alertLayerGroup)
-                            .bindPopup(alertPopupNoPolygon);
-                            // grey
-                            polygon2.setStyle({color: '#838383'});
+                            var geojsonStyle = {
+                                fillColor: "#838383",
+                                weight: 1,
+                                opacity: 0,
+                                fillOpacity: 0.5,
+                            };
+                            
+                            var options = {
+                                maxZoom: 20,
+                                tolerance: 3,
+                                debug: 0,
+                                style: geojsonStyle
+                            };
+                            var canvasLayer = L.geoJson.vt(data.geometry, options)
+                            .addTo(alertLayerGroup);
                         });
                     }
                 });
