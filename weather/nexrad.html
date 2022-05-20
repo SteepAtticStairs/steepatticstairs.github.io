@@ -32,6 +32,8 @@
     <!-- https://github.com/iamtekson/leaflet-geojson-vt -->
     <script src="/weather/assets/js/leaflet-geojson-vt.js"></script>
 
+    <script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"></script>
+
     <style>
         body, html {
             margin: 0; padding: 0; height: 100%;
@@ -1181,22 +1183,39 @@
                             //// grey
                             //polygon2.setStyle({color: '#838383'});
 
-                            var geojsonStyle = {
-                                fillColor: "#838383",
-                                weight: 1,
-                                opacity: 0,
-                                fillOpacity: 0.5,
-                            };
-                            
-                            var options = {
-                                // test
-                                maxZoom: 24,
-                                tolerance: 100,
-                                debug: 0,
-                                style: geojsonStyle
-                            };
-                            var canvasLayer = L.geoJson.vt(data.geometry, options)
-                            .addTo(geojsonAlertLayerGroup);
+                            //var geojsonStyle = {
+                            //    fillColor: "#838383",
+                            //    weight: 1,
+                            //    opacity: 0,
+                            //    fillOpacity: 0.5,
+                            //};
+                            //
+                            //var options = {
+                            //    // test
+                            //    maxZoom: 24,
+                            //    tolerance: 100,
+                            //    debug: 0,
+                            //    style: geojsonStyle
+                            //};
+                            //var canvasLayer = L.geoJson.vt(data.geometry, options)
+                            //.addTo(geojsonAlertLayerGroup);
+
+                            var vectorGrid = L.vectorGrid.slicer( data.geometry, {
+                                rendererFactory: L.canvas.tile,
+                                vectorTileLayerStyles: {
+                                    sliced: {
+                                        fillColor: '#838383',
+                                        fillOpacity: 0.5,
+                                         //fillOpacity: 1,
+                                        stroke: true,
+                                        fill: true,
+                                        color: 'black',
+                                             //opacity: 0.2,
+                                        weight: 0.5,
+                                    }
+                                },
+                                interactive: true,
+                            }).addTo(alertLayerGroup);
                         });
                     }
                 });
