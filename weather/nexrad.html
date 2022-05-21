@@ -31,6 +31,8 @@
     <script src="/weather/assets/js/geojson-vt.js"></script>
     <!-- https://github.com/iamtekson/leaflet-geojson-vt -->
     <script src="/weather/assets/js/leaflet-geojson-vt.js"></script>
+    <!-- https://github.com/seabre/simplify-geometry -->
+    <script src="/weather/assets/js/simplifygeometry-0.0.2.js"></script>
 
     <style>
         body, html {
@@ -1167,46 +1169,24 @@
                 var fullPopup = document.getElementById('noPolygonPopup');
                 console.log(alertDiv.innerHTML);
                 $.getJSON(alertDiv.innerHTML, function(data) {
-                    if (window.innerHeight > 750) {
-                        // mobile
-                        $.getJSON(data.properties.affectedZones[0], function(data) {
+                    for (let r = 0; r < data.properties.affectedZones.length; r++) {
+                        $.getJSON(data.properties.affectedZones[r], function(data) {
                             var allCoordinates2 = data.geometry.coordinates[0];
                             var coordinateArray2 = [];
-
                             for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
                                 coordinateArray2.push(allCoordinates2[x].reverse());
                             }
 
                             var alertPopupNoPolygon = L.popup({maxHeight: 100}).setContent(fullPopup.innerHTML);
+                            var simplified = simplifyGeometry(coordinateArray2, 0.1);
 
                             var polygon2 = L.polygon([
-                                coordinateArray2
-                            ]).addTo(alertLayerGroup)
+                                simplified
+                            ]).addTo(geojsonAlertLayerGroup)
                             .bindPopup(alertPopupNoPolygon);
                             // grey
                             polygon2.setStyle({color: '#838383'});
                         });
-                    } else { 
-                        for (let r = 0; r < data.properties.affectedZones.length; r++) {
-                            // desktop
-                            $.getJSON(data.properties.affectedZones[r], function(data) {
-                                var geojsonStyle = {
-                                    fillColor: "#838383",
-                                    weight: 1,
-                                    opacity: 0,
-                                    fillOpacity: 0.5,
-                                };
-                                
-                                var options = {
-                                    maxZoom: 24,
-                                    tolerance: 100,
-                                    debug: 0,
-                                    style: geojsonStyle
-                                };
-                                var canvasLayer = L.geoJson.vt(data.geometry, options)
-                                .addTo(geojsonAlertLayerGroup);
-                            });
-                        }
                     }
                 });
             });
