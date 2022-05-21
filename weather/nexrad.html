@@ -33,6 +33,9 @@
     <script src="/weather/assets/js/leaflet-geojson-vt.js"></script>
     <!-- https://github.com/seabre/simplify-geometry -->
     <script src="/weather/assets/js/simplifygeometry-0.0.2.js"></script>
+    <!-- https://github.com/makinacorpus/Leaflet.Spin -->
+    <script src="/weather/assets/js/spin.js"></script>
+    <script src="/weather/assets/js/leaflet.spin.js"></script>
 
     <style>
         body, html {
@@ -1165,6 +1168,8 @@
 
             var drawPolygonBtn = document.getElementById('polygon');
             drawPolygonBtn.addEventListener('click', function handleClick() {
+                map.spin(true);
+                var rCount = 0;
                 var totalData = 0;
                 console.log('pls draw polygon');
                 var alertDiv = document.getElementById('alertNameDiv');
@@ -1203,6 +1208,14 @@
                             } else if (document.getElementById('recieved').innerHTML != 'Waiting...') {
                                 totalData = totalData + e.loaded;
                                 document.getElementById('recieved').innerHTML = formatBytes(totalData);
+                            }
+                        });
+                        xhttpALERT.addEventListener('load', function (e) {
+                            rCount++;
+                            console.log("r: " + rCount);
+                            if (rCount == data.properties.affectedZones.length) {
+                                console.log('done');
+                                map.spin(false);
                             }
                         });
                         xhttpALERT.open("GET", data.properties.affectedZones[r], true);
