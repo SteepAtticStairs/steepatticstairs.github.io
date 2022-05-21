@@ -199,12 +199,14 @@
         <div><b>Zip: </b><a id="radstatzip"></a></div>
         <div style="display: none"><b>Stat: </b><a id="statti"></a></div>
         <div style="display: none"><b>bref array: </b><a id="bref_rawarr"></a></div>
-        <div style="display: none"><b>beet array: </b><a id="beetarr"></a></div>
-        <div style="display: none"><b>hvil array: </b><a id="hvilarr"></a></div>
         <div style="display: none"><b>isu array: </b><a id="isuarr"></a></div>
         <div style="display: none"><b>isu year: </b><a id="isuyear"></a></div>
         <div style="display: none"><b>isu month: </b><a id="isumonth"></a></div>
         <div style="display: none"><b>isu day: </b><a id="isuday"></a></div>
+        <div style="display: none"><b>isu refl array: </b><a id="isureflarr"></a></div>
+        <div style="display: none"><b>isu refl year: </b><a id="isureflyear"></a></div>
+        <div style="display: none"><b>isu refl month: </b><a id="isureflmonth"></a></div>
+        <div style="display: none"><b>isu refl day: </b><a id="isureflday"></a></div>
         <div style="display: none" id="recievedDiv"><b>GeoJSON Data: </b><a id="recieved">Waiting...</a></div>
         <div><b>Coords: </b>
             <br><a id="radstatcoords"></a></div>
@@ -277,7 +279,8 @@
                     </div>
                     <div>
                         <br>
-                        <div><u>ISU</u> <i><a id="isuloaded">0 bytes</a></i></div>
+                        <div><u>Ref</u> <i><a id="isureflloaded">0 bytes</a></i></div>
+                        <div><u>Vel</u> <i><a id="isuloaded">0 bytes</a></i></div>
                     </div>
                     <br>
                     <div><b>One Frame</b></div>
@@ -888,11 +891,18 @@
             //    attribution: "Weather data © 2012 IEM Nexrad"
             //}).addTo(map);
 
-            function setIsuLayers() {
-                var theYear = document.getElementById('isuyear').innerHTML;
-                var theMonth = document.getElementById('isumonth').innerHTML;
-                var theDay = document.getElementById('isuday').innerHTML;
-                var theIsuArray = document.getElementById('isuarr').innerHTML.split(',');
+            function setIsuLayers(theProduct) {
+                if (theProduct == 'N0S') {
+                    var theYear = document.getElementById('isuyear').innerHTML;
+                    var theMonth = document.getElementById('isumonth').innerHTML;
+                    var theDay = document.getElementById('isuday').innerHTML;
+                    var theIsuArray = document.getElementById('isuarr').innerHTML.split(',');
+                } else if (theProduct == 'N0B') {
+                    var theYear = document.getElementById('isureflyear').innerHTML;
+                    var theMonth = document.getElementById('isureflmonth').innerHTML;
+                    var theDay = document.getElementById('isureflday').innerHTML;
+                    var theIsuArray = document.getElementById('isureflarr').innerHTML.split(',');
+                }
                 theIsuArray.reverse();
                 var radarLayers = [];
                 for (let i = 0; i <= 11; i++) {
@@ -903,7 +913,7 @@
                         format: 'png',
                         transparent: true,
                         sector: document.getElementById('statti').innerHTML.substring(1),
-                        prod: 'N0S',
+                        prod: theProduct,
                         layers: 'single-archive',
                         year: theYear,
                         month: theMonth,
@@ -963,8 +973,8 @@
             }
             
 
-            function isu() {
-                var normalDataReturned = setIsuLayers();
+            function isu(isuPro) {
+                var normalDataReturned = setIsuLayers(isuPro);
                 radarLayers = normalDataReturned;
             }
 
@@ -1020,8 +1030,6 @@
             function clearProductCheckboxes() {
                 $('#reflectivity').prop('checked', false);
                 $('#velocity').prop('checked', false);
-                $('#echotops').prop('checked', false);
-                $('#vil').prop('checked', false);
             }
             clearProductCheckboxes();
             function clearSingImgProductCheckboxes() {
@@ -1249,6 +1257,7 @@
 
                 var wdgTsUrl = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`;
                 var isuTsUrl = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0S&start=${isuYesterday}&end=${isuCurTime}`;
+                var isuTsReflUrl = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0B&start=${isuYesterday}&end=${isuCurTime}`;
                 // document.getElementById('wdgloaded').href = wdgTsUrl;
                 // document.getElementById('isuloaded').href = isuTsUrl;
 
@@ -1271,13 +1280,43 @@
                         document.getElementById('isumonth').innerHTML = month;
                         document.getElementById('isuday').innerHTML = day;
                         document.getElementById('isuarr').innerHTML = actualTimeStampe;
+                        //console.log(document.getElementById('isuarr').innerHTML.split(','));
 
-                        console.log(document.getElementById('isuarr').innerHTML.split(','));
+                        var xhttpISURefl = new XMLHttpRequest();
+                        xhttpISURefl.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                var resptxt = this.responseText;
+                                var data = JSON.parse(resptxt);
 
-                        $('#datacheck').prop('checked', false);
-                        document.getElementById('datatext').innerHTML = "Products"
-                        document.getElementById('data').style.display = 'none';
-                        document.getElementById('prods').style.display = 'block';
+                                for (let y = 1; y < 12; y++) {
+                                    var latestScan = data.scans[data.scans.length - y].ts;
+                                    var year = latestScan.substring(0, 4);
+                                    var month = latestScan.substring(5, 7);
+                                    var day = latestScan.substring(8, 10);
+                                    var ts = latestScan.substring(11, 16);
+                                    ts = ts.replace(/:/g, '');
+                                    actualTimeStampe.push(ts);
+                                }
+                                document.getElementById('isureflyear').innerHTML = year;
+                                document.getElementById('isureflmonth').innerHTML = month;
+                                document.getElementById('isureflday').innerHTML = day;
+                                document.getElementById('isureflarr').innerHTML = actualTimeStampe;
+
+                                console.log('refl:');
+                                console.log(document.getElementById('isureflarr').innerHTML.split(','));
+
+                                $('#datacheck').prop('checked', false);
+                                document.getElementById('datatext').innerHTML = "Products"
+                                document.getElementById('data').style.display = 'none';
+                                document.getElementById('prods').style.display = 'block';
+                            }
+                        };
+                        xhttpISURefl.addEventListener('progress', function (l) {
+                            document.getElementById('isureflloaded').innerHTML = formatBytes(l.loaded);
+                            document.getElementById('isureflloaded').href = isuTsReflUrl;
+                        });
+                        xhttpISURefl.open("GET", isuTsReflUrl, true);
+                        xhttpISURefl.send();
                     }
                 };
                 xhttpISU.addEventListener('progress', function (f) {
@@ -1285,7 +1324,7 @@
                     //document.querySelector('#download-progress').style.width = percent_complete + '%';
                     document.getElementById('isuloaded').innerHTML = formatBytes(f.loaded);
                     document.getElementById('isuloaded').href = isuTsUrl;
-                    console.log("isu: " + formatBytes(f.loaded));
+                    //console.log("isu: " + formatBytes(f.loaded));
                 });
                 xhttpISU.open("GET", isuTsUrl, true);
                 xhttpISU.send();
@@ -1310,7 +1349,7 @@
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
                     //wdgProduct(document.getElementById('statti').innerHTML, "bref_raw", 1);
 
-                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0B', 1);
+                    isu('N0B');
                     updateLayer(10);
                 } else {
                     productLayerGroup.clearLayers();
@@ -1329,7 +1368,7 @@
                     $('#velocity').prop('checked', true);
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0S', 1);
 
-                    isu();
+                    isu('N0S');
                     oopaac = 1;
                     $('#opacitySlider').val(oopaac);
                     updateLayer(10);
