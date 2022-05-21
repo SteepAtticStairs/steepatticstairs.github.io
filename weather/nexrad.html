@@ -910,7 +910,7 @@
                         format: 'png',
                         transparent: true,
                         sector: document.getElementById('statti').innerHTML.substring(1),
-                        prod: 'N0U',
+                        prod: 'N0S',
                         layers: 'single-archive',
                         year: theYear,
                         month: theMonth,
@@ -1287,7 +1287,7 @@
                 var isuYesterday = yesterday.toISOString().substr(0,yesterday.toISOString().indexOf(".")) + "Z";
 
                 var wdgTsUrl = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`;
-                var isuTsUrl = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0U&start=${isuYesterday}&end=${isuCurTime}`;
+                var isuTsUrl = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${document.getElementById('statti').innerHTML.substring(1)}&product=N0S&start=${isuYesterday}&end=${isuCurTime}`;
                 // document.getElementById('wdgloaded').href = wdgTsUrl;
                 // document.getElementById('isuloaded').href = isuTsUrl;
 
@@ -1407,7 +1407,7 @@
                     clearProductCheckboxes();
                     clearSingImgProductCheckboxes();
                     $('#velocity').prop('checked', true);
-                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U', 1);
+                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0S', 1);
 
                     isu();
                     oopaac = 1;
@@ -1468,7 +1468,7 @@
                     clearSingImgProductCheckboxes();
                     $('#singimgreflectivity').prop('checked', true);
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
-                    wdgProduct(document.getElementById('statti').innerHTML, "bref_raw", 1);
+                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0B', 1);
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
@@ -1483,7 +1483,7 @@
                     clearSingImgProductCheckboxes();
                     $('#singimgvelocity').prop('checked', true);
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
-                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0U', 1);
+                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0S', 1);
                 } else {
                     productLayerGroup.clearLayers();
                     normal();
