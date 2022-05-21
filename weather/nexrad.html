@@ -202,6 +202,7 @@
         <div style="display: none"><b>isu year: </b><a id="isuyear"></a></div>
         <div style="display: none"><b>isu month: </b><a id="isumonth"></a></div>
         <div style="display: none"><b>isu day: </b><a id="isuday"></a></div>
+        <div style="display: none" id="recievedDiv"><b>GeoJSON Data: </b><a id="recieved"></a></div>
         <div><b>Coords: </b>
             <br><a id="radstatcoords"></a></div>
         <div><b>Timestamp: </b>
@@ -1170,23 +1171,35 @@
                 console.log(alertDiv.innerHTML);
                 $.getJSON(alertDiv.innerHTML, function(data) {
                     for (let r = 0; r < data.properties.affectedZones.length; r++) {
-                        $.getJSON(data.properties.affectedZones[r], function(data) {
-                            var allCoordinates2 = data.geometry.coordinates[0];
-                            var coordinateArray2 = [];
-                            for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
-                                coordinateArray2.push(allCoordinates2[x].reverse());
+                        var xhttpALERT = new XMLHttpRequest();
+                        xhttpALERT.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                var data = JSON.parse(this.responseText);
+                                var allCoordinates2 = data.geometry.coordinates[0];
+                                var coordinateArray2 = [];
+                                for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
+                                    coordinateArray2.push(allCoordinates2[x].reverse());
+                                }
+
+                                var alertPopupNoPolygon = L.popup({maxHeight: 100}).setContent(fullPopup.innerHTML);
+                                var simplified = simplifyGeometry(coordinateArray2, 0.1);
+
+                                //console.log(simplified);
+                                var polygon2 = L.polygon([
+                                    simplified
+                                ]).addTo(geojsonAlertLayerGroup)
+                                .bindPopup(alertPopupNoPolygon);
+                                // grey
+                                polygon2.setStyle({color: '#838383'});
                             }
-
-                            var alertPopupNoPolygon = L.popup({maxHeight: 100}).setContent(fullPopup.innerHTML);
-                            var simplified = simplifyGeometry(coordinateArray2, 0.1);
-
-                            var polygon2 = L.polygon([
-                                simplified
-                            ]).addTo(geojsonAlertLayerGroup)
-                            .bindPopup(alertPopupNoPolygon);
-                            // grey
-                            polygon2.setStyle({color: '#838383'});
+                        };
+                        xhttpALERT.addEventListener('progress', function (e) {
+                            //var percent_complete = (e.loaded / e.total) * 100;
+                            //document.querySelector('#download-progress').style.width = percent_complete + '%';
+                            document.getElementById('recieved').innerHTML = formatBytes(e.loaded);
                         });
+                        xhttpALERT.open("GET", data.properties.affectedZones[r], true);
+                        xhttpALERT.send();
                     }
                 });
             });
@@ -1502,10 +1515,14 @@
             var alertsCheckbox = document.querySelector("#alerts");
             alertsCheckbox.addEventListener("change", function() {
                 if (this.checked) {
+                    document.getElementById('recievedDiv').style.display = 'block';
+                    console.log("yes")
                     showAlertMarkers();
                 } else {
                     alertLayerGroup.clearLayers();
                     alertClusterGroup.clearLayers();
+                    geojsonAlertLayerGroup.clearLayers();
+                    document.getElementById('recievedDiv').style.display = 'none';
                 }
             });
         }
