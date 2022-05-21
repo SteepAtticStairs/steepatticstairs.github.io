@@ -274,16 +274,9 @@
                         <br>
                         <input type="checkbox" id="velocity" name="velocity">
                         <label for="velocity">Velocity</label>
-                        <br>
-                        <input type="checkbox" id="echotops" name="echotops">
-                        <label for="echotops">Echo Tops</label>
-                        <br>
-                        <input type="checkbox" id="vil" name="vil">
-                        <label for="vil">VIL</label>
                     </div>
                     <div>
                         <br>
-                        <div><u>WDG</u> <i><a id="wdgloaded">0 bytes</a></i></div>
                         <div><u>ISU</u> <i><a id="isuloaded">0 bytes</a></i></div>
                     </div>
                     <br>
@@ -963,32 +956,6 @@
                 return {radarLayers, minutesToSubtract};
             }
 
-            function wdgLayers(pro) {
-                if (pro == 'bref_raw') {
-                    var tsArray = document.getElementById('bref_rawarr').innerHTML.split(',').slice(-11);
-                } else if (pro == 'beet') {
-                    var tsArray = document.getElementById('beetarr').innerHTML.split(',').slice(-11);
-                } else if (pro == 'hvil') {
-                    var tsArray = document.getElementById('hvilarr').innerHTML.split(',').slice(-11);
-                }
-                var urlToGet = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/${document.getElementById('statti').innerHTML.toLowerCase()}_${pro}/ows?`;
-                var theService = `${document.getElementById('statti').innerHTML.toLowerCase()}_${pro}`;
-                var radarLayers = [];
-                for (let i = 0; i <= 11; i++) {
-                    radarLayers[i] = L.tileLayer.wms(urlToGet, {
-                        SERVICE: 'WMS',
-                        LAYERS: theService,
-                        TIME: tsArray[i],
-                        format: 'image/png',
-                        transparent: true,
-                    });
-                    //console.log(layer);
-                    tileLayers.addLayer(radarLayers[i]);
-                    radarLayers[i].addTo(productLayerGroup);
-                }
-                return radarLayers;
-            }
-
             function normal() {
                 var normalDataReturned = normalLayers();
                 radarLayers = normalDataReturned.radarLayers;
@@ -998,11 +965,6 @@
 
             function isu() {
                 var normalDataReturned = setIsuLayers();
-                radarLayers = normalDataReturned;
-            }
-
-            function wdg(pr) {
-                var normalDataReturned = wdgLayers(pr);
                 radarLayers = normalDataReturned;
             }
 
@@ -1076,7 +1038,6 @@
             document.getElementById('singimg').style.display = 'block';
             document.getElementById('singimgprods').style.display = 'none';
 
-            document.getElementById('wdgloaded').innerHTML = '0 bytes';
             document.getElementById('isuloaded').innerHTML = '0 bytes';
             //markerLayerGroup.clearLayers();
 
@@ -1313,51 +1274,10 @@
 
                         console.log(document.getElementById('isuarr').innerHTML.split(','));
 
-                        var xhttpWDG = new XMLHttpRequest();
-                        xhttpWDG.onreadystatechange = function() {
-                            if (this.readyState == 4 && this.status == 200) {
-                                var xmlStr = this.responseText;
-        
-                                var xmlDoc = parseXml(xmlStr);
-                                var theJson = xmlToJson(xmlDoc);
-        
-                                // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
-                                // @ json to string
-                                var stringjson = JSON.stringify(theJson);
-                                // replace @ with AT
-                                var stringjsonwithouthash = stringjson.replace(/#/g, 'hash');
-                                // re-parse the AT json
-                                var nohashjson = JSON.parse(stringjsonwithouthash);
-        
-                                var notTsArray = nohashjson.WMS_Capabilities.Capability.Layer.Layer[5].Dimension.hashtext;
-                                tsArray = notTsArray.split(',');
-                                document.getElementById('bref_rawarr').innerHTML = tsArray;
-        
-                                var notTsArray = nohashjson.WMS_Capabilities.Capability.Layer.Layer[3].Dimension.hashtext;
-                                tsArray = notTsArray.split(',');
-                                document.getElementById('beetarr').innerHTML = tsArray;
-        
-                                var notTsArray = nohashjson.WMS_Capabilities.Capability.Layer.Layer[11].Dimension.hashtext;
-                                tsArray = notTsArray.split(',');
-                                document.getElementById('hvilarr').innerHTML = tsArray;
-        
-                                console.log(document.getElementById('bref_rawarr').innerHTML.split(','));
-
-                                $('#datacheck').prop('checked', false);
-                                document.getElementById('datatext').innerHTML = "Products"
-                                document.getElementById('data').style.display = 'none';
-                                document.getElementById('prods').style.display = 'block';
-                            }
-                        };
-                        xhttpWDG.addEventListener('progress', function (e) {
-                            //var percent_complete = (e.loaded / e.total) * 100;
-                            //document.querySelector('#download-progress').style.width = percent_complete + '%';
-                            document.getElementById('wdgloaded').innerHTML = formatBytes(e.loaded);
-                            document.getElementById('wdgloaded').href = wdgTsUrl;
-                            console.log("wdg: " + formatBytes(e.loaded));
-                        });
-                        xhttpWDG.open("GET", wdgTsUrl, true);
-                        xhttpWDG.send();
+                        $('#datacheck').prop('checked', false);
+                        document.getElementById('datatext').innerHTML = "Products"
+                        document.getElementById('data').style.display = 'none';
+                        document.getElementById('prods').style.display = 'block';
                     }
                 };
                 xhttpISU.addEventListener('progress', function (f) {
@@ -1390,7 +1310,7 @@
                     //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
                     //wdgProduct(document.getElementById('statti').innerHTML, "bref_raw", 1);
 
-                    wdg('bref_raw');
+                    showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0B', 1);
                     updateLayer(10);
                 } else {
                     productLayerGroup.clearLayers();
@@ -1411,46 +1331,6 @@
 
                     isu();
                     oopaac = 1;
-                    $('#opacitySlider').val(oopaac);
-                    updateLayer(10);
-                } else {
-                    productLayerGroup.clearLayers();
-                    normal();
-                    updateLayer(10);
-                }
-            });
-            var echotopsCheckbox = document.querySelector("#echotops");
-            echotopsCheckbox.addEventListener("change", function() {
-                if (this.checked) {
-                    productLayerGroup.clearLayers();
-                    clearProductCheckboxes();
-                    clearSingImgProductCheckboxes();
-                    $('#echotops').prop('checked', true);
-                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'NET');
-                    //wdgProduct(document.getElementById('statti').innerHTML, "beet", 1);
-
-                    wdg('beet');
-                    oopaac = 1;
-                    $('#opacitySlider').val(oopaac);
-                    updateLayer(10);
-                } else {
-                    productLayerGroup.clearLayers();
-                    normal();
-                    updateLayer(10);
-                }
-            });
-            var vilCheckbox = document.querySelector("#vil");
-            vilCheckbox.addEventListener("change", function() {
-                if (this.checked) {
-                    productLayerGroup.clearLayers();
-                    clearProductCheckboxes();
-                    clearSingImgProductCheckboxes();
-                    $('#vil').prop('checked', true);
-                    //showProduct(document.getElementById('statti').innerHTML.substring(1), 'NET');
-                    //wdgProduct(document.getElementById('statti').innerHTML, "hvil", 0.5);
-
-                    wdg('hvil');
-                    oopaac = 0.5;
                     $('#opacitySlider').val(oopaac);
                     updateLayer(10);
                 } else {
