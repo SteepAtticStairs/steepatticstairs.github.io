@@ -202,7 +202,7 @@
         <div style="display: none"><b>isu year: </b><a id="isuyear"></a></div>
         <div style="display: none"><b>isu month: </b><a id="isumonth"></a></div>
         <div style="display: none"><b>isu day: </b><a id="isuday"></a></div>
-        <div style="display: none" id="recievedDiv"><b>GeoJSON Data: </b><a id="recieved"></a></div>
+        <div style="display: none" id="recievedDiv"><b>GeoJSON Data: </b><a id="recieved">Waiting...</a></div>
         <div><b>Coords: </b>
             <br><a id="radstatcoords"></a></div>
         <div><b>Timestamp: </b>
@@ -1165,6 +1165,7 @@
 
             var drawPolygonBtn = document.getElementById('polygon');
             drawPolygonBtn.addEventListener('click', function handleClick() {
+                var totalData = 0;
                 console.log('pls draw polygon');
                 var alertDiv = document.getElementById('alertNameDiv');
                 var fullPopup = document.getElementById('noPolygonPopup');
@@ -1196,7 +1197,13 @@
                         xhttpALERT.addEventListener('progress', function (e) {
                             //var percent_complete = (e.loaded / e.total) * 100;
                             //document.querySelector('#download-progress').style.width = percent_complete + '%';
-                            document.getElementById('recieved').innerHTML = formatBytes(e.loaded);
+                            if (document.getElementById('recieved').innerHTML == 'Waiting...') {
+                                totalData = e.loaded;
+                                document.getElementById('recieved').innerHTML = formatBytes(totalData);
+                            } else if (document.getElementById('recieved').innerHTML != 'Waiting...') {
+                                totalData = totalData + e.loaded;
+                                document.getElementById('recieved').innerHTML = formatBytes(totalData);
+                            }
                         });
                         xhttpALERT.open("GET", data.properties.affectedZones[r], true);
                         xhttpALERT.send();
