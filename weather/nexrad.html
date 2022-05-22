@@ -204,6 +204,7 @@
         <div style="display: none"><b>Stat: </b><a id="statti"></a></div>
         <div style="display: none"><b>bref array: </b><a id="bref_rawarr"></a></div>
         <div style="display: none"><b>isu full array: </b><a id="isuarrfull"></a></div>
+        <div style="display: none"><b>isu full array velocity: </b><a id="isuarrfullvel"></a></div>
         <div style="display: none"><b>isu array: </b><a id="isuarr"></a></div>
         <div style="display: none"><b>isu year: </b><a id="isuyear"></a></div>
         <div style="display: none"><b>isu month: </b><a id="isumonth"></a></div>
@@ -903,12 +904,13 @@
             function setIsuLayers(theProduct) {
                 var fullScan = document.getElementById('isuarrfull').innerHTML.split(',');
                 if (theProduct == 'N0S') {
-                    var theIsuArray = document.getElementById('isuarr').innerHTML.split(',');
+                    var fullScan = document.getElementById('isuarrfullvel').innerHTML.split(',');
                 } else if (theProduct == 'N0B') {
-                    var theIsuArray = document.getElementById('isureflarr').innerHTML.split(',');
+                    var fullScan = document.getElementById('isuarrfull').innerHTML.split(',');
                 }
-                theIsuArray.reverse();
                 fullScan.reverse();
+                console.log(theProduct + " array:")
+                console.log(fullScan);
 
                 var theYear = [];
                 var theMonth = [];
@@ -1288,18 +1290,8 @@
                         for (let y = 1; y < 12; y++) {
                             var latestScan = data.scans[data.scans.length - y].ts;
                             fullTsArray.push(latestScan);
-                            var year = latestScan.substring(0, 4);
-                            var month = latestScan.substring(5, 7);
-                            var day = latestScan.substring(8, 10);
-                            var ts = latestScan.substring(11, 16);
-                            ts = ts.replace(/:/g, '');
-                            actualTimeStampe.push(ts);
                         }
-                        document.getElementById('isuarrfull').innerHTML = fullTsArray;
-                        document.getElementById('isuyear').innerHTML = year;
-                        document.getElementById('isumonth').innerHTML = month;
-                        document.getElementById('isuday').innerHTML = day;
-                        document.getElementById('isuarr').innerHTML = actualTimeStampe;
+                        document.getElementById('isuarrfullvel').innerHTML = fullTsArray;
                         //console.log(document.getElementById('isuarr').innerHTML.split(','));
 
                         var xhttpISURefl = new XMLHttpRequest();
@@ -1308,22 +1300,12 @@
                                 var resptxt = this.responseText;
                                 var data = JSON.parse(resptxt);
 
+                                var fullTsArray = [];
                                 for (let y = 1; y < 12; y++) {
                                     var latestScan = data.scans[data.scans.length - y].ts;
-                                    var year = latestScan.substring(0, 4);
-                                    var month = latestScan.substring(5, 7);
-                                    var day = latestScan.substring(8, 10);
-                                    var ts = latestScan.substring(11, 16);
-                                    ts = ts.replace(/:/g, '');
-                                    actualTimeStampe.push(ts);
+                                    fullTsArray.push(latestScan);
                                 }
-                                document.getElementById('isureflyear').innerHTML = year;
-                                document.getElementById('isureflmonth').innerHTML = month;
-                                document.getElementById('isureflday').innerHTML = day;
-                                document.getElementById('isureflarr').innerHTML = actualTimeStampe;
-
-                                console.log('refl:');
-                                console.log(document.getElementById('isureflarr').innerHTML.split(','));
+                                document.getElementById('isuarrfull').innerHTML = fullTsArray;
 
                                 $('#datacheck').prop('checked', false);
                                 document.getElementById('datatext').innerHTML = "Products"
