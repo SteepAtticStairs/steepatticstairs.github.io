@@ -203,6 +203,7 @@
         <div><b>Zip: </b><a id="radstatzip"></a></div>
         <div style="display: none"><b>Stat: </b><a id="statti"></a></div>
         <div style="display: none"><b>bref array: </b><a id="bref_rawarr"></a></div>
+        <div style="display: none"><b>isu full array: </b><a id="isuarrfull"></a></div>
         <div style="display: none"><b>isu array: </b><a id="isuarr"></a></div>
         <div style="display: none"><b>isu year: </b><a id="isuyear"></a></div>
         <div style="display: none"><b>isu month: </b><a id="isumonth"></a></div>
@@ -900,20 +901,29 @@
             //}).addTo(map);
 
             function setIsuLayers(theProduct) {
+                var fullScan = document.getElementById('isuarrfull').innerHTML.split(',');
                 if (theProduct == 'N0S') {
-                    var theYear = document.getElementById('isuyear').innerHTML;
-                    var theMonth = document.getElementById('isumonth').innerHTML;
-                    var theDay = document.getElementById('isuday').innerHTML;
                     var theIsuArray = document.getElementById('isuarr').innerHTML.split(',');
                 } else if (theProduct == 'N0B') {
-                    var theYear = document.getElementById('isureflyear').innerHTML;
-                    var theMonth = document.getElementById('isureflmonth').innerHTML;
-                    var theDay = document.getElementById('isureflday').innerHTML;
                     var theIsuArray = document.getElementById('isureflarr').innerHTML.split(',');
                 }
                 theIsuArray.reverse();
+                fullScan.reverse();
+
+                var theYear = [];
+                var theMonth = [];
+                var theDay = [];
+                var theTime = [];
+
+                for (var u = 0; u < 11; u++) {
+                    theYear.push(fullScan[u].substring(0, 4));
+                    theMonth.push(fullScan[u].substring(5, 7));
+                    theDay.push(fullScan[u].substring(8, 10));
+                    theTime.push(fullScan[u].substring(11, 16).replace(/:/g, ''));
+                }
+
                 var radarLayers = [];
-                for (let i = 0; i <= 11; i++) {
+                for (var i = 0; i <= 11; i++) {
                     radarLayers[i] = L.tileLayer.wms('https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/ridge.cgi', {
                         service: 'wms',
                         version: '1.1.1',
@@ -923,10 +933,10 @@
                         sector: document.getElementById('statti').innerHTML.substring(1),
                         prod: theProduct,
                         layers: 'single-archive',
-                        year: theYear,
-                        month: theMonth,
-                        day: theDay,
-                        time: theIsuArray[i],
+                        year: theYear[i],
+                        month: theMonth[i],
+                        day: theDay[i],
+                        time: theTime[i],
                         opacity: 0.0
                     });
                     //console.log(layer);
@@ -1274,8 +1284,10 @@
                         var resptxt = this.responseText;
                         var data = JSON.parse(resptxt);
 
+                        var fullTsArray = [];
                         for (let y = 1; y < 12; y++) {
                             var latestScan = data.scans[data.scans.length - y].ts;
+                            fullTsArray.push(latestScan);
                             var year = latestScan.substring(0, 4);
                             var month = latestScan.substring(5, 7);
                             var day = latestScan.substring(8, 10);
@@ -1283,6 +1295,7 @@
                             ts = ts.replace(/:/g, '');
                             actualTimeStampe.push(ts);
                         }
+                        document.getElementById('isuarrfull').innerHTML = fullTsArray;
                         document.getElementById('isuyear').innerHTML = year;
                         document.getElementById('isumonth').innerHTML = month;
                         document.getElementById('isuday').innerHTML = day;
