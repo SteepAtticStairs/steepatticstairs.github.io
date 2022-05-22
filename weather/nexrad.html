@@ -1090,7 +1090,17 @@
                 // minutes back this frame is from
                 var displayedRadarTime = new Date(currentTime - minutesToSubtract[layernum] * msPerMinute);
                 // formats and prints that time
-                document.getElementById('ts').innerHTML = printFancyTime(displayedRadarTime);
+                if ($('#reflectivity:checked').val() == 'on') {
+                    var scen = document.getElementById('isuarrfull').innerHTML.split(',');
+                    scen.reverse();
+                    document.getElementById('ts').innerHTML = '<b>N0B</b> ' + printFancyTime(new Date(scen[layernum]));
+                } else if ($('#velocity:checked').val() == 'on') {
+                    var scen = document.getElementById('isuarrfullvel').innerHTML.split(',');
+                    scen.reverse();
+                    document.getElementById('ts').innerHTML = '<b>N0S</b> ' + printFancyTime(new Date(scen[layernum]));
+                } else {
+                    document.getElementById('ts').innerHTML = printFancyTime(displayedRadarTime);
+                }
                 // set the initial layer's opacity value to the oopaac value which changes
                 radarLayers[layernum].setOpacity(oopaac);
                 // sets the timestamp slider to the loop index
