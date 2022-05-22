@@ -37,6 +37,9 @@
     <!-- https://github.com/Leaflet/Leaflet.fullscreen -->
     <link rel="stylesheet" href="/weather/assets/css/leaflet.fullscreen.css" />
     <script src='/weather/assets/js/Leaflet.fullscreen.js'></script>
+    <!-- https://github.com/domoritz/leaflet-locatecontrol -->
+    <link rel="stylesheet" href="/weather/assets/css/L.Control.Locate.css" />
+    <script src='/weather/assets/js/L.Control.Locate.js'></script>
 
     <style>
         body, html {
@@ -595,6 +598,11 @@
                 smoothSensitivity: 1,
                 //zoomSnap: 0.1,
             }).setView([lat, lon], zoom);
+
+            L.control.locate({
+                keepCurrentZoomLevel: false,
+                returnToPrevBounds: true,
+            }).addTo(map);
 
             var osmLayer = 
             L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
