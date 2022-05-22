@@ -40,6 +40,11 @@
     <!-- https://github.com/domoritz/leaflet-locatecontrol -->
     <link rel="stylesheet" href="/weather/assets/css/L.Control.Locate.css" />
     <script src='/weather/assets/js/L.Control.Locate.js'></script>
+    <!-- https://cdnjs.com/libraries/font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- https://github.com/CliffCloud/Leaflet.EasyButton -->
+    <link rel="stylesheet" href="/weather/assets/css/easy-button.css">
+    <script src="/weather/assets/js/easy-button.js"></script>
 
     <style>
         body, html {
@@ -618,6 +623,48 @@
                     $("#map").css("z-index", "0");
                 }
             });
+
+            var stationButton = 
+                L.easyButton('fa-solid fa-satellite-dish', function(btn, map) {
+                    clickOnCheckbox('#labels');
+                }, {tagName: 'a'});
+            var lightningButton = 
+                L.easyButton('fa-solid fa-bolt', function(btn, map) {
+                    clickOnCheckbox('#lightning');
+                }, {tagName: 'a'});
+            var alertButton = 
+                L.easyButton('fa-solid fa-circle-exclamation', function(btn, map) {
+                    clickOnCheckbox('#alerts');
+                }, {tagName: 'a'});
+
+            var editBar = L.easyBar([
+                stationButton,
+                lightningButton,
+                alertButton,
+            ], {position: 'bottomleft'});
+
+            editBar.addTo(map);
+
+            // L.Control.Button = L.Control.extend({
+            //     options: {
+            //         position: 'topleft'
+            //     },
+            //     onAdd: function (map) {
+            //         var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+            //         var button = L.DomUtil.create('a', 'leaflet-control-button', container);
+            //         button.innerHTML = '<i class="fa fa-globe"></i>';
+            //         $(container).css("cursor", "pointer");
+            //         L.DomEvent.disableClickPropagation(button);
+            //         L.DomEvent.on(button, 'click', function(){
+            //             console.log('click');
+            //         });
+            //         container.title = "Title";
+            //         return container;
+            //     },
+            //     onRemove: function(map) {},
+            // });
+            // var control = new L.Control.Button()
+            // control.addTo(map);
 
             // var applemapsLayer = 
             // L.tileLayer.wms('https://{s}.apple-mapkit.com/ti/tile?x={x}&y={y}&z={z}', {
@@ -1609,6 +1656,10 @@
         }
         function clearPolygons() {
             $('#clearpolygon').trigger('click');
+        }
+
+        function clickOnCheckbox(divname) {
+            $(divname).trigger('click');
         }
     </script>
     </div>
