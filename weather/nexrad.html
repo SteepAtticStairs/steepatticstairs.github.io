@@ -259,6 +259,7 @@
                 <span class="anchor">Layers</span>
                 <ul class="items">
                     <!-- <li><input type="checkbox" />Apple </li> -->
+                    <br>
                     <input type="checkbox" id="labels" name="labels">
                     <label id="stationLabel" for="labels">Stations</label>
                     <br>
@@ -305,10 +306,6 @@
                         <input type="checkbox" id="singimgvil" name="singimgvil">
                         <label for="singimgvil">VIL</label>
                     </div>
-                    <br>
-                    <br>
-                    <input type="checkbox" id="location" name="location">
-                    <label for="location">Location</label>
                     <br>
                     <br>
                     <div style="display: flex; align-items: center; justify-content: center">
@@ -641,15 +638,6 @@
             var lightningLayerGroup = L.layerGroup().addTo(map);
             var productLayerGroup = L.layerGroup().addTo(map);
             var alertClusterGroup = L.markerClusterGroup().addTo(map);
-
-            function showLocationMarker() {
-                navigator.geolocation.getCurrentPosition(position => {
-                    const { coords: { latitude, longitude }} = position;
-                    var locationMarker = new L.marker([latitude, longitude], {
-                    }).addTo(locationMarkerLayerGroup)
-                    .bindPopup("<b>Current Location:</b><br>" + latitude + "<br>" + longitude);
-                })
-            }
 
             var radarIcon = L.icon({
                 iconUrl: '/icons/radar.png',
@@ -1056,7 +1044,6 @@
                 $('#singimgvil').prop('checked', false);
             }
             clearSingImgProductCheckboxes();
-            $('#location').prop('checked', false);
             document.getElementById('data').style.display = 'block';
             document.getElementById('prods').style.display = 'none';
 
@@ -1458,15 +1445,6 @@
             });
 
 
-
-            var locationCheckbox = document.querySelector("#location");
-            locationCheckbox.addEventListener("change", function() {
-                if (this.checked) {
-                    showLocationMarker();
-                } else {
-                    locationMarkerLayerGroup.clearLayers();
-                }
-            });
 
             var alertsCheckbox = document.querySelector("#alerts");
             alertsCheckbox.addEventListener("change", function() {
