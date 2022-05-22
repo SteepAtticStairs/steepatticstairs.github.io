@@ -1269,7 +1269,8 @@
 
                 var actualTimeStampe = [];
                 var curTime = new Date();
-                var yesterday = new Date(curTime - 1440 * 60000);
+                // 120 = # of minutes in 2 hours
+                var yesterday = new Date(curTime - 120 * 60000);
                 // https://stackoverflow.com/a/68514256
                 var isuCurTime = curTime.toISOString().substr(0,curTime.toISOString().indexOf(".")) + "Z";
                 var isuYesterday = yesterday.toISOString().substr(0,yesterday.toISOString().indexOf(".")) + "Z";
