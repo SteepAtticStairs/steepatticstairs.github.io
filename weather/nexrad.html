@@ -181,6 +181,10 @@
         .dropdown-check-list.visible .items {
             display: block;
         }
+
+        .icon-selected {
+            color:rgb(0, 132, 255);
+        }
     </style>
 </head>
 <body>
@@ -625,17 +629,62 @@
             });
 
             var stationButton = 
-                L.easyButton('fa-solid fa-satellite-dish', function(btn, map) {
-                    clickOnCheckbox('#labels');
-                }, {tagName: 'a'});
+                L.easyButton({
+                    states: [{
+                        icon: 'fa-satellite-dish',
+                        stateName: 'add',
+                        onClick: function(control) {
+                            clickOnCheckbox('#labels');
+                            control.state('remove');
+                        }
+                    }, {
+                        icon: 'fa-satellite-dish icon-selected',
+                        stateName: 'remove',
+                        onClick: function(control) {
+                            clickOnCheckbox('#labels');
+                            control.state('add');
+                        },
+                    }],
+                        tagName: 'a'
+                });
             var lightningButton = 
-                L.easyButton('fa-solid fa-bolt', function(btn, map) {
-                    clickOnCheckbox('#lightning');
-                }, {tagName: 'a'});
+                L.easyButton({
+                    states: [{
+                        icon: 'fa-bolt',
+                        stateName: 'add',
+                        onClick: function(control) {
+                            clickOnCheckbox('#lightning');
+                            control.state('remove');
+                        }
+                    }, {
+                        icon: 'fa-bolt icon-selected',
+                        stateName: 'remove',
+                        onClick: function(control) {
+                            clickOnCheckbox('#lightning');
+                            control.state('add');
+                        },
+                    }],
+                        tagName: 'a'
+                });
             var alertButton = 
-                L.easyButton('fa-solid fa-circle-exclamation', function(btn, map) {
-                    clickOnCheckbox('#alerts');
-                }, {tagName: 'a'});
+                L.easyButton({
+                    states: [{
+                        icon: 'fa-circle-exclamation',
+                        stateName: 'add',
+                        onClick: function(control) {
+                            clickOnCheckbox('#alerts');
+                            control.state('remove');
+                        }
+                    }, {
+                        icon: 'fa-circle-exclamation icon-selected',
+                        stateName: 'remove',
+                        onClick: function(control) {
+                            clickOnCheckbox('#alerts');
+                            control.state('add');
+                        },
+                    }],
+                        tagName: 'a'
+                });
 
             var editBar = L.easyBar([
                 stationButton,
