@@ -729,30 +729,29 @@
                     }],
                         tagName: 'a'
                 });
-
             var animReflBtn = 
-                L.easyButton('fa-hurricane', function(btn, map) {
-                    if ($(".fa-hurricane").hasClass("icon-selected-removable")) {
+                L.easyButton('fa-hurricane anim-refl', function(btn, map) {
+                    if ($(".anim-refl").hasClass("icon-selected-removable")) {
                         // if the button is clicked while the layer is being displayed
-                        $(".fa-hurricane").removeClass("icon-selected-removable");
+                        $(".anim-refl").removeClass("icon-selected-removable");
                     } else {
                         // remove blue from all other selected buttons
                         $(".icon-selected-removable").removeClass("icon-selected-removable");
                         // add blue to this button
-                        $(".fa-hurricane").addClass("icon-selected-removable");
+                        $(".anim-refl").addClass("icon-selected-removable");
                     }
                     clickOnCheckbox('#reflectivity');
                 }, {tagName: 'a'});
             var animVelBtn = 
-                L.easyButton('fa-gauge', function(btn, map) {
-                    if ($(".fa-gauge").hasClass("icon-selected-removable")) {
+                L.easyButton('fa-gauge anim-vel', function(btn, map) {
+                    if ($(".anim-vel").hasClass("icon-selected-removable")) {
                         // if the button is clicked while the layer is being displayed
-                        $(".fa-gauge").removeClass("icon-selected-removable");
+                        $(".anim-vel").removeClass("icon-selected-removable");
                     } else {
                         // remove blue from all other selected buttons
                         $(".icon-selected-removable").removeClass("icon-selected-removable");
                         // add blue to this button
-                        $(".fa-gauge").addClass("icon-selected-removable");
+                        $(".anim-vel").addClass("icon-selected-removable");
                     }
                     clickOnCheckbox('#velocity');
                 }, {tagName: 'a'});
@@ -765,6 +764,68 @@
             editBarTR.addTo(map);
             animReflBtn.disable();
             animVelBtn.disable();
+
+            var stillReflBtn = 
+                L.easyButton('fa-hurricane still-refl', function(btn, map) {
+                    if ($(".still-refl").hasClass("icon-selected-removable")) {
+                        // if the button is clicked while the layer is being displayed
+                        $(".still-refl").removeClass("icon-selected-removable");
+                    } else {
+                        // remove blue from all other selected buttons
+                        $(".icon-selected-removable").removeClass("icon-selected-removable");
+                        // add blue to this button
+                        $(".still-refl").addClass("icon-selected-removable");
+                    }
+                    clickOnCheckbox('#singimgreflectivity');
+                }, {tagName: 'a'});
+            var stillVelBtn = 
+                L.easyButton('fa-gauge still-vel', function(btn, map) {
+                    if ($(".still-vel").hasClass("icon-selected-removable")) {
+                        // if the button is clicked while the layer is being displayed
+                        $(".still-vel").removeClass("icon-selected-removable");
+                    } else {
+                        // remove blue from all other selected buttons
+                        $(".icon-selected-removable").removeClass("icon-selected-removable");
+                        // add blue to this button
+                        $(".still-vel").addClass("icon-selected-removable");
+                    }
+                    clickOnCheckbox('#singimgvelocity');
+                }, {tagName: 'a'});
+            var stillEchoTopsBtn = 
+                L.easyButton('fa-cloud-arrow-up still-echotops', function(btn, map) {
+                    if ($(".still-echotops").hasClass("icon-selected-removable")) {
+                        // if the button is clicked while the layer is being displayed
+                        $(".still-echotops").removeClass("icon-selected-removable");
+                    } else {
+                        // remove blue from all other selected buttons
+                        $(".icon-selected-removable").removeClass("icon-selected-removable");
+                        // add blue to this button
+                        $(".still-echotops").addClass("icon-selected-removable");
+                    }
+                    clickOnCheckbox('#singimgechotops');
+                }, {tagName: 'a'});
+            var stillVILBtn = 
+                L.easyButton('fa-droplet still-vil', function(btn, map) {
+                    if ($(".still-vil").hasClass("icon-selected-removable")) {
+                        // if the button is clicked while the layer is being displayed
+                        $(".still-vil").removeClass("icon-selected-removable");
+                    } else {
+                        // remove blue from all other selected buttons
+                        $(".icon-selected-removable").removeClass("icon-selected-removable");
+                        // add blue to this button
+                        $(".still-vil").addClass("icon-selected-removable");
+                    }
+                    clickOnCheckbox('#singimgvil');
+                }, {tagName: 'a'});
+
+            var editBarTRStill = L.easyBar([
+                stillReflBtn,
+                stillVelBtn,
+                stillEchoTopsBtn,
+                stillVILBtn
+            ], {position: 'topright'});
+            editBarTRStill.addTo(map);
+
 
             // L.Control.Button = L.Control.extend({
             //     options: {
