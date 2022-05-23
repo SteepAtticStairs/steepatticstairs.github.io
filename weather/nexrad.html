@@ -185,19 +185,20 @@
         .icon-selected {
             color:rgb(0, 132, 255);
         }
-        #map .easy-button-button{
+        .icon-selected-removable {
+            color:rgb(0, 132, 255);
+        }
+        #map .easy-button-button {
             transition-duration: .3s;
             position: relative;
             border-radius: 4px;
             border: solid 0px transparent;
         }
-        #map .easy-button-container{
+        #map .easy-button-container {
             background-color: white;
         }
         #map .easy-button-button.disabled {
             height: 0;
-        }
-        #map .hide {
             display: none;
         }
     </style>
@@ -719,7 +720,7 @@
                             control.state('remove');
                         }
                     }, {
-                        icon: 'fa-spinner',
+                        icon: 'fa-server icon-selected',
                         stateName: 'remove',
                         onClick: function(control) {
                             console.log('sus');
@@ -729,45 +730,32 @@
                         tagName: 'a'
                 });
 
-            var plusUri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wYJFTodgbZtSwAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAABoSURBVEjHY2AYBaNg2AJmMvQkMTAwGDAwMHAzMDA8JlYTIxkW/SdHPxO9gm7kWWQNjRNkjB5fMPyXgYEhg1yL1Eh0tCm5FpGSKr/jUz+avOlq0Xco/Y8UTSxkWLQCGk+nR6uKUTC4AQC8oBHyYLAfhwAAAABJRU5ErkJggg=='
             var animReflBtn = 
-                L.easyButton({
-                    states: [{
-                        icon: 'fa-hurricane hide',
-                        stateName: 'add',
-                        onClick: function(control) {
-                            clickOnCheckbox('#reflectivity');
-                            control.state('remove');
-                        }
-                    }, {
-                        icon: 'fa-hurricane icon-selected',
-                        stateName: 'remove',
-                        onClick: function(control) {
-                            clickOnCheckbox('#reflectivity');
-                            control.state('add');
-                        },
-                    }],
-                        tagName: 'a'
-                });
+                L.easyButton('fa-hurricane', function(btn, map) {
+                    if ($(".fa-hurricane").hasClass("icon-selected-removable")) {
+                        // if the button is clicked while the layer is being displayed
+                        $(".fa-hurricane").removeClass("icon-selected-removable");
+                    } else {
+                        // remove blue from all other selected buttons
+                        $(".icon-selected-removable").removeClass("icon-selected-removable");
+                        // add blue to this button
+                        $(".fa-hurricane").addClass("icon-selected-removable");
+                    }
+                    clickOnCheckbox('#reflectivity');
+                }, {tagName: 'a'});
             var animVelBtn = 
-                L.easyButton({
-                    states: [{
-                        icon: 'fa-gauge',
-                        stateName: 'add',
-                        onClick: function(control) {
-                            clickOnCheckbox('#velocity');
-                            control.state('remove');
-                        }
-                    }, {
-                        icon: 'fa-gauge icon-selected',
-                        stateName: 'remove',
-                        onClick: function(control) {
-                            clickOnCheckbox('#velocity');
-                            control.state('add');
-                        },
-                    }],
-                        tagName: 'a'
-                });
+                L.easyButton('fa-gauge', function(btn, map) {
+                    if ($(".fa-gauge").hasClass("icon-selected-removable")) {
+                        // if the button is clicked while the layer is being displayed
+                        $(".fa-gauge").removeClass("icon-selected-removable");
+                    } else {
+                        // remove blue from all other selected buttons
+                        $(".icon-selected-removable").removeClass("icon-selected-removable");
+                        // add blue to this button
+                        $(".fa-gauge").addClass("icon-selected-removable");
+                    }
+                    clickOnCheckbox('#velocity');
+                }, {tagName: 'a'});
 
             var editBarTR = L.easyBar([
                 dataBtn,
