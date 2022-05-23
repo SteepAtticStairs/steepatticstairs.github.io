@@ -188,6 +188,12 @@
         .icon-selected-removable {
             color:rgb(0, 132, 255);
         }
+        .green-icon {
+            color:green;
+        }
+        .red-icon {
+            color:red;
+        }
         #map .easy-button-button {
             transition-duration: .3s;
             position: relative;
@@ -708,6 +714,28 @@
                 alertButton,
             ], {position: 'bottomleft'});
             editBarBL.addTo(map);
+
+
+            var pausePlayButton = 
+                L.easyButton({
+                    states: [{
+                        icon: 'fa-play green-icon',
+                        stateName: 'add',
+                        onClick: function(control) {
+                            $('#play').trigger('click');
+                            control.state('remove');
+                        }
+                    }, {
+                        icon: 'fa-pause red-icon',
+                        stateName: 'remove',
+                        onClick: function(control) {
+                            $('#pause').trigger('click');
+                            control.state('add');
+                        },
+                    }],
+                        tagName: 'a',
+                        position: 'bottomleft'
+                }).addTo(map);
 
 
             var dataBtn = 
@@ -1274,7 +1302,8 @@
             });
 
             var tileProgressBarControl = new L.Control.TileLoadingProgress({
-                leafletElt: tileLayers
+                leafletElt: tileLayers,
+                position: 'bottomright'
             }).addTo(map);
 
             function showLightning() {
