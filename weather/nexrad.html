@@ -1208,7 +1208,21 @@
                     }],
                         tagName: 'a',
                         position: 'topleft'
-                }).addTo(map);
+                });
+
+            map.on('zoomstart', function() {
+                map.eachLayer(function (layer) {
+                    if (layer != osmLayer) {
+                        map.removeLayer(layer);
+                        allLayerGroup.addLayer(layer);
+                    }
+                });
+            });
+            map.on('zoomend', function() {
+                allLayerGroup.eachLayer(function (layer) {
+                    map.addLayer(layer);
+                });
+            });
 
             var tileProgressBarControl = new L.Control.TileLoadingProgress({
                 leafletElt: tileLayers
