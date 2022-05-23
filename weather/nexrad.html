@@ -691,7 +691,6 @@
                 lightningButton,
                 alertButton,
             ], {position: 'bottomleft'});
-
             editBar.addTo(map);
 
             // L.Control.Button = L.Control.extend({
@@ -732,6 +731,7 @@
             // }).addTo(map);
 
             var tileLayers = L.layerGroup([]);
+            var allLayerGroup = L.layerGroup();
             var markerLayerGroup = L.layerGroup().addTo(map);
             var locationMarkerLayerGroup = L.layerGroup().addTo(map);
             var alertLayerGroup = L.layerGroup().addTo(map);
@@ -1095,6 +1095,36 @@
             }
 
             normal();
+
+            var trashButton = 
+                L.easyButton({
+                    states: [{
+                        icon: 'fa-trash',
+                        stateName: 'add',
+                        onClick: function(control) {
+                            map.eachLayer(function (layer) {
+                                if (layer != osmLayer) {
+                                    map.removeLayer(layer);
+                                    allLayerGroup.addLayer(layer);
+                                }
+                            });
+                            control.state('remove');
+                        }
+                    }, {
+                        icon: 'fa-trash icon-selected',
+                        stateName: 'remove',
+                        onClick: function(control) {
+                            allLayerGroup.eachLayer(function (layer) {
+                                map.addLayer(layer);
+                            });
+                            normal();
+                            control.state('add');
+                        },
+                    }],
+                        tagName: 'a',
+                        position: 'topleft'
+                }).addTo(map);
+
             var tileProgressBarControl = new L.Control.TileLoadingProgress({
                 leafletElt: tileLayers
             }).addTo(map);
