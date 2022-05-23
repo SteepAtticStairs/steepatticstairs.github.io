@@ -45,6 +45,9 @@
     <!-- https://github.com/CliffCloud/Leaflet.EasyButton -->
     <link rel="stylesheet" href="/weather/assets/css/easy-button.css">
     <script src="/weather/assets/js/easy-button.js"></script>
+    <!-- https://gitlab.com/manuel.richter95/leaflet.notifications -->
+    <link rel="stylesheet" href="/weather/assets/css/leaflet-notifications.css">
+    <script src="/weather/assets/js/leaflet-notifications.js"></script>
 
     <style>
         body, html {
@@ -642,6 +645,21 @@
                 attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            var notification = L.control.notifications({
+                position: 'bottomright',
+            }).addTo(map);
+            function checkIfRadarStation() {
+                if (document.getElementById('statti').innerHTML == '') {
+                    notification.alert('Error', 'Please select a radar station before choosing a product.', {
+                        timeout: 2000,
+                        closable: true,
+                        dismissable: true,
+                        icon: 'fa fa-times-circle',
+                    });
+                }
+            }
+
+
             map.on('fullscreenchange', function () {
                 if (map.isFullscreen()) {
                     $("#map").css("z-index", "10000");
@@ -745,6 +763,7 @@
                         stateName: 'add',
                         onClick: function(control) {
                             clickOnCheckbox('#datacheck');
+                            checkIfRadarStation();
                             control.state('remove');
                         }
                     }, {
@@ -805,6 +824,7 @@
                         $(".still-refl").addClass("icon-selected-removable");
                     }
                     clickOnCheckbox('#singimgreflectivity');
+                    checkIfRadarStation();
                 }, {tagName: 'a'});
             var stillVelBtn = 
                 L.easyButton('fa-gauge still-vel', function(btn, map) {
@@ -818,6 +838,7 @@
                         $(".still-vel").addClass("icon-selected-removable");
                     }
                     clickOnCheckbox('#singimgvelocity');
+                    checkIfRadarStation();
                 }, {tagName: 'a'});
             var stillEchoTopsBtn = 
                 L.easyButton('fa-cloud-arrow-up still-echotops', function(btn, map) {
@@ -831,6 +852,7 @@
                         $(".still-echotops").addClass("icon-selected-removable");
                     }
                     clickOnCheckbox('#singimgechotops');
+                    checkIfRadarStation();
                 }, {tagName: 'a'});
             var stillVILBtn = 
                 L.easyButton('fa-droplet still-vil', function(btn, map) {
@@ -844,6 +866,7 @@
                         $(".still-vil").addClass("icon-selected-removable");
                     }
                     clickOnCheckbox('#singimgvil');
+                    checkIfRadarStation();
                 }, {tagName: 'a'});
 
             var editBarTRStill = L.easyBar([
