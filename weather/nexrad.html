@@ -48,6 +48,9 @@
     <!-- https://gitlab.com/manuel.richter95/leaflet.notifications -->
     <link rel="stylesheet" href="/weather/assets/css/leaflet-notifications.css">
     <script src="/weather/assets/js/leaflet-notifications.js"></script>
+    <!-- https://github.com/Eclipse1979/leaflet-slider -->
+    <link rel="stylesheet" href="/weather/assets/css/leaflet-slider.css">
+    <script src="/weather/assets/js/leaflet-slider.js"></script>
 
     <style>
         body, html {
@@ -192,7 +195,7 @@
             color:rgb(0, 132, 255);
         }
         .green-icon {
-            color:green;
+            color:rgb(17, 167, 17);
         }
         .red-icon {
             color:red;
@@ -1324,6 +1327,23 @@
                 });
             });
 
+            var slider = L.control.slider(function(value) {
+                oopaac = value;
+                $('#opacitySlider').val(value);
+                updateLayer($('#timestampSlider').val());
+			}, {
+                min: 0,
+                max: 1,
+                value: 1,
+                step: 0.1,
+                size: '250px',
+                orientation: 'horizontal',
+                id: 'slider',
+                position: 'bottomright',
+                logo: 'S',
+                syncSlider: true
+            }).addTo(map);
+
             var tileProgressBarControl = new L.Control.TileLoadingProgress({
                 leafletElt: tileLayers,
                 position: 'bottomright'
@@ -1433,7 +1453,7 @@
                 // this does NOT update the layer itself
                 $('#timestampSlider').val(layernum);
                 // logs the current frame index
-                console.log(layernum);
+                //console.log(layernum);
             }
 
             /*
