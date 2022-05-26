@@ -901,6 +901,7 @@
                         '>\
                             <div id='timestampThing'></div>\
                             <b><div id='stationThing'></div></b>\
+                            <i><div id='recievedOnMapDiv'><div id='recievedOnMap'></div></div></i>\
                         </div>"
                     return text;
                 },
@@ -1323,6 +1324,7 @@
                         icon: 'fa-trash',
                         stateName: 'add',
                         onClick: function(control) {
+                            allLayerGroup.clearLayers();
                             map.eachLayer(function (layer) {
                                 if (layer != osmLayer) {
                                     map.removeLayer(layer);
@@ -1349,6 +1351,7 @@
 
                 map.on('zoomstart', function() {
                     if (isTrashSelected == false) {
+                        allLayerGroup.clearLayers();
                         map.eachLayer(function (layer) {
                             if (layer != osmLayer) {
                                 map.removeLayer(layer);
@@ -1612,9 +1615,11 @@
                             if (document.getElementById('recieved').innerHTML == 'Waiting...') {
                                 totalData = e.loaded;
                                 document.getElementById('recieved').innerHTML = formatBytes(totalData);
+                                document.getElementById('recievedOnMap').innerHTML = formatBytes(totalData);
                             } else if (document.getElementById('recieved').innerHTML != 'Waiting...') {
                                 totalData = totalData + e.loaded;
                                 document.getElementById('recieved').innerHTML = formatBytes(totalData);
+                                document.getElementById('recievedOnMap').innerHTML = formatBytes(totalData);
                             }
                         });
                         xhttpALERT.addEventListener('load', function (e) {
@@ -1871,6 +1876,7 @@
             alertsCheckbox.addEventListener("change", function() {
                 if (this.checked) {
                     document.getElementById('recievedDiv').style.display = 'block';
+                    document.getElementById('recievedOnMapDiv').style.display = 'block';
                     console.log("yes")
                     showAlertMarkers();
                 } else {
@@ -1878,6 +1884,7 @@
                     alertClusterGroup.clearLayers();
                     geojsonAlertLayerGroup.clearLayers();
                     document.getElementById('recievedDiv').style.display = 'none';
+                    document.getElementById('recievedOnMapDiv').style.display = 'none';
                 }
             });
         }
