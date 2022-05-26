@@ -1316,6 +1316,7 @@
 
             normal();
 
+            var isTrashSelected = false;
             var trashButton = 
                 L.easyButton({
                     states: [{
@@ -1328,36 +1329,41 @@
                                     allLayerGroup.addLayer(layer);
                                 }
                             });
+                            isTrashSelected = true;
                             control.state('remove');
                         }
                     }, {
-                        icon: 'fa-trash icon-selected',
+                        icon: 'fa-trash red-icon',
                         stateName: 'remove',
                         onClick: function(control) {
                             allLayerGroup.eachLayer(function (layer) {
                                 map.addLayer(layer);
                             });
-                            normal();
+                            isTrashSelected = false;
                             control.state('add');
                         },
                     }],
                         tagName: 'a',
                         position: 'topleft'
-                });
+                }).addTo(map);
 
-            map.on('zoomstart', function() {
-                map.eachLayer(function (layer) {
-                    if (layer != osmLayer) {
-                        map.removeLayer(layer);
-                        allLayerGroup.addLayer(layer);
+                map.on('zoomstart', function() {
+                    if (isTrashSelected == false) {
+                        map.eachLayer(function (layer) {
+                            if (layer != osmLayer) {
+                                map.removeLayer(layer);
+                                allLayerGroup.addLayer(layer);
+                            }
+                        });
                     }
                 });
-            });
-            map.on('zoomend', function() {
-                allLayerGroup.eachLayer(function (layer) {
-                    map.addLayer(layer);
+                map.on('zoomend', function() {
+                    if (isTrashSelected == false) {
+                        allLayerGroup.eachLayer(function (layer) {
+                            map.addLayer(layer);
+                        });
+                    }
                 });
-            });
 
             var slider = L.control.slider(function(value) {
                 oopaac = value;
