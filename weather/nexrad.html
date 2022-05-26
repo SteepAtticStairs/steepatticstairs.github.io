@@ -51,6 +51,9 @@
     <!-- https://github.com/Eclipse1979/leaflet-slider -->
     <link rel="stylesheet" href="/weather/assets/css/leaflet-slider.css">
     <script src="/weather/assets/js/leaflet-slider.js"></script>
+    <!-- https://github.com/FCOO/leaflet-control-topcenter -->
+    <link rel="stylesheet" href="/weather/assets/css/leaflet-control-topcenter.css">
+    <script src="/weather/assets/js/leaflet-control-topcenter.js"></script>
 
     <style>
         body, html {
@@ -881,6 +884,33 @@
             editBarTRStill.addTo(map);
 
 
+            // https://stackoverflow.com/a/57961941
+            L.Control.textbox = L.Control.extend({
+                onAdd: function(map) {
+                    var text = L.DomUtil.create('div');
+                    text.id = "info_text";
+                    text.innerHTML = "\
+                        <div id='timestampThing' style='\
+                        width: auto;\
+                        padding: 5px 10px;\
+                        height: 25px;\
+                        line-height: 25px;\
+                        background-color: white;\
+                        border: 1px solid black;\
+                        border-radius: 5px;\
+                        '>\
+                            Nothing here yet\
+                        </div>"
+                    return text;
+                },
+                onRemove: function(map) {
+                    // Nothing to do here
+                }
+            });
+            L.control.textbox = function(opts) { return new L.Control.textbox(opts);}
+            L.control.textbox({ position: 'topcenter' }).addTo(map);
+
+
             // L.Control.Button = L.Control.extend({
             //     options: {
             //         position: 'topleft'
@@ -1366,7 +1396,7 @@
 
             var tileProgressBarControl = new L.Control.TileLoadingProgress({
                 leafletElt: tileLayers,
-                position: 'bottomright'
+                position: 'bottomcenter'
             }).addTo(map);
 
             function showLightning() {
@@ -1460,12 +1490,15 @@
                     var scen = document.getElementById('isuarrfull').innerHTML.split(',');
                     scen.reverse();
                     document.getElementById('ts').innerHTML = '<b>N0B</b> ' + printFancyTime(new Date(scen[layernum]));
+                    document.getElementById('timestampThing').innerHTML = '<b>N0B</b> ' + printFancyTime(new Date(scen[layernum]));
                 } else if ($('#velocity:checked').val() == 'on') {
                     var scen = document.getElementById('isuarrfullvel').innerHTML.split(',');
                     scen.reverse();
                     document.getElementById('ts').innerHTML = '<b>N0S</b> ' + printFancyTime(new Date(scen[layernum]));
+                    document.getElementById('timestampThing').innerHTML = '<b>N0S</b> ' + printFancyTime(new Date(scen[layernum]));
                 } else {
                     document.getElementById('ts').innerHTML = printFancyTime(displayedRadarTime);
+                    document.getElementById('timestampThing').innerHTML = printFancyTime(displayedRadarTime);
                 }
                 // set the initial layer's opacity value to the oopaac value which changes
                 radarLayers[layernum].setOpacity(oopaac);
