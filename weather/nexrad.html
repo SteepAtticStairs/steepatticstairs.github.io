@@ -1340,9 +1340,29 @@
                 orientation: 'horizontal',
                 id: 'slider',
                 position: 'bottomright',
-                logo: 'S',
+                logo: 'OP',
                 syncSlider: true
             }).addTo(map);
+            var tsSlider = L.control.slider(function(value) {
+                updateLayer(value);
+			}, {
+                min: 0,
+                max: 10,
+                value: 10,
+                step: 1,
+                size: '250px',
+                orientation: 'horizontal',
+                id: 'slider',
+                position: 'bottomright',
+                logo: 'TS',
+                syncSlider: true
+            }).addTo(map);
+
+            var timestampSlider = document.querySelector("#timestampSlider");
+            timestampSlider.addEventListener("click", function() {
+                tsSlider.slider.value = this.value;
+                tsSlider._updateValue();
+            });
 
             var tileProgressBarControl = new L.Control.TileLoadingProgress({
                 leafletElt: tileLayers,
@@ -1452,6 +1472,7 @@
                 // sets the timestamp slider to the loop index
                 // this does NOT update the layer itself
                 $('#timestampSlider').val(layernum);
+                $('#timestampSlider').trigger('click');
                 // logs the current frame index
                 //console.log(layernum);
             }
@@ -1482,6 +1503,7 @@
                     var loopTimeout = window.setTimeout(nextStep, 700, ++i)
 
                     // stops the loop when timestamp slider is pressed
+                    var timestampSlider = document.querySelector("#timestampSlider");
                     timestampSlider.addEventListener("input", function() {
                         window.clearTimeout(loopTimeout);
                         updateLayer(this.value);
