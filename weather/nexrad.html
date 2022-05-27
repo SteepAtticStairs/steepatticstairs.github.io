@@ -234,13 +234,17 @@
         <div class="window-body" id="windowBody">
     <div style="float: left">
         <form>
-            <b><label for="radstatzipList">Input Radar Station:</b>
-                <br> (e.g. KLWX)</label>
-            <br>
+            <b><label for="radstatzipList">Input Radar Station:</b></label>
+                <div>(e.g. <a id="klwx" style="cursor: pointer">KLWX</a>)</div>
             <input name="radstatzipList" id="radstatzipList">
             <br>
             <button id="radstatzipSubmit">Ok</button>
         </form>
+        <script>
+            document.getElementById('klwx').addEventListener("click", function() {
+                setRadarStation('KLWX')
+            });
+        </script>
         <button style="display: none" id="polygon">draw</button>
         <button style="display: none" id="clearpolygon">clear</button>
         <div><b>Zip: </b><a id="radstatzip"></a></div>
