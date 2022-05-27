@@ -899,9 +899,16 @@
                         border: 1px solid black;\
                         border-radius: 5px;\
                         '>\
-                            <div id='timestampThing'></div>\
                             <b><div id='stationThing'></div></b>\
+                            <div id='timestampThing'></div>\
+                            <i><b><div id='additionalInfo' style='\
+                                display: none;\
+                                color:rgb(0, 132, 255);\
+                                cursor: pointer\
+                            '>Click Me</div></b></i>\
                             <i><div id='recievedOnMapDiv'><div id='recievedOnMap'></div></div></i>\
+                            <div id='mapZipDisplay' style='display: none'></div>\
+                            <div id='mapCoordsDisplay' style='display: none'></div>\
                         </div>"
                     return text;
                 },
@@ -912,6 +919,26 @@
             L.control.textbox = function(opts) { return new L.Control.textbox(opts);}
             L.control.textbox({ position: 'topcenter' }).addTo(map);
             document.getElementById('stationThing').innerHTML = document.getElementById('statti').innerHTML;
+
+            var additionalInfoDiv = document.getElementById('additionalInfo');
+            if (document.getElementById('radstatzipList').value != '') {
+                additionalInfoDiv.style.display = 'block';
+            }
+            additionalInfoDiv.addEventListener("click", function() {
+                if (mapZipDisplay.style.display == 'none') {
+                    console.log('this is mouse over');
+                    document.getElementById('mapZipDisplay').innerHTML = document.getElementById('radstatzip').innerHTML;
+                    document.getElementById('mapCoordsDisplay').innerHTML = document.getElementById('radstatcoords').innerHTML;
+                    document.getElementById('recievedOnMapDiv').style.display = 'block';
+                    document.getElementById('mapZipDisplay').style.display = 'block';
+                    document.getElementById('mapCoordsDisplay').style.display = 'block';
+                } else if (mapZipDisplay.style.display == 'block') {
+                    console.log('this is mouse out');
+                    document.getElementById('recievedOnMapDiv').style.display = 'none';
+                    document.getElementById('mapZipDisplay').style.display = 'none';
+                    document.getElementById('mapCoordsDisplay').style.display = 'none';
+                }
+            });
 
 
             // L.Control.Button = L.Control.extend({
@@ -1876,7 +1903,7 @@
             alertsCheckbox.addEventListener("change", function() {
                 if (this.checked) {
                     document.getElementById('recievedDiv').style.display = 'block';
-                    document.getElementById('recievedOnMapDiv').style.display = 'block';
+                    // document.getElementById('recievedOnMapDiv').style.display = 'block';
                     console.log("yes")
                     showAlertMarkers();
                 } else {
@@ -1884,7 +1911,7 @@
                     alertClusterGroup.clearLayers();
                     geojsonAlertLayerGroup.clearLayers();
                     document.getElementById('recievedDiv').style.display = 'none';
-                    document.getElementById('recievedOnMapDiv').style.display = 'none';
+                    // document.getElementById('recievedOnMapDiv').style.display = 'none';
                 }
             });
         }
