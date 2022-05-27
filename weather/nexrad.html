@@ -54,6 +54,9 @@
     <!-- https://github.com/FCOO/leaflet-control-topcenter -->
     <link rel="stylesheet" href="/weather/assets/css/leaflet-control-topcenter.css">
     <script src="/weather/assets/js/leaflet-control-topcenter.js"></script>
+    <!-- https://github.com/foto-andreas/leaflet-control-textinput -->
+    <link rel="stylesheet" href="/weather/assets/css/Control.Textinput.css">
+    <script src="/weather/assets/js/Control.Textinput.js"></script>
 
     <style>
         body, html {
@@ -665,6 +668,16 @@
                 }
             }
 
+            var textinput = L.Control.textinput({
+                position: 'bottomleft',
+                placeholder: 'Input Station',
+            })
+            .on('textinput', function(e) {
+                //console.log(e.text);
+                setRadarStation(e.text);
+            })
+            .addTo(map);
+
 
             map.on('fullscreenchange', function () {
                 if (map.isFullscreen()) {
@@ -738,28 +751,6 @@
                 alertButton,
             ], {position: 'bottomleft'});
             editBarBL.addTo(map);
-
-
-            var pausePlayButton = 
-                L.easyButton({
-                    states: [{
-                        icon: 'fa-play green-icon',
-                        stateName: 'add',
-                        onClick: function(control) {
-                            $('#play').trigger('click');
-                            control.state('remove');
-                        }
-                    }, {
-                        icon: 'fa-pause red-icon',
-                        stateName: 'remove',
-                        onClick: function(control) {
-                            $('#pause').trigger('click');
-                            control.state('add');
-                        },
-                    }],
-                        tagName: 'a',
-                        position: 'bottomleft'
-                }).addTo(map);
 
 
             var dataBtn = 
@@ -1432,6 +1423,27 @@
                 tsSlider._updateValue();
             });
 
+            var pausePlayButton = 
+                L.easyButton({
+                    states: [{
+                        icon: 'fa-play green-icon',
+                        stateName: 'add',
+                        onClick: function(control) {
+                            $('#play').trigger('click');
+                            control.state('remove');
+                        }
+                    }, {
+                        icon: 'fa-pause red-icon',
+                        stateName: 'remove',
+                        onClick: function(control) {
+                            $('#pause').trigger('click');
+                            control.state('add');
+                        },
+                    }],
+                        tagName: 'a',
+                        position: 'bottomright'
+                }).addTo(map);
+
             var tileProgressBarControl = new L.Control.TileLoadingProgress({
                 leafletElt: tileLayers,
                 position: 'bottomcenter'
@@ -2049,7 +2061,12 @@
             document.getElementById('radstatzipList').value = stationDiv.innerHTML;
             $('#radstatzipSubmit').trigger('click');
         }
-        
+
+        function setRadarStation(thingToSet) {
+            document.getElementById('radstatzipList').value = thingToSet.toUpperCase();
+            $('#radstatzipSubmit').trigger('click');
+        }
+
         function clickOnPolygonBtn() {
             $('#polygon').trigger('click');
         }
