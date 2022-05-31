@@ -643,7 +643,12 @@
                 scrollWheelZoom: false,
                 smoothWheelZoom: true,
                 smoothSensitivity: 1,
-            }).setView([lat, lon], zoom);
+            });
+            map.setView([36.8281576, -98.5606744], 4);
+            map.flyTo([lat, lon], zoom, {
+                "animate": true,
+                'duration': 0.5
+            });
             map.scrollWheelZoom = true;
 
             var fullscreenOptions = {
