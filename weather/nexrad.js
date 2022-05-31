@@ -259,6 +259,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     if (shouldBeFullscreen == true) {
         map.toggleFullscreen(fullscreenOptions);
     }
+    // if (!map.isFullscreen()) {
+    //     map.toggleFullscreen(fullscreenOptions);
+    // }
 
     L.control.locate({
         keepCurrentZoomLevel: true,
