@@ -218,31 +218,31 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         scrollWheelZoom: false,
         smoothWheelZoom: true,
         smoothSensitivity: 1,
-    });
-    map.setView([36.8281576, -98.5606744], 4);
-    function waitForElement()   {
-        if (typeof trashButton !== "undefined") {
-            //variable exists, do what you want
-            allLayerGroup.clearLayers();
-            map.eachLayer(function (layer) {
-                if (layer != osmLayer) {
-                    map.removeLayer(layer);
-                    allLayerGroup.addLayer(layer);
-                }
-            });
-        }
-        else {
-            setTimeout(waitForElement, 250);
-        }
-    }
-    if (lat != 36.8281576) {
-        waitForElement();
-    }
-    map.flyTo([lat, lon], zoom, {
-        "animate": true,
-        'duration': 1
-    });
+    }).setView([lat, lon], zoom);
     map.scrollWheelZoom = true;
+    // map.setView([36.8281576, -98.5606744], 4);
+    // function waitForElement()   {
+    //     if (typeof trashButton !== "undefined") {
+    //         //variable exists, do what you want
+    //         allLayerGroup.clearLayers();
+    //         map.eachLayer(function (layer) {
+    //             if (layer != osmLayer) {
+    //                 map.removeLayer(layer);
+    //                 allLayerGroup.addLayer(layer);
+    //             }
+    //         });
+    //     }
+    //     else {
+    //         setTimeout(waitForElement, 250);
+    //     }
+    // }
+    // if (lat != 36.8281576) {
+    //     waitForElement();
+    // }
+    // map.flyTo([lat, lon], zoom, {
+    //     "animate": true,
+    //     'duration': 1
+    // });
 
     var fullscreenOptions = {
         pseudoFullscreen: true
