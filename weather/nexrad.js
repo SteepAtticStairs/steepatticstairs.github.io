@@ -220,9 +220,27 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         smoothSensitivity: 1,
     });
     map.setView([36.8281576, -98.5606744], 4);
+    function waitForElement()   {
+        if (typeof trashButton !== "undefined") {
+            //variable exists, do what you want
+            allLayerGroup.clearLayers();
+            map.eachLayer(function (layer) {
+                if (layer != osmLayer) {
+                    map.removeLayer(layer);
+                    allLayerGroup.addLayer(layer);
+                }
+            });
+        }
+        else {
+            setTimeout(waitForElement, 250);
+        }
+    }
+    if (lat != 36.8281576) {
+        waitForElement();
+    }
     map.flyTo([lat, lon], zoom, {
         "animate": true,
-        'duration': 0.5
+        'duration': 1
     });
     map.scrollWheelZoom = true;
 
