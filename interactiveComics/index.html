@@ -7,33 +7,66 @@
             width: calc(100vw - 20px);
             max-width: 750px;
         }
+        #loading {
+            position: absolute;
+            top: 30;
+            right: 30;
+            width: 100px;
+            display: none;
+        }
     </style>
 </head>
 
 <body>
     <label for="comicDate">Date:</label>
     <br>
-    <input type="date" id="comicDate" name="comicDate">
+    <input type="date" id="comicDate">
     <br><br>
     <label for="comicStrip">Comic:</label>
     <br>
-    <input id="comicStrip" name="comicStrip">
+    <input id="comicStrip">
     <br><br>
+    <input type="checkbox" id="showLoading" checked>
+    <label for="showLoading"> Show loading circle</label>
+    <br><br>
+    <button id="back"><</button>
     <button id="submitDate">Submit</button>
+    <button id="forward">></button>
+
+    <img id="loading" src="/icons/loading_icon.gif"></img>
     <br><br>
-    <img id="replace" src="/icons/loading_icon.gif"></img>
+    <img id="replace" src=""></img>
 
     <script>
+        $(document).ready(function() {
+            /*
+            * https://stackoverflow.com/questions/5775469/whats-the-valid-way-to-include-an-image-with-no-src#comment39385494_14115340
+            */
+            var blankImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=';
+            document.getElementById('replace').src = blankImg;
+        });
+        Date.prototype.addDays = function(days) {
+            var date = new Date(this.valueOf());
+            date.setDate(date.getDate() + days);
+            return date;
+        }
+
         var proxy = "https://circumvent-cors.herokuapp.com/";
         var theURL = "https://www.gocomics.com/";
         function showStrip(stripName, stripDate) {
-            document.getElementById('replace').src = "/icons/loading_icon.gif";
+            // document.getElementById('replace').src = "/icons/loading_icon.gif";
+            // document.getElementById('replace').src = document.getElementById('replace').src;
+            var loadingImage = document.getElementById('loading');
+            if (document.getElementById('showLoading').checked) {
+                loadingImage.style.display = "block";
+            }
             $.get(proxy + theURL + stripName + "/" + stripDate, function (data) {
                 //console.log(data);
                 var parser = new DOMParser();
                 var doc = parser.parseFromString(data, "text/html");
                 var imageURL = doc.querySelector(".item-comic-image img");
                 document.getElementById('replace').src = imageURL.getAttribute('src');
+                loadingImage.style.display = "none";
                 //console.log(imageURL.getAttribute('src'));
             });
         }
@@ -45,9 +78,24 @@
         dateSubmitBtn.addEventListener("click", function () {
             var dateOutput = dateField.value.replace(/-/g, '/');
             var stripOutput = comicStripField.value;
+
             stripOutput = stripOutput.toLowerCase().replace(/ /g, '');
             comicStripField.value = stripOutput;
+
             showStrip(stripOutput, dateOutput);
+        });
+
+        var backBtn = document.getElementById('back');
+        backBtn.addEventListener("click", function () {
+            var stripDateObj = new Date(dateField.value);
+            dateField.value = stripDateObj.addDays(-1).toISOString().split('T')[0];
+            $(dateSubmitBtn).trigger('click');
+        });
+        var forwardBtn = document.getElementById('forward');
+        forwardBtn.addEventListener("click", function () {
+            var stripDateObj = new Date(dateField.value);
+            dateField.value = stripDateObj.addDays(1).toISOString().split('T')[0];
+            $(dateSubmitBtn).trigger('click');
         });
     </script>
 </body>
