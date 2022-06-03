@@ -94,19 +94,12 @@
                     var parser = new DOMParser();
                     var doc = parser.parseFromString(data, "text/html");
                     var imageURL = doc.querySelector(".item-comic-image img");
-                    if (imageURL == null) {
-                        console.log('too old');
-                        alert("This is the first comic - you cannot go back further.")
-                        $('#forward').trigger("click");
-                        loadingImage.style.display = "none";
-                    } else {
-                        document.getElementById('replace').src = imageURL.getAttribute('src');
-                        loadingImage.style.display = "none";
-                        //console.log(imageURL.getAttribute('src'));
+                    document.getElementById('replace').src = imageURL.getAttribute('src');
+                    loadingImage.style.display = "none";
+                    //console.log(imageURL.getAttribute('src'));
 
-                        obj[stripName + stripDate] = imageURL.getAttribute('src');
-                        console.log(obj);
-                    }
+                    obj[stripName + stripDate] = imageURL.getAttribute('src');
+                    console.log(obj);
                 });
             }
         }
