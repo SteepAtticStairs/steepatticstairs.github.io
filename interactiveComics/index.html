@@ -15,6 +15,11 @@
             display: none;
         }
     </style>
+
+    <script>
+        var shouldCheckLeft;
+        var shouldCheckRight;
+    </script>
 </head>
 
 <body>
@@ -98,25 +103,48 @@
             var comicNow = new Date(dateOutput).toISOString().split('T')[0];
             if (comicNow == now) {
                 document.getElementById('forward').style.display = "none";
+                shouldCheckLeft = true;
+                shouldCheckRight = false;
+                document.onkeydown = checkKey;
             } else if (comicNow != now) {
                 document.getElementById('forward').style.display = "inline";
+                shouldCheckLeft = true;
+                shouldCheckRight = true;
+                document.onkeydown = checkKey;
             }
 
             showStrip(stripOutput, dateOutput);
         });
 
+        function shiftADay(amount) {
+            var stripDateObj = new Date(dateField.value);
+            dateField.value = stripDateObj.addDays(amount).toISOString().split('T')[0];
+            $(dateSubmitBtn).trigger('click');
+        }
         var backBtn = document.getElementById('back');
         backBtn.addEventListener("click", function () {
-            var stripDateObj = new Date(dateField.value);
-            dateField.value = stripDateObj.addDays(-1).toISOString().split('T')[0];
-            $(dateSubmitBtn).trigger('click');
+            shiftADay(-1);
         });
         var forwardBtn = document.getElementById('forward');
         forwardBtn.addEventListener("click", function () {
-            var stripDateObj = new Date(dateField.value);
-            dateField.value = stripDateObj.addDays(1).toISOString().split('T')[0];
-            $(dateSubmitBtn).trigger('click');
+            shiftADay(1);
         });
+
+        function checkKey(e) {
+            e = e || window.event;
+            if (shouldCheckLeft) {
+                if (e.keyCode == '37') {
+                    // left arrow
+                    shiftADay(-1);
+                }
+            }
+            if (shouldCheckRight) {
+                if (e.keyCode == '39') {
+                    // right arrow
+                    shiftADay(1);
+                }
+            }
+        }
     </script>
 </body>
 </html>
