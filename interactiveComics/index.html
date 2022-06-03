@@ -22,7 +22,15 @@
     <br>
     <input type="date" id="comicDate">
     <br><br>
-    <label for="comicStrip">Comic:</label>
+    <label for="comicStrip">Comic: (<a href="#" id="bignate">Big Nate</a>, <a href="#" id="garfield"">Garfield</a>)</label>
+    <script>
+        document.getElementById('bignate').addEventListener("click", function() {
+            setValue('bignate');
+        });
+        document.getElementById('garfield').addEventListener("click", function() {
+            setValue('garfield');
+        });
+    </script>
     <br>
     <input id="comicStrip">
     <br><br>
@@ -82,6 +90,14 @@
             stripOutput = stripOutput.toLowerCase().replace(/ /g, '');
             comicStripField.value = stripOutput;
 
+            var now = new Date().toISOString().split('T')[0];
+            var comicNow = new Date(dateOutput).toISOString().split('T')[0];
+            if (comicNow == now) {
+                document.getElementById('forward').style.display = "none";
+            } else if (comicNow != now) {
+                document.getElementById('forward').style.display = "inline";
+            }
+
             showStrip(stripOutput, dateOutput);
         });
 
@@ -97,6 +113,10 @@
             dateField.value = stripDateObj.addDays(1).toISOString().split('T')[0];
             $(dateSubmitBtn).trigger('click');
         });
+
+        function setValue(string) {
+            comicStripField.value = string;
+        }
     </script>
 </body>
 </html>
