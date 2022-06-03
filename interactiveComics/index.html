@@ -18,21 +18,25 @@
 </head>
 
 <body>
-    <label for="comicDate">Date:</label>
+    <label for="comicDate">Date: (<a href="#" id="today">Today</a>)</label>
     <br>
     <input type="date" id="comicDate">
     <br><br>
     <label for="comicStrip">Comic: (<a href="#" id="bignate">Big Nate</a>, <a href="#" id="garfield"">Garfield</a>)</label>
-    <script>
-        document.getElementById('bignate').addEventListener("click", function() {
-            setValue('bignate');
-        });
-        document.getElementById('garfield').addEventListener("click", function() {
-            setValue('garfield');
-        });
-    </script>
     <br>
     <input id="comicStrip">
+    <script>
+        document.getElementById('today').addEventListener("click", function() {
+            document.getElementById('comicDate').value = new Date().toISOString().split('T')[0];
+        });
+
+        document.getElementById('bignate').addEventListener("click", function() {
+            document.getElementById('comicStrip').value = 'bignate';
+        });
+        document.getElementById('garfield').addEventListener("click", function() {
+            document.getElementById('comicStrip').value = 'garfield';
+        });
+    </script>
     <br><br>
     <input type="checkbox" id="showLoading" checked>
     <label for="showLoading"> Show loading circle</label>
@@ -113,10 +117,6 @@
             dateField.value = stripDateObj.addDays(1).toISOString().split('T')[0];
             $(dateSubmitBtn).trigger('click');
         });
-
-        function setValue(string) {
-            comicStripField.value = string;
-        }
     </script>
 </body>
 </html>
