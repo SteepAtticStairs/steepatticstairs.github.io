@@ -1,0 +1,54 @@
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <style>
+        #replace {
+            width: calc(100vw - 20px);
+            max-width: 750px;
+        }
+    </style>
+</head>
+
+<body>
+    <label for="comicDate">Date:</label>
+    <br>
+    <input type="date" id="comicDate" name="comicDate">
+    <br><br>
+    <label for="comicStrip">Comic:</label>
+    <br>
+    <input id="comicStrip" name="comicStrip">
+    <br><br>
+    <button id="submitDate">Submit</button>
+    <br><br>
+    <img id="replace" src="/icons/loading_icon.gif"></img>
+
+    <script>
+        var proxy = "https://circumvent-cors.herokuapp.com/";
+        var theURL = "https://www.gocomics.com/";
+        function showStrip(stripName, stripDate) {
+            document.getElementById('replace').src = "/icons/loading_icon.gif";
+            $.get(proxy + theURL + stripName + "/" + stripDate, function (data) {
+                //console.log(data);
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(data, "text/html");
+                var imageURL = doc.querySelector(".item-comic-image img");
+                document.getElementById('replace').src = imageURL.getAttribute('src');
+                //console.log(imageURL.getAttribute('src'));
+            });
+        }
+        //showStrip('garfield', '2012/12/14');
+
+        var dateField = document.getElementById('comicDate');
+        var comicStripField = document.getElementById('comicStrip');
+        var dateSubmitBtn = document.getElementById('submitDate');
+        dateSubmitBtn.addEventListener("click", function () {
+            var dateOutput = dateField.value.replace(/-/g, '/');
+            var stripOutput = comicStripField.value;
+            stripOutput = stripOutput.toLowerCase().replace(/ /g, '');
+            comicStripField.value = stripOutput;
+            showStrip(stripOutput, dateOutput);
+        });
+    </script>
+</body>
+</html>
