@@ -19,6 +19,7 @@
     <script>
         var shouldCheckLeft;
         var shouldCheckRight;
+        var obj = new Object();
     </script>
 </head>
 
@@ -71,21 +72,31 @@
         var proxy = "https://circumvent-cors.herokuapp.com/";
         var theURL = "https://www.gocomics.com/";
         function showStrip(stripName, stripDate) {
+            // var s = 'sussy';
+            // obj[s] = arr;
             // document.getElementById('replace').src = "/icons/loading_icon.gif";
             // document.getElementById('replace').src = document.getElementById('replace').src;
-            var loadingImage = document.getElementById('loading');
-            if (document.getElementById('showLoading').checked) {
-                loadingImage.style.display = "block";
+            if (obj.hasOwnProperty(stripName + stripDate)) {
+                document.getElementById('replace').src = obj[stripName + stripDate];
+                console.log('cached');
+            } else {
+                var loadingImage = document.getElementById('loading');
+                if (document.getElementById('showLoading').checked) {
+                    loadingImage.style.display = "block";
+                }
+                $.get(proxy + theURL + stripName + "/" + stripDate, function (data) {
+                    //console.log(data);
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(data, "text/html");
+                    var imageURL = doc.querySelector(".item-comic-image img");
+                    document.getElementById('replace').src = imageURL.getAttribute('src');
+                    loadingImage.style.display = "none";
+                    //console.log(imageURL.getAttribute('src'));
+
+                    obj[stripName + stripDate] = imageURL.getAttribute('src');
+                    console.log(obj);
+                });
             }
-            $.get(proxy + theURL + stripName + "/" + stripDate, function (data) {
-                //console.log(data);
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(data, "text/html");
-                var imageURL = doc.querySelector(".item-comic-image img");
-                document.getElementById('replace').src = imageURL.getAttribute('src');
-                loadingImage.style.display = "none";
-                //console.log(imageURL.getAttribute('src'));
-            });
         }
         //showStrip('garfield', '2012/12/14');
 
