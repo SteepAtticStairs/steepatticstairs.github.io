@@ -7,6 +7,8 @@
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
+    <script src="/interactiveComics/startDate.js"></script>
+
     <style>
         #replace {
             width: calc(100vw - 20px);
@@ -33,21 +35,14 @@
     <br>
     <input type="date" id="comicDate">
     <br><br>
-    <label for="comicStrip">Comic: (<a href="#" id="bignate">Big Nate</a>, <a href="#" id="garfield"">Garfield</a>)</label>
+    <label for="comicStrip">Comic:<br>
+        (<a href="#" id="bignate">BN</a>
+        <a href="#" id="garfield"">GA</a>
+        <a href="#" id="calvinandhobbes"">CH</a><a style="display: none" href="#" id="foxtrot"">FT</a>)
+    </label>
     <br>
     <input id="comicStrip">
-    <script>
-        document.getElementById('today').addEventListener("click", function() {
-            document.getElementById('comicDate').value = new Date().toISOString().split('T')[0];
-        });
-
-        document.getElementById('bignate').addEventListener("click", function() {
-            document.getElementById('comicStrip').value = 'bignate';
-        });
-        document.getElementById('garfield').addEventListener("click", function() {
-            document.getElementById('comicStrip').value = 'garfield';
-        });
-    </script>
+    <script src="/interactiveComics/hoverEvents.js"></script>
     <br><br>
     <input type="checkbox" id="showLoading" checked>
     <label for="showLoading"> Show loading circle</label>
@@ -74,9 +69,12 @@
             return date;
         }
 
-        var proxy = "https://circumvent-cors.herokuapp.com/";
+        var proxy = "https://salty-citadel-44916.herokuapp.com/";
+        // var proxy = 'https://secret-retreat-45871.herokuapp.com/'
+        // var proxy = "https://circumvent-cors.herokuapp.com/";
         var theURL = "https://www.gocomics.com/";
         function showStrip(stripName, stripDate) {
+            var loadingImage = document.getElementById('loading');
             // var s = 'sussy';
             // obj[s] = arr;
             // document.getElementById('replace').src = "/icons/loading_icon.gif";
@@ -84,8 +82,8 @@
             if (obj.hasOwnProperty(stripName + stripDate)) {
                 document.getElementById('replace').src = obj[stripName + stripDate];
                 console.log('cached');
+                loadingImage.style.display = "none";
             } else {
-                var loadingImage = document.getElementById('loading');
                 if (document.getElementById('showLoading').checked) {
                     loadingImage.style.display = "block";
                 }
@@ -115,7 +113,11 @@
             stripOutput = stripOutput.toLowerCase().replace(/ /g, '');
             comicStripField.value = stripOutput;
 
-            var now = new Date().toISOString().split('T')[0];
+            var yourDate = new Date();
+            var offset = yourDate.getTimezoneOffset();
+            yourDate = new Date(yourDate.getTime() - (offset*60*1000));
+            var now = yourDate.toISOString().split('T')[0];
+
             var comicNow = new Date(dateOutput).toISOString().split('T')[0];
             if (comicNow == now) {
                 document.getElementById('forward').style.display = "none";
@@ -124,6 +126,18 @@
                 document.onkeydown = checkKey;
             } else if (comicNow != now) {
                 document.getElementById('forward').style.display = "inline";
+                shouldCheckLeft = true;
+                shouldCheckRight = true;
+                document.onkeydown = checkKey;
+            }
+
+            if (startDates[comicStripField.value][0] == comicNow) {
+                document.getElementById('back').style.display = "none";
+                shouldCheckLeft = false;
+                shouldCheckRight = true;
+                document.onkeydown = checkKey;
+            } else if (comicNow != now) {
+                document.getElementById('back').style.display = "inline";
                 shouldCheckLeft = true;
                 shouldCheckRight = true;
                 document.onkeydown = checkKey;
