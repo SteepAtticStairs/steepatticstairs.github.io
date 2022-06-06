@@ -43,11 +43,10 @@ render(out, ar2.ElevationScans[elv], label)
 ```
 with
 ```go
-// if product != "ref" {
-// elv = 2 // uhhh, why did i do this again?
-// }
-label := fmt.Sprintf("%s %f %s VCP:%d %s %s", ar2.VolumeHeader.ICAO, ar2.ElevationScans[2][0].Header.ElevationAngle, strings.ToUpper(product), ar2.RadarStatus.VolumeCoveragePatternNum, ar2.VolumeHeader.FileName(), ar2.VolumeHeader.Date().Format(time.RFC3339))
-render(out, ar2.ElevationScans[elv], label)
+if product == "vel" {
+	elv = 2 // uhhh, why did i do this again?
+}
+render(out, ar2.ElevationScans[elv], fmt.Sprintf("%s - %s", ar2.VolumeHeader.ICAO, ar2.VolumeHeader.Date()))
 ```
 [this is the commit](https://github.com/bwiggs/go-nexrad/commit/046430b75e3742c2adc0e1591ef6060e87f1662d#diff-60edfbcf8dfa6fed72e8edc2bb4f7a2f3dd178ff5c5aa4ec845a3936bad3a81aR181)
 ```
