@@ -21,6 +21,14 @@ cd steepatticstairs.github.io
 
 After this, you can open the `steepatticstairs.github.io` directory in the code editor of your choice. I use VSCode, but any editor will work.
 
+# Installing older versions of Go on M1 Mac
+
+```
+GOARCH=amd64 go install golang.org/dl/go1.12@latest
+~/go/bin/darwin_amd64/go1.12 download
+~/sdk/go1.12/bin/go version
+```
+
 # Working with go-nexrad
 
 ```
