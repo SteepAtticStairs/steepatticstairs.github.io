@@ -1060,6 +1060,42 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         position: 'bottomcenter'
     }).addTo(map);
 
+    function setImageFromCenter(zoomLevel, imagePath) {
+        var initMapWidth = document.getElementById("map").style.width;
+        var initMapHeight = document.getElementById("map").style.height;
+
+        // if the map is fullscreen, exit it
+        var yes;
+        if (map.isFullscreen()) {
+            yes = true;
+        }
+        if (yes) {
+            map.toggleFullscreen(fullscreenOptions);
+            console.log("exited")
+        }
+
+        // sets the map's width and height to be the same as the user's value
+        $("#map").css("width", zoomLevel + "px");
+        $("#map").css("height", zoomLevel + "px");
+        map.invalidateSize();
+
+        // sets the image overlay to the map's bounds
+        var theSquareBounds = map.getBounds();
+        L.imageOverlay(imagePath, theSquareBounds).addTo(lightningLayerGroup);
+
+        // resets the map's initial dimensions
+        $("#map").css("height", initMapHeight);
+        $("#map").css("width", "auto");
+        map.invalidateSize();
+
+        // if the map was fullscreen, re-enter it
+        if (yes) {
+            map.toggleFullscreen(fullscreenOptions);
+            console.log("entered")
+        }
+    }
+    //setImageFromCenter(950, '/weather/nexrad/radar.png');
+
     function showLightning() {
         var lightningLayer = 
         L.tileLayer('https://tiles.lightningmaps.org/?x={x}&y={y}&z={z}&s=256', {
