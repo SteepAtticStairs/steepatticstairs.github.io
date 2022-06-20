@@ -583,91 +583,12 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     var tileLayers = L.layerGroup([]);
     var allLayerGroup = L.layerGroup();
     var markerLayerGroup = L.layerGroup().addTo(map);
-    var specificProductLayerGroup = L.layerGroup().addTo(map);
+    var locationMarkerLayerGroup = L.layerGroup().addTo(map);
     var alertLayerGroup = L.layerGroup().addTo(map);
     var geojsonAlertLayerGroup = L.layerGroup().addTo(map);
     var lightningLayerGroup = L.layerGroup().addTo(map);
     var productLayerGroup = L.layerGroup().addTo(map);
     var alertClusterGroup = L.markerClusterGroup().addTo(map);
-
-    function setImageFromCenter(zoomLevel, imagePath, lat, lng, zoom) {
-        var initMapCenter = map.getCenter();
-        var initMapZoom = map.getZoom();
-        var initMapWidth = document.getElementById("map").style.width;
-        var initMapHeight = document.getElementById("map").style.height;
-
-        //map.setView([lat, lng], zoom, {
-        //    "animate": false
-        //});
-
-        // sets the map's width and height to be the same as the user's value
-        $("#map").css("width", zoomLevel + "px");
-        $("#map").css("height", zoomLevel + 380 + "px");
-        map.invalidateSize();
-
-        // sets the image overlay to the map's bounds
-        var squareBoundsElem = document.getElementById('squareBounds');
-        if (squareBoundsElem.innerHTML == '') {
-            map.setView([lat, lng], zoom, {"animate": false});
-            var theSquareBounds = map.getBounds();
-            squareBoundsElem.innerHTML = JSON.stringify(theSquareBounds);
-            L.imageOverlay(imagePath, theSquareBounds).addTo(specificProductLayerGroup);
-            map.setView(initMapCenter, initMapZoom, {"animate": false});
-        } else if (squareBoundsElem.innerHTML != '') {
-            var parsedStoredBounds = JSON.parse(squareBoundsElem.innerHTML);
-            console.log(parsedStoredBounds)
-            var theParsedBounds = [[parsedStoredBounds._southWest.lat, parsedStoredBounds._southWest.lng], [parsedStoredBounds._northEast.lat, parsedStoredBounds._northEast.lng]]
-            L.imageOverlay(imagePath, theParsedBounds).addTo(specificProductLayerGroup);
-        }
-
-        // resets the map's initial dimensions
-        $("#map").css("height", initMapHeight);
-        $("#map").css("width", "auto");
-        map.invalidateSize();
-
-        //map.setView(initMapCenter, initMapZoom, {
-        //    "animate": false
-        //});
-    }
-
-    // https://mrms.ncep.noaa.gov/data/RIDGEII/L2/KLWX/BREF_RAW/
-    function un_gzip_uploaded_file(file) {
-        // https://stackoverflow.com/a/22675494
-        var urlOfTheFile = file;
-        fetch(urlOfTheFile)
-        .then(res => res.arrayBuffer())
-        .then(someBuffer => {
-            var arrayBuffer = someBuffer;
-            //console.log(arrayBuffer);
-            // Get datastream as Array, for example:
-            var charData = arrayBuffer;
-            // Turn number array into byte-array
-            var binData = new Uint8Array(charData);
-            // Pako magic
-            var data = pako.inflate(binData);
-            // Output to console
-            var blob = new Blob([new Uint8Array(data).buffer])
-            var blobURL = URL.createObjectURL(blob)
-            //console.log(blobURL);
-
-            var xhr = new XMLHttpRequest();
-            xhr.responseType = 'arraybuffer';
-            xhr.open('GET', blobURL);
-            xhr.onload = function (e) {
-                var tiff = new Tiff({buffer: xhr.response});
-                var canvas = tiff.toCanvas();
-                canvas.toBlob(function(blob) {
-                    const newImg = document.createElement('img');
-                    const url2 = URL.createObjectURL(blob);
-                    document.getElementById('blobURL').innerHTML = url2;
-                    var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
-                    var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
-                    setImageFromCenter(915, document.getElementById('blobURL').innerHTML, stationLat, stationLon, 7)
-                })
-            };
-            xhr.send();
-        });
-    }
 
     var radarIcon = L.icon({
         iconUrl: '/icons/radar.png',
@@ -1175,24 +1096,6 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }
     //setImageFromCenter(950, '/weather/nexrad/radar.png');
 
-    function showTiffFromUrl(url69) {
-        productLayerGroup.clearLayers()
-        var blobUrlElem = document.getElementById('blobURL');
-        if (blobUrlElem.innerHTML == '') {
-            // URL.createObjectURL(document.getElementById("image-file").files[0])
-            // var proxy = "https://salty-citadel-44916.herokuapp.com/";
-            // var proxy = 'https://secret-retreat-45871.herokuapp.com/'
-            var proxy = "https://circumvent-cors.herokuapp.com/";
-            var fileUrl = url69
-            un_gzip_uploaded_file(proxy + fileUrl)
-        } else if (blobUrlElem.innerHTML != '') {
-            var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
-            var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
-            setImageFromCenter(950, blobUrlElem.innerHTML, stationLat, stationLon, 7)
-        }
-    }
-    // showTiffFromUrl('https://mrms.ncep.noaa.gov/data/RIDGEII/L2/KBLX/BREF_RAW/KBLX_L2_BREF_RAW_20220619_200907.tif.gz')
-
     function showLightning() {
         var lightningLayer = 
         L.tileLayer('https://tiles.lightningmaps.org/?x={x}&y={y}&z={z}&s=256', {
@@ -1230,6 +1133,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
     $('#zoomSlider').val(zoom);
     //nexradLayer.setOpacity(opac);
+    //$('#opacitySlider').val(opac);
     oopaac = 1;
     $('#opacitySlider').val(oopaac);
     $('#timestampSlider').val(0);
@@ -1599,14 +1503,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             clearSingImgProductCheckboxes();
             $('#singimgreflectivity').prop('checked', true);
             //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
-            //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0B', 1);
-
-            showTiffFromUrl('https://mrms.ncep.noaa.gov/data/RIDGEII/L2/KBLX/BREF_RAW/KBLX_L2_BREF_RAW_20220619_213105.tif.gz')
+            showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0B', 1);
         } else {
             productLayerGroup.clearLayers();
-            specificProductLayerGroup.eachLayer(function(layer) {
-                specificProductLayerGroup.removeLayer(layer);
-            });
             normal();
             updateLayer(10);
         }
@@ -1615,21 +1514,13 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     singimgVelocityCheckbox.addEventListener("change", function() {
         if (this.checked) {
             productLayerGroup.clearLayers();
-            specificProductLayerGroup.eachLayer(function(layer) {
-                specificProductLayerGroup.removeLayer(layer);
-            });
             clearProductCheckboxes();
             clearSingImgProductCheckboxes();
             $('#singimgvelocity').prop('checked', true);
             //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0Q');
-            //showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0S', 1);
-
-            showTiffFromUrl('https://mrms.ncep.noaa.gov/data/RIDGEII/L2/KBLX/BVEL_RAW/KBLX_L2_BVEL_RAW_20220619_213123.tif.gz')
+            showProduct(document.getElementById('statti').innerHTML.substring(1), 'N0S', 1);
         } else {
             productLayerGroup.clearLayers();
-            specificProductLayerGroup.eachLayer(function(layer) {
-                specificProductLayerGroup.removeLayer(layer);
-            });
             normal();
             updateLayer(10);
         }
@@ -1697,7 +1588,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
             //console.log(radstat + ": " + lati + ", " + longi);
             document.getElementById('statti').innerHTML = radstat;
-            document.getElementById('radstatcoords').innerHTML = lati + ", " + longi;
+            document.getElementById('radstatcoords').innerHTML = radstat + ": " + lati + ", " + longi;
             document.getElementById('radstatzip').innerHTML = zippy;
             if (map.isFullscreen()) {
                 setView(lati, longi, 7, 1, true);
