@@ -133,6 +133,17 @@ body, html {
     display: block;
 }
 
+.false-anchor {
+    cursor: pointer;
+    text-decoration: underline;
+    color:rgb(0, 0, 238);
+}
+.false-anchor:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color:rgb(0, 0, 137);
+}
+
 .icon-selected {
     color:rgb(0, 132, 255);
 }
@@ -157,4 +168,23 @@ body, html {
 #map .easy-button-button.disabled {
     height: 0;
     display: none;
+}
+
+/* Leaflet crispness override 
+https://stackoverflow.com/a/69032144 */
+.leaflet-container .leaflet-overlay-pane svg,
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer {
+    max-width: none !important;
+    /* Preserve crisp pixels with scaled up images */
+    image-rendering: optimizeSpeed;             /* Legal fallback */
+    image-rendering: -moz-crisp-edges;          /* Firefox        */
+    image-rendering: -o-crisp-edges;            /* Opera          */
+    image-rendering: -webkit-optimize-contrast; /* Safari         */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed  */
+    image-rendering: crisp-edges;               /* CSS4 Proposed  */
+    image-rendering: pixelated;                 /* CSS4 Proposed  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+           */
 }

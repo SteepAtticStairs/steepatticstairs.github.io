@@ -485,6 +485,20 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     ], {position: 'topright'});
     editBarTRStill.addTo(map);
 
+    var contents = `
+        <div><b>Please choose a radar product.</b></div>
+        <br>
+        <div><u>Level 2</u></div>
+        <div>Base Reflectivity (<a class="false-anchor" id="bref_raw">BREF_RAW</a>)</div>
+        <div>Base Velocity (<a class="false-anchor" id="bvel_raw">BVEL_RAW</a>)</div>`
+
+    L.control.slideMenu(contents, {
+        position: "topright",
+        menuposition: "topright",
+        width: "30%",
+        height: "400px",
+        icon: "fa fa-bars",
+    }).addTo(map);
 
     // https://stackoverflow.com/a/57961941
     L.Control.textbox = L.Control.extend({
@@ -583,7 +597,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     var tileLayers = L.layerGroup([]);
     var allLayerGroup = L.layerGroup();
     var markerLayerGroup = L.layerGroup().addTo(map);
-    var locationMarkerLayerGroup = L.layerGroup().addTo(map);
+    var imageLayerGroup = L.layerGroup().addTo(map);
     var alertLayerGroup = L.layerGroup().addTo(map);
     var geojsonAlertLayerGroup = L.layerGroup().addTo(map);
     var lightningLayerGroup = L.layerGroup().addTo(map);
@@ -1454,6 +1468,159 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     });
 
 
+    // https://mrms.ncep.noaa.gov/data/RIDGEII/L2/KLWX/BREF_RAW/
+    function un_gzip_uploaded_file(file, product) {
+        // https://stackoverflow.com/a/22675494
+        var urlOfTheFile = file;
+        fetch(urlOfTheFile)
+        .then(res => res.arrayBuffer())
+        .then(someBuffer => {
+            var arrayBuffer = someBuffer;
+            //console.log(arrayBuffer);
+            // Get datastream as Array, for example:
+            var charData = arrayBuffer;
+            // Turn number array into byte-array
+            var binData = new Uint8Array(charData);
+            // Pako magic
+            var data = pako.inflate(binData);
+            // Output to console
+            var blob = new Blob([new Uint8Array(data).buffer])
+            var blobURL = URL.createObjectURL(blob)
+            //console.log(blobURL);
+
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'arraybuffer';
+            xhr.open('GET', blobURL);
+            xhr.onload = function (e) {
+                var tiff = new Tiff({buffer: xhr.response});
+                var canvas = tiff.toCanvas();
+                canvas.toBlob(function(blob) {
+                    const newImg = document.createElement('img');
+                    const url2 = URL.createObjectURL(blob);
+                    document.getElementById('blobURL').innerHTML = url2 + "::" + product;
+                    var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
+                    var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
+                    setImageFromCenter(915, document.getElementById('blobURL').innerHTML.split('::')[0].split('::')[0], stationLat, stationLon, 7)
+                })
+            };
+            xhr.send();
+        });
+    }
+
+    function setImageFromCenter(zoomLevel, imagePath, lat, lng, zoom) {
+        var initMapCenter = map.getCenter();
+        var initMapZoom = map.getZoom();
+        var initMapWidth = document.getElementById("map").style.width;
+        var initMapHeight = document.getElementById("map").style.height;
+
+        //map.setView([lat, lng], zoom, {
+        //    "animate": false
+        //});
+
+        // sets the map's width and height to be the same as the user's value
+        $("#map").css("width", zoomLevel + "px");
+        $("#map").css("height", zoomLevel + 380 + "px");
+        map.invalidateSize();
+
+        // sets the image overlay to the map's bounds
+        var squareBoundsElem = document.getElementById('squareBounds');
+        if (squareBoundsElem.innerHTML == '') {
+            map.setView([lat, lng], zoom, {"animate": false});
+            var theSquareBounds = map.getBounds();
+            squareBoundsElem.innerHTML = JSON.stringify(theSquareBounds);
+            var iOverlay = L.imageOverlay(imagePath, theSquareBounds).addTo(imageLayerGroup);
+            map.setView(initMapCenter, initMapZoom, {"animate": false});
+        } else if (squareBoundsElem.innerHTML != '') {
+            var parsedStoredBounds = JSON.parse(squareBoundsElem.innerHTML);
+            console.log(parsedStoredBounds)
+            var theParsedBounds = [[parsedStoredBounds._southWest.lat, parsedStoredBounds._southWest.lng], [parsedStoredBounds._northEast.lat, parsedStoredBounds._northEast.lng]]
+            var iOverlay = L.imageOverlay(imagePath, theParsedBounds).addTo(imageLayerGroup);
+        }
+
+        // resets the map's initial dimensions
+        $("#map").css("height", initMapHeight);
+        $("#map").css("width", "auto");
+        map.invalidateSize();
+
+        //map.setView(initMapCenter, initMapZoom, {
+        //    "animate": false
+        //});
+        map.spin(false);
+    }
+
+    function displayDecodedImage(prod, imageUrl) {
+        var blobUrlElem = document.getElementById('blobURL');
+        if (!(blobUrlElem.innerHTML.split('::')[1] == prod)) {
+            blobUrlElem.innerHTML = ''
+        }
+        //console.log(blobUrlElem.innerHTML.split('::')[1] == prod)
+        if (blobUrlElem.innerHTML == '') {
+            // URL.createObjectURL(document.getElementById("image-file").files[0])
+            // var proxy = "https://salty-citadel-44916.herokuapp.com/";
+            // var proxy = 'https://secret-retreat-45871.herokuapp.com/'
+            var proxy = "https://circumvent-cors.herokuapp.com/";
+            var fileUrl = imageUrl
+            un_gzip_uploaded_file(proxy + fileUrl, prod)
+        } else if (blobUrlElem.innerHTML != '') {
+            var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
+            var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
+            setImageFromCenter(950, blobUrlElem.innerHTML.split('::')[0], stationLat, stationLon, 7)
+        }
+    }
+
+
+    function getLatestFile(pro) {
+        var proxy = "https://circumvent-cors.herokuapp.com/";
+        var getter = `https://mrms.ncep.noaa.gov/data/RIDGEII/L2/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/`
+        $.get(proxy + getter, function(data) {
+            var div = document.createElement('div')
+            div.innerHTML = data;
+            const Elem = e => ({
+                tagName: 
+                    e.tagName,
+                textContent:
+                    e.textContent,
+                attributes:
+                    Array.from(e.attributes, ({name, value}) => [name, value]),
+                children:
+                    Array.from(e.children, Elem)
+            })
+            const html2json = e =>
+                JSON.parse(JSON.stringify(Elem(e), null, '  '))
+
+            var htmlJson = html2json(div)
+            var amountOfFiles = Object.keys(htmlJson.children[2].children[0].children).length
+            var latestFileName = htmlJson.children[2].children[0].children[amountOfFiles - 2].children[0].textContent
+
+            displayDecodedImage(pro.toUpperCase(), `https://mrms.ncep.noaa.gov/data/RIDGEII/L2/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/${latestFileName}`)
+        })
+    }
+
+    var CHECK_bref_raw = false;
+    document.getElementById('bref_raw').addEventListener("click", function() {
+        if (!CHECK_bref_raw) {
+            map.spin(true);
+            getLatestFile("BREF_RAW")
+            CHECK_bref_raw = true;
+        } else if (CHECK_bref_raw) {
+            imageLayerGroup.clearLayers()
+            CHECK_bref_raw = false;
+        }
+    })
+
+    var CHECK_bvel_raw = false;
+    document.getElementById('bvel_raw').addEventListener("click", function() {
+        if (!CHECK_bvel_raw) {
+            map.spin(true);
+            getLatestFile("BVEL_RAW")
+            CHECK_bvel_raw = true;
+        } else if (CHECK_bvel_raw) {
+            imageLayerGroup.clearLayers()
+            CHECK_bvel_raw = false;
+        }
+    })
+
+
 
     var reflectivityCheckbox = document.querySelector("#reflectivity");
     reflectivityCheckbox.addEventListener("change", function() {
@@ -1588,7 +1755,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
             //console.log(radstat + ": " + lati + ", " + longi);
             document.getElementById('statti').innerHTML = radstat;
-            document.getElementById('radstatcoords').innerHTML = radstat + ": " + lati + ", " + longi;
+            document.getElementById('radstatcoords').innerHTML = lati + ", " + longi;
             document.getElementById('radstatzip').innerHTML = zippy;
             if (map.isFullscreen()) {
                 setView(lati, longi, 7, 1, true);
