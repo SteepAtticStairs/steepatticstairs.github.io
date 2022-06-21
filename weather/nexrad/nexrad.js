@@ -215,11 +215,15 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         //touchZoom: false,
         zoomDelta: 0.5,
         zoomSnap: 0.5,
-        scrollWheelZoom: false,
         smoothWheelZoom: true,
         smoothSensitivity: 1,
     }).setView([lat, lon], zoom);
-    map.scrollWheelZoom = true;
+
+    // map.touchZoom.disable();
+    // map.doubleClickZoom.disable();
+    // map.scrollWheelZoom.disable();
+    // map.boxZoom.disable();
+    // map.keyboard.disable();
     // map.setView([36.8281576, -98.5606744], 4);
     // function waitForElement()   {
     //     if (typeof trashButton !== "undefined") {
@@ -511,8 +515,19 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         <div><b>Please choose a radar product.</b></div>
         <br>
         <div><u>Level 2</u></div>
-        <div>Base Reflectivity (<a class="false-anchor" id="bref_raw">BREF_RAW</a>)</div>
-        <div>Base Velocity (<a class="false-anchor" id="bvel_raw">BVEL_RAW</a>)</div>`
+        <div>Base Reflectivity (<a class="false-anchor" id="BREF_RAW">BREF_RAW</a>)</div>
+        <div>Base Velocity (<a class="false-anchor" id="BVEL_RAW">BVEL_RAW</a>)</div>
+        <br>
+        <div><u>Level 3</u></div>
+        <div>Digital Hydrometeor Classification (<a class="false-anchor" id="BDHC">BDHC</a>)</div>
+        <div>Digital Storm Total Precipitation (<a class="false-anchor" id="BDSA">BDSA</a>)</div>
+        <div>Digital Differential Reflectivity (<a class="false-anchor" id="BDZD">BDZD</a>)</div>
+        <div>Enhanced Echo Tops (<a class="false-anchor" id="BEET">BEET</a>)</div>
+        <div>Rainfall Accumulation One Hour Classification (<a class="false-anchor" id="BOHP">BOHP</a>)</div>
+        <div>Storm Relative Mean Radial Velocity (<a class="false-anchor" id="BSRM">BSRM</a>)</div>
+        <div>Rainfall Accumulation Storm Total (<a class="false-anchor" id="BSTP">BSTP</a>)</div>
+        <div>Composite Reflectivity (<a class="false-anchor" id="CREF">CREF</a>)</div>
+        <div>Vertical Integrated Liquid (<a class="false-anchor" id="HVIL">HVIL</a>)</div>`
 
     L.control.slideMenu(contents, {
         position: "topright",
@@ -538,6 +553,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                 border-radius: 5px;\
                 '>\
                     <b><div id='stationThing'></div></b>\
+                    <div id='curMapProd'></div>\
                     <div id='timestampThing'></div>\
                     <i><b><div id='additionalInfo' style='\
                         display: none;\
@@ -1591,9 +1607,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }
 
 
-    function getLatestFile(pro) {
+    function getLatestFile(pro, level) {
         var proxy = "https://circumvent-cors.herokuapp.com/";
-        var getter = `https://mrms.ncep.noaa.gov/data/RIDGEII/L2/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/`
+        var getter = `https://mrms.ncep.noaa.gov/data/RIDGEII/${level}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/`
         $.get(proxy + getter, function(data) {
             var div = document.createElement('div')
             div.innerHTML = data;
@@ -1614,33 +1630,39 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             var amountOfFiles = Object.keys(htmlJson.children[2].children[0].children).length
             var latestFileName = htmlJson.children[2].children[0].children[amountOfFiles - 2].children[0].textContent
 
-            displayDecodedImage(pro.toUpperCase(), `https://mrms.ncep.noaa.gov/data/RIDGEII/L2/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/${latestFileName}`)
+            displayDecodedImage(pro.toUpperCase(), `https://mrms.ncep.noaa.gov/data/RIDGEII/${level}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/${latestFileName}`)
         })
     }
 
-    var CHECK_bref_raw = false;
-    document.getElementById('bref_raw').addEventListener("click", function() {
-        if (!CHECK_bref_raw) {
-            map.spin(true);
-            getLatestFile("BREF_RAW")
-            CHECK_bref_raw = true;
-        } else if (CHECK_bref_raw) {
-            imageLayerGroup.clearLayers()
-            CHECK_bref_raw = false;
-        }
-    })
+    function initImageDisplayListner(theprod, lev, desc) {
+        var isClicked = false;
+        document.getElementById(theprod.toUpperCase()).addEventListener("click", function() {
+            checkIfRadarStation()
+            if (!isClicked) {
+                map.spin(true);
+                document.getElementById('curMapProd').innerHTML = theprod.toUpperCase() + ": " + desc
+                getLatestFile(theprod.toUpperCase(), lev)
+                isClicked = true;
+            } else if (isClicked) {
+                imageLayerGroup.clearLayers()
+                isClicked = false;
+                document.getElementById('curMapProd').innerHTML = ''
+            }
+        })
+    }
 
-    var CHECK_bvel_raw = false;
-    document.getElementById('bvel_raw').addEventListener("click", function() {
-        if (!CHECK_bvel_raw) {
-            map.spin(true);
-            getLatestFile("BVEL_RAW")
-            CHECK_bvel_raw = true;
-        } else if (CHECK_bvel_raw) {
-            imageLayerGroup.clearLayers()
-            CHECK_bvel_raw = false;
-        }
-    })
+    // https://opengeo.ncep.noaa.gov/geoserver/www/index.html
+    initImageDisplayListner("bref_raw", "L2", "L2 Base Reflectivity")
+    initImageDisplayListner("bvel_raw", "L2", "L2 Base Radial Velocity")
+    initImageDisplayListner("bdhc", "L3", "Digital Hydrometeor Classification")
+    initImageDisplayListner("bdsa", "L3", "Digital Storm Total Precipitation")
+    initImageDisplayListner("bdzd", "L3", "Digital Differential Reflectivity")
+    initImageDisplayListner("beet", "L3", "Enhanced Echo Tops")
+    initImageDisplayListner("bohp", "L3", "Rainfall Accumulation One Hour")
+    initImageDisplayListner("bsrm", "L3", "Storm Relative Mean Radial Velocity")
+    initImageDisplayListner("bstp", "L3", "Rainfall Accumulation Storm Total")
+    initImageDisplayListner("cref", "L3", "Composite Reflectivity")
+    initImageDisplayListner("hvil", "L3", "Vertical Integrated Liquid")
 
 
 
