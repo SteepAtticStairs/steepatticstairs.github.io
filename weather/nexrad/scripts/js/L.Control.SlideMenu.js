@@ -15,7 +15,7 @@ L.Control.SlideMenu = L.Control.extend({
             class_left: 'fa fa-chevron-left',
             class_right: 'fa fa-chevron-right',
             size: '16pt',
-            color: '#BBCC22'
+            color: '#000000'
         }
     },
 
@@ -73,7 +73,7 @@ L.Control.SlideMenu = L.Control.extend({
             }
         }
 
-        var closeButton = L.DomUtil.create('button', 'leaflet-menu-close-button', this._menu);
+        var closeButton = L.DomUtil.create('a', 'leaflet-menu-close-button', this._menu);
 
         closeButton.style.fontSize = this.options.icon_close.size;
         closeButton.style.color = this.options.icon_close.color;
@@ -85,6 +85,7 @@ L.Control.SlideMenu = L.Control.extend({
             }
             else{
                 closeButton.style.float = 'left';
+                closeButton.style.top = '5px';
                 L.DomUtil.addClass(closeButton, this.options.icon_close.class_right);
             }
         }
