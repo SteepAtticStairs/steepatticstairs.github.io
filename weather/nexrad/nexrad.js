@@ -215,9 +215,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         //touchZoom: false,
         zoomDelta: 0.5,
         zoomSnap: 0.5,
-        scrollWheelZoom: false,
-        smoothWheelZoom: true,
-        smoothSensitivity: 1,
+        // scrollWheelZoom: false,
+        // smoothWheelZoom: true,
+        // smoothSensitivity: 1,
     }).setView([lat, lon], zoom);
 
     // map.touchZoom.disable();
@@ -537,6 +537,21 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         height: "400px",
         icon: "fa fa-bars",
     }).addTo(map);
+
+    // https://stackoverflow.com/a/57961941
+    L.Control.addDiv = L.Control.extend({
+        onAdd: function(map) {
+            var div = L.DomUtil.create('div');
+            div.id = "progressbar-container";
+            div.innerHTML = "<div style='width: 20vw' id='progressbar'></div>"
+            return div;
+        },
+        onRemove: function(map) {
+            // Nothing to do here
+        }
+    });
+    L.control.addDiv = function(opts) { return new L.Control.addDiv(opts);}
+    L.control.addDiv({ position: 'bottomcenter' }).addTo(map);
 
     // https://stackoverflow.com/a/57961941
     L.Control.textbox = L.Control.extend({
@@ -1509,12 +1524,25 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
     // https://mrms.ncep.noaa.gov/data/RIDGEII/L2/KLWX/BREF_RAW/
     function un_gzip_uploaded_file(file, product) {
+        $("#progressbar").progressbar({value: 0});
         // https://stackoverflow.com/a/22675494
         var urlOfTheFile = file;
-        fetch(urlOfTheFile)
-        .then(res => res.arrayBuffer())
-        .then(someBuffer => {
-            var arrayBuffer = someBuffer;
+        var xhttp2 = new XMLHttpRequest();
+        // listen for `progress` event
+        xhttp2.onprogress = (event) => {
+            // event.loaded returns how many bytes are downloaded
+            // event.total returns the total number of bytes
+            // event.total is only available if server sends `Content-Length` header
+            //console.log(`%c Downloaded ${formatBytes(event.loaded)} of ${formatBytes(event.total)}`, 'color: #bada55');
+            var complete = (event.loaded / event.total * 50 | 0);
+            console.log(complete + "%")
+            $("#progressbar").progressbar({value: complete});
+        }
+        xhttp2.responseType = 'arraybuffer';
+        xhttp2.open('GET', urlOfTheFile);
+        xhttp2.onload = function (e) {
+            console.log(xhttp2.response)
+            var arrayBuffer = xhttp2.response;
             //console.log(arrayBuffer);
             // Get datastream as Array, for example:
             var charData = arrayBuffer;
@@ -1525,6 +1553,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             // Output to console
             var blob = new Blob([new Uint8Array(data).buffer])
             var blobURL = URL.createObjectURL(blob)
+            $("#progressbar").progressbar({value: 75});
             //console.log(blobURL);
 
             var xhr = new XMLHttpRequest();
@@ -1543,7 +1572,8 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                 })
             };
             xhr.send();
-        });
+        };
+        xhttp2.send();
     }
 
     function setImageFromCenter(zoomLevel, imagePath, lat, lng, zoom) {
@@ -1584,6 +1614,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         //map.setView(initMapCenter, initMapZoom, {
         //    "animate": false
         //});
+        $("#progressbar").progressbar({value: 100});
+        document.getElementById('progressbar-container').style.display = 'none'
+        $("#progressbar").progressbar({value: 0});
         map.spin(false);
     }
 
@@ -1641,11 +1674,13 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             checkIfRadarStation()
             if (!isClicked) {
                 map.spin(true);
+                document.getElementById('progressbar-container').style.display = 'block'
                 document.getElementById('curMapProd').innerHTML = theprod.toUpperCase() + ": " + desc
                 getLatestFile(theprod.toUpperCase(), lev)
                 isClicked = true;
             } else if (isClicked) {
                 imageLayerGroup.clearLayers()
+                document.getElementById('progressbar-container').style.display = 'none'
                 isClicked = false;
                 document.getElementById('curMapProd').innerHTML = ''
             }
