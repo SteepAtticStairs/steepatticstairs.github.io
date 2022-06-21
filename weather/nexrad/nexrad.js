@@ -215,6 +215,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         //touchZoom: false,
         zoomDelta: 0.5,
         zoomSnap: 0.5,
+        scrollWheelZoom: false,
         smoothWheelZoom: true,
         smoothSensitivity: 1,
     }).setView([lat, lon], zoom);
