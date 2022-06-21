@@ -272,6 +272,28 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
+    // var osmLayer = L.mapboxGL({
+    //     accessToken: "pk.eyJ1Ijoic3RlZXBhdHRpY3N0YWlycyIsImEiOiJjbDNvaGFod2EwbXluM2pwZTJiMDYzYjh5In0.J_HeH00ry0tbLmGmTy4z5w",
+    //     // https://cloud.maptiler.com/maps/darkmatter
+    //     // https://api.maptiler.com/maps/openstreetmap/style.json?key=FWYZykwNVLnLEkB9rJxa
+    //     /*
+    //     OTHER MAPTILER STYLES:
+    //     darkmatter
+    //     basic
+    //     streets
+    //     openstreetmap
+    //     */
+    //     style: 'mapbox://styles/mapbox/bright-v9'
+    //     /*
+    //     OTHER MAPBOX STYLES:
+    //     https://docs.mapbox.com/api/maps/styles/
+    //     mapbox://styles/mapbox/bright-v9
+    //     mapbox://styles/mapbox/streets-v11
+    //     mapbox://styles/mapbox/light-v10
+    //     mapbox://styles/mapbox/dark-v10
+    //     mapbox://styles/mapbox/navigation-night-v1
+    //     */
+    // }).addTo(map);
 
     var notification = L.control.notifications({
         position: 'bottomright',
