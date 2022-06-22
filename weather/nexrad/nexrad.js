@@ -1523,7 +1523,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
 
     // https://mrms.ncep.noaa.gov/data/RIDGEII/L2/KLWX/BREF_RAW/
-    function un_gzip_uploaded_file(file, product) {
+    function un_gzip_uploaded_file(file, product, theFram) {
         $("#progressbar").progressbar({value: 0});
         // https://stackoverflow.com/a/22675494
         var urlOfTheFile = file;
@@ -1565,10 +1565,10 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                 canvas.toBlob(function(blob) {
                     const newImg = document.createElement('img');
                     const url2 = URL.createObjectURL(blob);
-                    document.getElementById('blobURL').innerHTML = url2 + "::" + product;
+                    document.getElementById('blobURL' + theFram).innerHTML = url2 + "::" + product;
                     var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
                     var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
-                    setImageFromCenter(915, document.getElementById('blobURL').innerHTML.split('::')[0].split('::')[0], stationLat, stationLon, 7)
+                    setImageFromCenter(915, document.getElementById('blobURL' + theFram).innerHTML.split('::')[0].split('::')[0], stationLat, stationLon, 7)
                 })
             };
             xhr.send();
@@ -1620,8 +1620,8 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         map.spin(false);
     }
 
-    function displayDecodedImage(prod, imageUrl) {
-        var blobUrlElem = document.getElementById('blobURL');
+    function displayDecodedImage(prod, imageUrl, theFrame) {
+        var blobUrlElem = document.getElementById('blobURL' + theFrame);
         if (!(blobUrlElem.innerHTML.split('::')[1] == prod)) {
             blobUrlElem.innerHTML = ''
         }
@@ -1632,7 +1632,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             // var proxy = 'https://secret-retreat-45871.herokuapp.com/'
             var proxy = "https://circumvent-cors.herokuapp.com/";
             var fileUrl = imageUrl
-            un_gzip_uploaded_file(proxy + fileUrl, prod)
+            un_gzip_uploaded_file(proxy + fileUrl, prod, theFrame)
         } else if (blobUrlElem.innerHTML != '') {
             var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
             var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
@@ -1665,7 +1665,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             var amountToSubtract = 2 + fram
             var latestFileName = htmlJson.children[2].children[0].children[amountOfFiles - amountToSubtract].children[0].textContent
 
-            displayDecodedImage(pro.toUpperCase(), `https://mrms.ncep.noaa.gov/data/RIDGEII/${level}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/${latestFileName}`)
+            displayDecodedImage(pro.toUpperCase(), `https://mrms.ncep.noaa.gov/data/RIDGEII/${level}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/${latestFileName}`, fram)
         })
     }
 
