@@ -1151,6 +1151,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
         var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
         setImageFromCenter(950, document.getElementById('blobURL' + value).innerHTML.split('::')[0], stationLat, stationLon, 7)
+        //iOverlay.setUrl(document.getElementById('blobURL' + value).innerHTML.split('::')[0])
     }, {
         min: 0,
         max: 5,
