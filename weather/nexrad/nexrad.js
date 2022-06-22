@@ -1144,27 +1144,6 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         syncSlider: true
     }).addTo(map);
 
-    var rpvSlider = L.control.slider(function(value) {
-        imageLayerGroup.clearLayers()
-        console.log(document.getElementById('blobURL' + value).innerHTML.split('::')[2])
-        document.getElementById('ts').innerHTML = document.getElementById('blobURL' + value).innerHTML.split('::')[2]
-        var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
-        var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
-        setImageFromCenter(950, document.getElementById('blobURL' + value).innerHTML.split('::')[0], stationLat, stationLon, 7)
-        //iOverlay.setUrl(document.getElementById('blobURL' + value).innerHTML.split('::')[0])
-    }, {
-        min: 0,
-        max: 5,
-        value: 0,
-        step: 1,
-        size: '250px',
-        orientation: 'horizontal',
-        id: 'slider',
-        position: 'bottomright',
-        logo: 'RPV',
-        syncSlider: true
-    });
-
     var timestampSlider = document.querySelector("#timestampSlider");
     timestampSlider.addEventListener("click", function() {
         tsSlider.slider.value = this.value;
@@ -1699,7 +1678,30 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
             setImageFromCenter(950, document.getElementById('blobURL0').innerHTML.split('::')[0], stationLat, stationLon, 7)
             map.spin(false);
-            rpvSlider.addTo(map)
+            var rpvSlider = L.control.slider(function(value) {
+                imageLayerGroup.clearLayers()
+                console.log(document.getElementById('blobURL' + value).innerHTML.split('::')[2])
+                document.getElementById('ts').innerHTML = document.getElementById('blobURL' + value).innerHTML.split('::')[2]
+                var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
+                var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
+                //setImageFromCenter(950, document.getElementById('blobURL' + value).innerHTML.split('::')[0], stationLat, stationLon, 7)
+                //iOverlay.setUrl(document.getElementById('blobURL' + value).innerHTML.split('::')[0])
+                var parsedStoredBounds = JSON.parse(document.getElementById('squareBounds').innerHTML);
+                var theParsedBounds = [[parsedStoredBounds._southWest.lat, parsedStoredBounds._southWest.lng], [parsedStoredBounds._northEast.lat, parsedStoredBounds._northEast.lng]]
+                L.imageOverlay(document.getElementById('blobURL' + value).innerHTML.split('::')[0], theParsedBounds).addTo(imageLayerGroup)
+                //console.log(map.hasLayer(iOverlay))
+            }, {
+                min: 0,
+                max: 5,
+                value: 0,
+                step: 1,
+                size: '250px',
+                orientation: 'horizontal',
+                id: 'slider',
+                position: 'bottomright',
+                logo: 'RPV',
+                syncSlider: true
+            }).addTo(map);
         }
     }
 
