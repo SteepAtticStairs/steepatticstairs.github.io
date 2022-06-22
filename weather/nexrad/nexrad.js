@@ -494,7 +494,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     animReflBtn.disable();
     animVelBtn.disable();
 
-    var stillReflBtn = 
+    /* var stillReflBtn = 
         L.easyButton('fa-hurricane still-refl', function(btn, map) {
             if ($(".still-refl").hasClass("icon-selected-removable")) {
                 // if the button is clicked while the layer is being displayed
@@ -558,6 +558,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         stillVILBtn
     ], {position: 'topright'});
     editBarTRStill.addTo(map);
+    */
 
     var contents = `
         <div><b>Please choose a radar product.</b></div>
@@ -1143,6 +1144,26 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         syncSlider: true
     }).addTo(map);
 
+    var rpvSlider = L.control.slider(function(value) {
+        imageLayerGroup.clearLayers()
+        console.log(document.getElementById('blobURL' + value).innerHTML.split('::')[2])
+        document.getElementById('ts').innerHTML = document.getElementById('blobURL' + value).innerHTML.split('::')[2]
+        var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
+        var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
+        setImageFromCenter(950, document.getElementById('blobURL' + value).innerHTML.split('::')[0], stationLat, stationLon, 7)
+    }, {
+        min: 0,
+        max: 5,
+        value: 0,
+        step: 1,
+        size: '250px',
+        orientation: 'horizontal',
+        id: 'slider',
+        position: 'bottomright',
+        logo: 'RPV',
+        syncSlider: true
+    });
+
     var timestampSlider = document.querySelector("#timestampSlider");
     timestampSlider.addEventListener("click", function() {
         tsSlider.slider.value = this.value;
@@ -1570,7 +1591,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
 
     // https://mrms.ncep.noaa.gov/data/RIDGEII/L2/KLWX/BREF_RAW/
-    function un_gzip_uploaded_file(file, product, theFram) {
+    function un_gzip_uploaded_file(file, product, theFram, theFileName) {
         $("#progressbar").progressbar({value: 0});
         // https://stackoverflow.com/a/22675494
         var urlOfTheFile = file;
@@ -1612,7 +1633,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                 canvas.toBlob(function(blob) {
                     const newImg = document.createElement('img');
                     const url2 = URL.createObjectURL(blob);
-                    document.getElementById('blobURL' + theFram).innerHTML = url2 + "::" + product;
+                    document.getElementById('blobURL' + theFram).innerHTML = url2 + "::" + product + "::" + theFileName;
                     var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
                     var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
                     setImageFromCenter(915, document.getElementById('blobURL' + theFram).innerHTML.split('::')[0].split('::')[0], stationLat, stationLon, 7)
@@ -1648,7 +1669,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             map.setView(initMapCenter, initMapZoom, {"animate": false});
         } else if (squareBoundsElem.innerHTML != '') {
             var parsedStoredBounds = JSON.parse(squareBoundsElem.innerHTML);
-            console.log(parsedStoredBounds)
+            //console.log(parsedStoredBounds)
             var theParsedBounds = [[parsedStoredBounds._southWest.lat, parsedStoredBounds._southWest.lng], [parsedStoredBounds._northEast.lat, parsedStoredBounds._northEast.lng]]
             var iOverlay = L.imageOverlay(imagePath, theParsedBounds).addTo(imageLayerGroup);
         }
@@ -1664,10 +1685,24 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         $("#progressbar").progressbar({value: 100});
         document.getElementById('progressbar-container').style.display = 'none'
         $("#progressbar").progressbar({value: 0});
-        map.spin(false);
+        if (parseInt(document.getElementById('curProccessingFrame').innerHTML) < 5) {
+            imageLayerGroup.clearLayers()
+            console.log('need to do next one')
+            console.log(document.getElementById('curProccessingProduct').innerHTML, parseInt(document.getElementById('curProccessingFrame').innerHTML) + 1)
+            getLatestFile(document.getElementById('curProccessingProduct').innerHTML, parseInt(document.getElementById('curProccessingFrame').innerHTML) + 1)
+        } else if (parseInt(document.getElementById('curProccessingFrame').innerHTML) == 5) {
+            document.getElementById('curProccessingFrame').innerHTML = 10
+            console.log('sussy balls')
+            imageLayerGroup.clearLayers()
+            var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
+            var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
+            setImageFromCenter(950, document.getElementById('blobURL0').innerHTML.split('::')[0], stationLat, stationLon, 7)
+            map.spin(false);
+            rpvSlider.addTo(map)
+        }
     }
 
-    function displayDecodedImage(prod, imageUrl, theFrame) {
+    function displayDecodedImage(prod, imageUrl, theFrame, curFileName) {
         var blobUrlElem = document.getElementById('blobURL' + theFrame);
         if (!(blobUrlElem.innerHTML.split('::')[1] == prod)) {
             blobUrlElem.innerHTML = ''
@@ -1679,7 +1714,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             // var proxy = 'https://secret-retreat-45871.herokuapp.com/'
             var proxy = "https://circumvent-cors.herokuapp.com/";
             var fileUrl = imageUrl
-            un_gzip_uploaded_file(proxy + fileUrl, prod, theFrame)
+            un_gzip_uploaded_file(proxy + fileUrl, prod, theFrame, curFileName)
         } else if (blobUrlElem.innerHTML != '') {
             var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
             var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
@@ -1689,6 +1724,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
 
     function getLatestFile(pro, fram) {
+        document.getElementById('progressbar-container').style.display = 'block'
+        document.getElementById('curProccessingFrame').innerHTML = fram
+        document.getElementById('curProccessingProduct').innerHTML = pro
         var proxy = "https://circumvent-cors.herokuapp.com/";
         var getter = `https://mrms.ncep.noaa.gov/data/RIDGEII/${productObject[pro.toLowerCase()][1]}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/`
         $.get(proxy + getter, function(data) {
@@ -1712,18 +1750,16 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             var amountToSubtract = 2 + fram
             var latestFileName = htmlJson.children[2].children[0].children[amountOfFiles - amountToSubtract].children[0].textContent
 
-            displayDecodedImage(pro.toUpperCase(), `https://mrms.ncep.noaa.gov/data/RIDGEII/${productObject[pro.toLowerCase()][1]}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/${latestFileName}`, fram)
+            displayDecodedImage(pro.toUpperCase(), `https://mrms.ncep.noaa.gov/data/RIDGEII/${productObject[pro.toLowerCase()][1]}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/${latestFileName}`, fram, latestFileName)
         })
     }
 
     function initImageDisplayListner(theprod, frame) {
-        document.getElementById('curProccessingFrame').innerHTML = frame
         var isClicked = false;
         document.getElementById(theprod.toUpperCase()).addEventListener("click", function() {
             checkIfRadarStation()
             if (!isClicked) {
                 map.spin(true);
-                document.getElementById('progressbar-container').style.display = 'block'
                 document.getElementById('curMapProd').innerHTML = theprod.toUpperCase() + ": " + productObject[theprod][0]
                 getLatestFile(theprod.toUpperCase(), frame)
                 isClicked = true;
