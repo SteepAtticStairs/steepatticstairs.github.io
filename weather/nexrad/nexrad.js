@@ -1641,7 +1641,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }
 
 
-    function getLatestFile(pro, level) {
+    function getLatestFile(pro, level, fram) {
         var proxy = "https://circumvent-cors.herokuapp.com/";
         var getter = `https://mrms.ncep.noaa.gov/data/RIDGEII/${level}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/`
         $.get(proxy + getter, function(data) {
@@ -1662,13 +1662,14 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
             var htmlJson = html2json(div)
             var amountOfFiles = Object.keys(htmlJson.children[2].children[0].children).length
-            var latestFileName = htmlJson.children[2].children[0].children[amountOfFiles - 2].children[0].textContent
+            var amountToSubtract = 2 + fram
+            var latestFileName = htmlJson.children[2].children[0].children[amountOfFiles - amountToSubtract].children[0].textContent
 
             displayDecodedImage(pro.toUpperCase(), `https://mrms.ncep.noaa.gov/data/RIDGEII/${level}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/${latestFileName}`)
         })
     }
 
-    function initImageDisplayListner(theprod, lev, desc) {
+    function initImageDisplayListner(theprod, frame, lev, desc) {
         var isClicked = false;
         document.getElementById(theprod.toUpperCase()).addEventListener("click", function() {
             checkIfRadarStation()
@@ -1676,7 +1677,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                 map.spin(true);
                 document.getElementById('progressbar-container').style.display = 'block'
                 document.getElementById('curMapProd').innerHTML = theprod.toUpperCase() + ": " + desc
-                getLatestFile(theprod.toUpperCase(), lev)
+                getLatestFile(theprod.toUpperCase(), lev, frame)
                 isClicked = true;
             } else if (isClicked) {
                 imageLayerGroup.clearLayers()
@@ -1688,17 +1689,17 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }
 
     // https://opengeo.ncep.noaa.gov/geoserver/www/index.html
-    initImageDisplayListner("bref_raw", "L2", "L2 Base Reflectivity")
-    initImageDisplayListner("bvel_raw", "L2", "L2 Base Radial Velocity")
-    initImageDisplayListner("bdhc", "L3", "Digital Hydrometeor Classification")
-    initImageDisplayListner("bdsa", "L3", "Digital Storm Total Precipitation")
-    initImageDisplayListner("bdzd", "L3", "Digital Differential Reflectivity")
-    initImageDisplayListner("beet", "L3", "Enhanced Echo Tops")
-    initImageDisplayListner("bohp", "L3", "Rainfall Accumulation One Hour")
-    initImageDisplayListner("bsrm", "L3", "Storm Relative Mean Radial Velocity")
-    initImageDisplayListner("bstp", "L3", "Rainfall Accumulation Storm Total")
-    initImageDisplayListner("cref", "L3", "Composite Reflectivity")
-    initImageDisplayListner("hvil", "L3", "Vertical Integrated Liquid")
+    initImageDisplayListner("bref_raw", "0", "L2", "L2 Base Reflectivity")
+    initImageDisplayListner("bvel_raw", "0", "L2", "L2 Base Radial Velocity")
+    initImageDisplayListner("bdhc", "0", "L3", "Digital Hydrometeor Classification")
+    initImageDisplayListner("bdsa", "0", "L3", "Digital Storm Total Precipitation")
+    initImageDisplayListner("bdzd", "0", "L3", "Digital Differential Reflectivity")
+    initImageDisplayListner("beet", "0", "L3", "Enhanced Echo Tops")
+    initImageDisplayListner("bohp", "0", "L3", "Rainfall Accumulation One Hour")
+    initImageDisplayListner("bsrm", "0", "L3", "Storm Relative Mean Radial Velocity")
+    initImageDisplayListner("bstp", "0", "L3", "Rainfall Accumulation Storm Total")
+    initImageDisplayListner("cref", "0", "L3", "Composite Reflectivity")
+    initImageDisplayListner("hvil", "0", "L3", "Vertical Integrated Liquid")
 
 
 
