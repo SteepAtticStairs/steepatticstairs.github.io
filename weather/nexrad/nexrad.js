@@ -618,6 +618,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                 '>\
                     <b><div id='stationThing'></div></b>\
                     <div id='curMapProd'></div>\
+                    <b><div id='progressbarStatus'></div></b>\
                     <div id='timestampThing'></div>\
                     <i><b><div id='additionalInfo' style='\
                         display: none;\
@@ -1572,7 +1573,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
     // https://mrms.ncep.noaa.gov/data/RIDGEII/L2/KLWX/BREF_RAW/
     function un_gzip_uploaded_file(file, product, theFram, theFileName) {
-        $("#progressbar").progressbar({value: 0});
+        //$("#progressbar").progressbar({value: 0});
         // https://stackoverflow.com/a/22675494
         var urlOfTheFile = file;
         var xhttp2 = new XMLHttpRequest();
@@ -1582,12 +1583,14 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             // event.total returns the total number of bytes
             // event.total is only available if server sends `Content-Length` header
             //console.log(`%c Downloaded ${formatBytes(event.loaded)} of ${formatBytes(event.total)}`, 'color: #bada55');
-            var complete = (event.loaded / event.total * 50 | 0);
+            document.getElementById('progressbarStatus').innerHTML = "Downloading..."
+            var complete = (event.loaded / event.total * (100/6) | 0);
             console.log(complete + "%")
-            $("#progressbar").progressbar({value: complete});
+            $("#progressbar").progressbar({value: complete + $("#progressbar").progressbar("value")});
         }
         xhttp2.responseType = 'arraybuffer';
         xhttp2.open('GET', urlOfTheFile);
+        document.getElementById('progressbarStatus').innerHTML = "Un-gzipping..."
         xhttp2.onload = function (e) {
             console.log(xhttp2.response)
             var arrayBuffer = xhttp2.response;
@@ -1601,7 +1604,8 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             // Output to console
             var blob = new Blob([new Uint8Array(data).buffer])
             var blobURL = URL.createObjectURL(blob)
-            $("#progressbar").progressbar({value: 75});
+            document.getElementById('progressbarStatus').innerHTML = "Converting from TIFF..."
+            //$("#progressbar").progressbar({value: 75});
             //console.log(blobURL);
 
             var xhr = new XMLHttpRequest();
@@ -1662,9 +1666,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         //map.setView(initMapCenter, initMapZoom, {
         //    "animate": false
         //});
-        $("#progressbar").progressbar({value: 100});
-        document.getElementById('progressbar-container').style.display = 'none'
-        $("#progressbar").progressbar({value: 0});
+        //$("#progressbar").progressbar({value: 100});
+        //document.getElementById('progressbar-container').style.display = 'none'
+        //$("#progressbar").progressbar({value: 0});
         if (parseInt(document.getElementById('curProccessingFrame').innerHTML) < 5) {
             imageLayerGroup.clearLayers()
             console.log('need to do next one')
@@ -1678,6 +1682,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
             setImageFromCenter(950, document.getElementById('blobURL0').innerHTML.split('::')[0], stationLat, stationLon, 7)
             map.spin(false);
+            document.getElementById('progressbar-container').style.display = 'none'
+            document.getElementById('progressbarStatus').innerHTML = ""
+            $("#progressbar").progressbar({value: 0});
             var rpvSlider = L.control.slider(function(value) {
                 imageLayerGroup.clearLayers()
                 console.log(document.getElementById('blobURL' + value).innerHTML.split('::')[2])
@@ -1762,11 +1769,17 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         document.getElementById(theprod.toUpperCase()).addEventListener("click", function() {
             checkIfRadarStation()
             if (!isClicked) {
+                $("#progressbar").progressbar({value: 0});
+                document.getElementById('progressbarStatus').innerHTML = "Downloading..."
+                oopaac = 0;
+                updateLayer($('#timestampSlider').val());
                 map.spin(true);
                 document.getElementById('curMapProd').innerHTML = theprod.toUpperCase() + ": " + productObject[theprod][0]
                 getLatestFile(theprod.toUpperCase(), frame)
                 isClicked = true;
             } else if (isClicked) {
+                oopaac = 10;
+                updateLayer($('#timestampSlider').val());
                 imageLayerGroup.clearLayers()
                 document.getElementById('progressbar-container').style.display = 'none'
                 isClicked = false;
