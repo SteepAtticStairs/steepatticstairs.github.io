@@ -264,6 +264,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     var currentTime = new Date();
     var oopaac;
     document.getElementById('weathermap').innerHTML = "<div id='map'></div>";
+    document.getElementById('isRPVActive').innerHTML = 'no'
     // $("#map").css("border-radius", "50%");
     // $("#map").css("height", "500px");
     // $("#map").css("top", "0px");
@@ -1171,21 +1172,35 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         tsSlider._updateValue();
     });
 
+    var rpvStatus = document.getElementById('isRPVActive')
     var pausePlayButton = 
         L.easyButton({
             states: [{
                 icon: 'fa-play green-icon',
                 stateName: 'add',
                 onClick: function(control) {
-                    $('#play').trigger('click');
-                    control.state('remove');
+                    if (rpvStatus.innerHTML == 'no') {
+                        $('#play').trigger('click');
+                        control.state('remove');
+                    } else if (rpvStatus.innerHTML == 'yes') {
+                        playAnimation();
+                        control.state('remove');
+                    }
                 }
             }, {
                 icon: 'fa-pause red-icon',
                 stateName: 'remove',
                 onClick: function(control) {
-                    $('#pause').trigger('click');
-                    control.state('add');
+                    if (rpvStatus.innerHTML == 'no') {
+                        $('#pause').trigger('click');
+                        control.state('add');
+                    } else if (rpvStatus.innerHTML == 'yes') {
+                        var highestTimeoutId = setTimeout(";");
+                    for (var i = 0 ; i < highestTimeoutId ; i++) {
+                        clearTimeout(i); 
+                    }
+                        control.state('add');
+                    }
                 },
             }],
                 tagName: 'a',
@@ -1705,32 +1720,34 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             document.getElementById('progressbar-container').style.display = 'none'
             document.getElementById('progressbarStatus').innerHTML = ""
             $("#progressbar").progressbar({value: 0});
-            var rpvSlider = L.control.slider(function(value) {
-                imageLayerGroup.clearLayers()
-                console.log(document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[2])
-                document.getElementById('ts').innerHTML = document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[2]
-                var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
-                var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
-                //setImageFromCenter(950, document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[0], stationLat, stationLon, 7)
-                //iOverlay.setUrl(document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[0])
-                var parsedStoredBounds = JSON.parse(document.getElementById('squareBounds').innerHTML);
-                var theParsedBounds = [[parsedStoredBounds._southWest.lat, parsedStoredBounds._southWest.lng], [parsedStoredBounds._northEast.lat, parsedStoredBounds._northEast.lng]]
-                L.imageOverlay(document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[0], theParsedBounds).addTo(imageLayerGroup)
-                //console.log(map.hasLayer(iOverlay))
-            }, {
-                min: 0,
-                max: 5,
-                value: 0,
-                step: 1,
-                size: '150px',
-                orientation: 'horizontal',
-                id: 'slider',
-                position: 'bottomright',
-                logo: 'RPV',
-                syncSlider: true
-            }).addTo(map);
+            rpvSlider.addTo(map)
         }
     }
+
+    var rpvSlider = L.control.slider(function(value) {
+        imageLayerGroup.clearLayers()
+        console.log(document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[2])
+        document.getElementById('ts').innerHTML = document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[2]
+        var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
+        var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
+        //setImageFromCenter(950, document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[0], stationLat, stationLon, 7)
+        //iOverlay.setUrl(document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[0])
+        var parsedStoredBounds = JSON.parse(document.getElementById('squareBounds').innerHTML);
+        var theParsedBounds = [[parsedStoredBounds._southWest.lat, parsedStoredBounds._southWest.lng], [parsedStoredBounds._northEast.lat, parsedStoredBounds._northEast.lng]]
+        L.imageOverlay(document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[0], theParsedBounds).addTo(imageLayerGroup)
+        //console.log(map.hasLayer(iOverlay))
+    }, {
+        min: 0,
+        max: 5,
+        value: 0,
+        step: 1,
+        size: '150px',
+        orientation: 'horizontal',
+        id: 'slider',
+        position: 'bottomright',
+        logo: 'RPV',
+        syncSlider: true
+    });
 
     function displayDecodedImage(prod, imageUrl, theFrame, curFileName) {
         var blobUrlElem = document.getElementById('blobURL' + theFrame);
@@ -1789,6 +1806,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         document.getElementById(theprod.toUpperCase()).addEventListener("click", function() {
             checkIfRadarStation()
             if (!isClicked) {
+                document.getElementById('isRPVActive').innerHTML = 'yes'
                 $("#progressbar").progressbar({value: 0});
                 document.getElementById('progressbarStatus').innerHTML = `(${frame}) Downloading...`
                 oopaac = 0;
@@ -1798,6 +1816,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                 getLatestFile(theprod.toUpperCase(), frame)
                 isClicked = true;
             } else if (isClicked) {
+                document.getElementById('isRPVActive').innerHTML = 'no'
                 oopaac = 10;
                 updateLayer($('#timestampSlider').val());
                 imageLayerGroup.clearLayers()
@@ -1820,6 +1839,24 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     initImageDisplayListner("bstp", "0")
     initImageDisplayListner("cref", "0")
     initImageDisplayListner("hvil", "0")
+
+    function playAnimation() {
+        var i = 0;
+        function myLoop() {
+            var theTimeout = setTimeout(function() {
+                rpvSlider.slider.value = i;
+                rpvSlider._updateValue();
+                i++;
+                if (i < 6 && !(document.getElementById('clearTimeout').innerHTML == 'yes')) {
+                    myLoop();
+                } else if (i == 6 && !(document.getElementById('clearTimeout').innerHTML == 'yes')) {
+                    i = 0;
+                    myLoop();
+                }
+            }, 700)
+        }
+        myLoop();
+    }
 
 
 
