@@ -44,6 +44,26 @@ var productObject = {
         "L3"
     ]
 }
+var frameObject = {
+    "5": [
+        "0"
+    ],
+    "4": [
+        "1"
+    ],
+    "3": [
+        "2"
+    ],
+    "2": [
+        "3"
+    ],
+    "1": [
+        "4"
+    ],
+    "0": [
+        "5"
+    ],
+}
 
 $("#myModalBody").draggable({
     handle: "#myModalBodyDrag"
@@ -1583,14 +1603,14 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             // event.total returns the total number of bytes
             // event.total is only available if server sends `Content-Length` header
             //console.log(`%c Downloaded ${formatBytes(event.loaded)} of ${formatBytes(event.total)}`, 'color: #bada55');
-            document.getElementById('progressbarStatus').innerHTML = "Downloading..."
+            document.getElementById('progressbarStatus').innerHTML = `(${theFram}) Downloading...`
             var complete = (event.loaded / event.total * (100/6) | 0);
             console.log(complete + "%")
             $("#progressbar").progressbar({value: complete + $("#progressbar").progressbar("value")});
         }
         xhttp2.responseType = 'arraybuffer';
         xhttp2.open('GET', urlOfTheFile);
-        document.getElementById('progressbarStatus').innerHTML = "Un-gzipping..."
+        document.getElementById('progressbarStatus').innerHTML = `(${theFram}) Un-gzipping...`
         xhttp2.onload = function (e) {
             console.log(xhttp2.response)
             var arrayBuffer = xhttp2.response;
@@ -1604,7 +1624,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             // Output to console
             var blob = new Blob([new Uint8Array(data).buffer])
             var blobURL = URL.createObjectURL(blob)
-            document.getElementById('progressbarStatus').innerHTML = "Converting from TIFF..."
+            document.getElementById('progressbarStatus').innerHTML = `(${theFram}) Converting from TIFF...`
             //$("#progressbar").progressbar({value: 75});
             //console.log(blobURL);
 
@@ -1680,29 +1700,29 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             imageLayerGroup.clearLayers()
             var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
             var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
-            setImageFromCenter(950, document.getElementById('blobURL0').innerHTML.split('::')[0], stationLat, stationLon, 7)
+            setImageFromCenter(950, document.getElementById('blobURL5').innerHTML.split('::')[0], stationLat, stationLon, 7)
             map.spin(false);
             document.getElementById('progressbar-container').style.display = 'none'
             document.getElementById('progressbarStatus').innerHTML = ""
             $("#progressbar").progressbar({value: 0});
             var rpvSlider = L.control.slider(function(value) {
                 imageLayerGroup.clearLayers()
-                console.log(document.getElementById('blobURL' + value).innerHTML.split('::')[2])
-                document.getElementById('ts').innerHTML = document.getElementById('blobURL' + value).innerHTML.split('::')[2]
+                console.log(document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[2])
+                document.getElementById('ts').innerHTML = document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[2]
                 var stationLat = document.getElementById('radstatcoords').innerHTML.split(', ')[0]
                 var stationLon = document.getElementById('radstatcoords').innerHTML.split(', ')[1]
-                //setImageFromCenter(950, document.getElementById('blobURL' + value).innerHTML.split('::')[0], stationLat, stationLon, 7)
-                //iOverlay.setUrl(document.getElementById('blobURL' + value).innerHTML.split('::')[0])
+                //setImageFromCenter(950, document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[0], stationLat, stationLon, 7)
+                //iOverlay.setUrl(document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[0])
                 var parsedStoredBounds = JSON.parse(document.getElementById('squareBounds').innerHTML);
                 var theParsedBounds = [[parsedStoredBounds._southWest.lat, parsedStoredBounds._southWest.lng], [parsedStoredBounds._northEast.lat, parsedStoredBounds._northEast.lng]]
-                L.imageOverlay(document.getElementById('blobURL' + value).innerHTML.split('::')[0], theParsedBounds).addTo(imageLayerGroup)
+                L.imageOverlay(document.getElementById('blobURL' + frameObject[value][0]).innerHTML.split('::')[0], theParsedBounds).addTo(imageLayerGroup)
                 //console.log(map.hasLayer(iOverlay))
             }, {
                 min: 0,
                 max: 5,
                 value: 0,
                 step: 1,
-                size: '250px',
+                size: '150px',
                 orientation: 'horizontal',
                 id: 'slider',
                 position: 'bottomright',
@@ -1757,7 +1777,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
 
             var htmlJson = html2json(div)
             var amountOfFiles = Object.keys(htmlJson.children[2].children[0].children).length
-            var amountToSubtract = 2 + fram
+            var amountToSubtract = 2 + parseInt(fram)
             var latestFileName = htmlJson.children[2].children[0].children[amountOfFiles - amountToSubtract].children[0].textContent
 
             displayDecodedImage(pro.toUpperCase(), `https://mrms.ncep.noaa.gov/data/RIDGEII/${productObject[pro.toLowerCase()][1]}/${document.getElementById('statti').innerHTML.toUpperCase()}/${pro}/${latestFileName}`, fram, latestFileName)
@@ -1770,7 +1790,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             checkIfRadarStation()
             if (!isClicked) {
                 $("#progressbar").progressbar({value: 0});
-                document.getElementById('progressbarStatus').innerHTML = "Downloading..."
+                document.getElementById('progressbarStatus').innerHTML = `(${frame}) Downloading...`
                 oopaac = 0;
                 updateLayer($('#timestampSlider').val());
                 map.spin(true);
