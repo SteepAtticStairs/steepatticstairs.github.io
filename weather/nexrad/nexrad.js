@@ -1195,10 +1195,11 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                         $('#pause').trigger('click');
                         control.state('add');
                     } else if (rpvStatus.innerHTML == 'yes') {
+                        // https://stackoverflow.com/a/8345814/18758797
                         var highestTimeoutId = setTimeout(";");
-                    for (var i = 0 ; i < highestTimeoutId ; i++) {
-                        clearTimeout(i); 
-                    }
+                        for (var i = 0 ; i < highestTimeoutId ; i++) {
+                            clearTimeout(i); 
+                        }
                         control.state('add');
                     }
                 },
