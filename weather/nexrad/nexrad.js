@@ -64,6 +64,44 @@ var frameObject = {
         "5"
     ],
 }
+var timestampLocationObject = {
+    "bdhc": [
+        "0"
+    ],
+    "bdsa": [
+        "1"
+    ],
+    "bdzd": [
+        "2"
+    ],
+    "beet": [
+        "3"
+    ],
+    "bohp": [
+        "4"
+    ],
+    "bref_raw": [
+        "5"
+    ],
+    "bsrm": [
+        "6"
+    ],
+    "bstp": [
+        "7"
+    ],
+    "bvel": [
+        "8"
+    ],
+    "bvel_raw": [
+        "9"
+    ],
+    "cref": [
+        "10"
+    ],
+    "hvil": [
+        "11"
+    ]
+}
 
 $("#myModalBody").draggable({
     handle: "#myModalBodyDrag"
@@ -582,7 +620,8 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     */
 
     var contents = `
-        <div><b>Please choose a radar product.</b></div>
+        <!-- <div id="introDiv">
+        <div><b>Click to generate timestamps.</b></div>
         <br>
         <div><u>Level 2</u></div>
         <div>Base Reflectivity (<a class="false-anchor" id="BREF_RAW">BREF_RAW</a>)</div>
@@ -597,7 +636,45 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         <div>Storm Relative Mean Radial Velocity (<a class="false-anchor" id="BSRM">BSRM</a>)</div>
         <div>Rainfall Accumulation Storm Total (<a class="false-anchor" id="BSTP">BSTP</a>)</div>
         <div>Composite Reflectivity (<a class="false-anchor" id="CREF">CREF</a>)</div>
-        <div>Vertical Integrated Liquid (<a class="false-anchor" id="HVIL">HVIL</a>)</div>`
+        <div>Vertical Integrated Liquid (<a class="false-anchor" id="HVIL">HVIL</a>)</div>
+        </div> -->
+
+        <div id="icanhidethis">
+        <div><b>Please choose a radar product.</b></div>
+        <br>
+        <div><u>Level 2</u></div>
+        <div class='getTs'>Base Reflectivity (<a class="false-anchor-grey" id="TS_BREF_RAW">BREF_RAW</a><a class="false-anchor" id="BREF_RAW">BREF_RAW</a>)</div>
+
+        <div class='getTs'>Base Velocity (<a class="false-anchor-grey" id="TS_BVEL_RAW">BVEL_RAW</a><a class="false-anchor" id="BVEL_RAW">BVEL_RAW</a>)</div>
+        <br>
+        <div><u>Level 3</u></div>
+        <div class='getTs'>Digital Hydrometeor Classification (<a class="false-anchor-grey" id="TS_BDHC">BDHC</a>)</div>
+        <div class='showImage'>Digital Hydrometeor Classification (<a class="false-anchor" id="BDHC">BDHC</a>)</div>
+
+        <div class='getTs'>Digital Storm Total Precipitation (<a class="false-anchor-grey" id="TS_BDSA">BDSA</a>)</div>
+        <div class='showImage'>Digital Storm Total Precipitation (<a class="false-anchor" id="BDSA">BDSA</a>)</div>
+
+        <div class='getTs'>Digital Differential Reflectivity (<a class="false-anchor-grey" id="TS_BDZD">BDZD</a>)</div>
+        <div class='showImage'>Digital Differential Reflectivity (<a class="false-anchor" id="BDZD">BDZD</a>)</div>
+
+        <div class='getTs'>Enhanced Echo Tops (<a class="false-anchor-grey" id="TS_BEET">BEET</a>)</div>
+        <div class='showImage'>Enhanced Echo Tops (<a class="false-anchor" id="BEET">BEET</a>)</div>
+
+        <div class='getTs'>Rainfall Accumulation One Hour Classification (<a class="false-anchor-grey" id="TS_BOHP">BOHP</a>)</div>
+        <div class='showImage'>Rainfall Accumulation One Hour Classification (<a class="false-anchor" id="BOHP">BOHP</a>)</div>
+
+        <div class='getTs'>Storm Relative Mean Radial Velocity (<a class="false-anchor-grey" id="TS_BSRM">BSRM</a>)</div>
+        <div class='showImage'>Storm Relative Mean Radial Velocity (<a class="false-anchor" id="BSRM">BSRM</a>)</div>
+
+        <div class='getTs'>Rainfall Accumulation Storm Total (<a class="false-anchor-grey" id="TS_BSTP">BSTP</a>)</div>
+        <div class='showImage'>Rainfall Accumulation Storm Total (<a class="false-anchor" id="BSTP">BSTP</a>)</div>
+
+        <div class='getTs'>Composite Reflectivity (<a class="false-anchor-grey" id="TS_CREF">CREF</a>)</div>
+        <div class='showImage'>Composite Reflectivity (<a class="false-anchor" id="CREF">CREF</a>)</div>
+
+        <div class='getTs'>Vertical Integrated Liquid (<a class="false-anchor-grey" id="TS_HVIL">HVIL</a>)</div>
+        <div class='showImage'>Vertical Integrated Liquid (<a class="false-anchor" id="HVIL">HVIL</a>)</div>
+        </div>`
 
     L.control.slideMenu(contents, {
         position: "topright",
@@ -1280,7 +1357,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             transparent: true
         });
         tileLayers.addLayer(wdgProductLayer);
-        wdgProductLayer.addTo(productLayerGroup);
+        wdgProductLayer.addTo(imageLayerGroup);
         wdgProductLayer.setOpacity(theOpacity);
     }
 
@@ -1802,29 +1879,98 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         })
     }
 
+    function wdg(pr) {
+        var normalDataReturned = displayWDGLayer(pr);
+        radarLayers = normalDataReturned;
+    }
+
+    function displayWDGLayer(prodd) {
+        var urlToGet = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}/ows?`;
+        var theService = `${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}`;
+        var arraye = JSON.parse(document.getElementById('wdgArray').innerHTML)
+        var radarLayers = [];
+        for (let i = 0; i <= 11; i++) {
+            radarLayers[i] = L.tileLayer.wms(urlToGet, {
+                SERVICE: 'WMS',
+                LAYERS: theService,
+                TIME: arraye[i],
+                format: 'image/png',
+                transparent: true,
+            });
+            tileLayers.addLayer(radarLayers[i]);
+            radarLayers[i].setOpacity(0)
+            radarLayers[i].addTo(productLayerGroup);
+        }
+        radarLayers[10].setOpacity(10)
+        return radarLayers;
+    }
+
+    function getWdgTimestamps(whatprod) {
+        var wdgTsUrl = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`;
+        var WDGxhttp = new XMLHttpRequest();
+        WDGxhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var txt = this.responseText;
+                var xmlDoc = parseXml(txt);
+                var theJson = xmlToJson(xmlDoc);
+                // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
+                // @ json to string
+                var stringjson = JSON.stringify(theJson);
+                // replace @ with AT
+                var stringjsonwithouthash = stringjson.replace(/#/g, 'hash');
+                // re-parse the AT json
+                var nohashjson = JSON.parse(stringjsonwithouthash);
+                var timestampString = nohashjson.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[whatprod][0]].Dimension.hashtext
+                var tsArray = timestampString.split(',')
+                document.getElementById('wdgArray').innerHTML = JSON.stringify(tsArray.slice(-11))
+                map.spin(false)
+                document.getElementById('TS_' + whatprod.toUpperCase()).style.display = 'none'
+                document.getElementById(whatprod.toUpperCase()).style.display = 'inline'
+            }
+        };
+        WDGxhttp.open("GET", wdgTsUrl, true);
+        WDGxhttp.send();
+    }
+
     function initImageDisplayListner(theprod, frame) {
         var isClicked = false;
         document.getElementById(theprod.toUpperCase()).addEventListener("click", function() {
             checkIfRadarStation()
             if (!isClicked) {
-                document.getElementById('isRPVActive').innerHTML = 'yes'
-                $("#progressbar").progressbar({value: 0});
-                document.getElementById('progressbarStatus').innerHTML = `(${frame}) Downloading...`
-                oopaac = 0;
-                updateLayer($('#timestampSlider').val());
-                map.spin(true);
-                document.getElementById('curMapProd').innerHTML = theprod.toUpperCase() + ": " + productObject[theprod][0]
-                getLatestFile(theprod.toUpperCase(), frame)
+                //document.getElementById('isRPVActive').innerHTML = 'yes'
+                //$("#progressbar").progressbar({value: 0});
+                //document.getElementById('progressbarStatus').innerHTML = `(${frame}) Downloading...`
+                //oopaac = 0;
+                //updateLayer($('#timestampSlider').val());
+                //map.spin(true);
+                //document.getElementById('curMapProd').innerHTML = theprod.toUpperCase() + ": " + productObject[theprod][0]
+                //getLatestFile(theprod.toUpperCase(), frame)
                 isClicked = true;
-            } else if (isClicked) {
-                document.getElementById('isRPVActive').innerHTML = 'no'
-                oopaac = 10;
-                updateLayer($('#timestampSlider').val());
+                productLayerGroup.clearLayers()
                 imageLayerGroup.clearLayers()
-                document.getElementById('progressbar-container').style.display = 'none'
+                //wdgProduct(document.getElementById('statti').innerHTML, theprod, 1)
+                //getWdgTimestamps(theprod);
+                //setTimeout(function() {
+                //    wdg(theprod)
+                //}, 5000)
+                wdg(theprod)
+            } else if (isClicked) {
+                //document.getElementById('isRPVActive').innerHTML = 'no'
+                //oopaac = 10;
+                //updateLayer($('#timestampSlider').val());
+                //imageLayerGroup.clearLayers()
+                //document.getElementById('progressbar-container').style.display = 'none'
+                //document.getElementById('curMapProd').innerHTML = ''
                 isClicked = false;
-                document.getElementById('curMapProd').innerHTML = ''
+                imageLayerGroup.clearLayers()
             }
+        })
+    }
+
+    function initTsListner(prr) {
+        document.getElementById('TS_' + prr.toUpperCase()).addEventListener('click', function() {
+            map.spin(true)
+            getWdgTimestamps(prr)
         })
     }
 
@@ -1840,6 +1986,22 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     initImageDisplayListner("bstp", "0")
     initImageDisplayListner("cref", "0")
     initImageDisplayListner("hvil", "0")
+
+    var elemsToHide = document.getElementsByClassName('false-anchor')
+    for (var x = 0; x < elemsToHide.length; x++) {
+        elemsToHide[x].style.display = 'none'
+    }
+    initTsListner("bref_raw")
+    initTsListner("bvel_raw")
+    initTsListner("bdhc")
+    initTsListner("bdsa")
+    initTsListner("bdzd")
+    initTsListner("beet")
+    initTsListner("bohp")
+    initTsListner("bsrm")
+    initTsListner("bstp")
+    initTsListner("cref")
+    initTsListner("hvil")
 
     function playAnimation() {
         var i = 0;

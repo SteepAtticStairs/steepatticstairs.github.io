@@ -143,6 +143,16 @@ body, html {
     text-decoration: underline;
     color:rgb(0, 0, 137);
 }
+.false-anchor-grey {
+    cursor: pointer;
+    text-decoration: underline;
+    color:rgb(145, 145, 145);
+}
+.false-anchor-grey:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color:rgb(195, 28, 28);
+}
 
 .icon-selected {
     color:rgb(0, 132, 255);
