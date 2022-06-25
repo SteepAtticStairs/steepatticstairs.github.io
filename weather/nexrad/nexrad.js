@@ -649,6 +649,16 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         icon: "fa fa-bars",
     }).addTo(map);
 
+    var radarLegend = `<div id='radarLegendImg'><b>Plese select a radar product.</b></div>`
+    L.control.slideMenu(radarLegend, {
+        position: "bottomright",
+        menuposition: "bottomright",
+        direction: 'vertical',
+        width: "100%",
+        height: "100px",
+        icon: "fa fa-eye-dropper",
+    }).addTo(map);
+
     var satelliteButton = 
         L.easyButton({
             states: [{
@@ -1889,6 +1899,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }
 
     function displayWDGLayer(prodd) {
+        document.getElementById('radarLegendImg').innerHTML = `
+            <img style='width: 70vw; min-width: 450px' src='/icons/radarKeys/${prodd}.png'>
+            <div><b>${prodd.toUpperCase() + ": " + productObject[prodd][0]}</b></div>`
         var urlToGet = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}/ows?`;
         var theService = `${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}`;
         var fullxmltoparse = JSON.parse(document.getElementById('fullWdgTimestampXml').innerHTML)
