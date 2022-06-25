@@ -620,60 +620,23 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     */
 
     var contents = `
-        <!-- <div id="introDiv">
-        <div><b>Click to generate timestamps.</b></div>
-        <br>
-        <div><u>Level 2</u></div>
-        <div>Base Reflectivity (<a class="false-anchor" id="BREF_RAW">BREF_RAW</a>)</div>
-        <div>Base Velocity (<a class="false-anchor" id="BVEL_RAW">BVEL_RAW</a>)</div>
-        <br>
-        <div><u>Level 3</u></div>
-        <div>Digital Hydrometeor Classification (<a class="false-anchor" id="BDHC">BDHC</a>)</div>
-        <div>Digital Storm Total Precipitation (<a class="false-anchor" id="BDSA">BDSA</a>)</div>
-        <div>Digital Differential Reflectivity (<a class="false-anchor" id="BDZD">BDZD</a>)</div>
-        <div>Enhanced Echo Tops (<a class="false-anchor" id="BEET">BEET</a>)</div>
-        <div>Rainfall Accumulation One Hour Classification (<a class="false-anchor" id="BOHP">BOHP</a>)</div>
-        <div>Storm Relative Mean Radial Velocity (<a class="false-anchor" id="BSRM">BSRM</a>)</div>
-        <div>Rainfall Accumulation Storm Total (<a class="false-anchor" id="BSTP">BSTP</a>)</div>
-        <div>Composite Reflectivity (<a class="false-anchor" id="CREF">CREF</a>)</div>
-        <div>Vertical Integrated Liquid (<a class="false-anchor" id="HVIL">HVIL</a>)</div>
-        </div> -->
-
         <div id="icanhidethis">
         <div><b>Please choose a radar product.</b></div>
         <br>
         <div><u>Level 2</u></div>
         <div class='getTs'>Base Reflectivity (<a class="false-anchor-grey" id="TS_BREF_RAW">BREF_RAW</a><a class="false-anchor" id="BREF_RAW">BREF_RAW</a>)</div>
-
         <div class='getTs'>Base Velocity (<a class="false-anchor-grey" id="TS_BVEL_RAW">BVEL_RAW</a><a class="false-anchor" id="BVEL_RAW">BVEL_RAW</a>)</div>
         <br>
         <div><u>Level 3</u></div>
-        <div class='getTs'>Digital Hydrometeor Classification (<a class="false-anchor-grey" id="TS_BDHC">BDHC</a>)</div>
-        <div class='showImage'>Digital Hydrometeor Classification (<a class="false-anchor" id="BDHC">BDHC</a>)</div>
-
-        <div class='getTs'>Digital Storm Total Precipitation (<a class="false-anchor-grey" id="TS_BDSA">BDSA</a>)</div>
-        <div class='showImage'>Digital Storm Total Precipitation (<a class="false-anchor" id="BDSA">BDSA</a>)</div>
-
-        <div class='getTs'>Digital Differential Reflectivity (<a class="false-anchor-grey" id="TS_BDZD">BDZD</a>)</div>
-        <div class='showImage'>Digital Differential Reflectivity (<a class="false-anchor" id="BDZD">BDZD</a>)</div>
-
-        <div class='getTs'>Enhanced Echo Tops (<a class="false-anchor-grey" id="TS_BEET">BEET</a>)</div>
-        <div class='showImage'>Enhanced Echo Tops (<a class="false-anchor" id="BEET">BEET</a>)</div>
-
-        <div class='getTs'>Rainfall Accumulation One Hour Classification (<a class="false-anchor-grey" id="TS_BOHP">BOHP</a>)</div>
-        <div class='showImage'>Rainfall Accumulation One Hour Classification (<a class="false-anchor" id="BOHP">BOHP</a>)</div>
-
-        <div class='getTs'>Storm Relative Mean Radial Velocity (<a class="false-anchor-grey" id="TS_BSRM">BSRM</a>)</div>
-        <div class='showImage'>Storm Relative Mean Radial Velocity (<a class="false-anchor" id="BSRM">BSRM</a>)</div>
-
-        <div class='getTs'>Rainfall Accumulation Storm Total (<a class="false-anchor-grey" id="TS_BSTP">BSTP</a>)</div>
-        <div class='showImage'>Rainfall Accumulation Storm Total (<a class="false-anchor" id="BSTP">BSTP</a>)</div>
-
-        <div class='getTs'>Composite Reflectivity (<a class="false-anchor-grey" id="TS_CREF">CREF</a>)</div>
-        <div class='showImage'>Composite Reflectivity (<a class="false-anchor" id="CREF">CREF</a>)</div>
-
-        <div class='getTs'>Vertical Integrated Liquid (<a class="false-anchor-grey" id="TS_HVIL">HVIL</a>)</div>
-        <div class='showImage'>Vertical Integrated Liquid (<a class="false-anchor" id="HVIL">HVIL</a>)</div>
+        <div class='getTs'>Digital Hydrometeor Classification (<a class="false-anchor-grey" id="TS_BDHC">BDHC</a><a class="false-anchor" id="BDHC">BDHC</a>)</div>
+        <div class='getTs'>Digital Storm Total Precipitation (<a class="false-anchor-grey" id="TS_BDSA">BDSA</a><a class="false-anchor" id="BDSA">BDSA</a>)</div>
+        <div class='getTs'>Digital Differential Reflectivity (<a class="false-anchor-grey" id="TS_BDZD">BDZD</a><a class="false-anchor" id="BDZD">BDZD</a>)</div>
+        <div class='getTs'>Enhanced Echo Tops (<a class="false-anchor-grey" id="TS_BEET">BEET</a><a class="false-anchor" id="BEET">BEET</a>)</div>
+        <div class='getTs'>Rainfall Accumulation One Hour Classification (<a class="false-anchor-grey" id="TS_BOHP">BOHP</a><a class="false-anchor" id="BOHP">BOHP</a>)</div>
+        <div class='getTs'>Storm Relative Mean Radial Velocity (<a class="false-anchor-grey" id="TS_BSRM">BSRM</a><a class="false-anchor" id="BSRM">BSRM</a>)</div>
+        <div class='getTs'>Rainfall Accumulation Storm Total (<a class="false-anchor-grey" id="TS_BSTP">BSTP</a><a class="false-anchor" id="BSTP">BSTP</a>)</div>
+        <div class='getTs'>Composite Reflectivity (<a class="false-anchor-grey" id="TS_CREF">CREF</a><a class="false-anchor" id="CREF">CREF</a>)</div>
+        <div class='getTs'>Vertical Integrated Liquid (<a class="false-anchor-grey" id="TS_HVIL">HVIL</a><a class="false-anchor" id="HVIL">HVIL</a>)</div>
         </div>`
 
     L.control.slideMenu(contents, {
@@ -1925,7 +1888,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                 document.getElementById('wdgArray').innerHTML = JSON.stringify(tsArray.slice(-11))
                 map.spin(false)
                 document.getElementById('TS_' + whatprod.toUpperCase()).style.display = 'none'
-                document.getElementById(whatprod.toUpperCase()).style.display = 'inline'
+                document.getElementById(whatprod.toUpperCase()).style.display = 'inline';
             }
         };
         WDGxhttp.open("GET", wdgTsUrl, true);
@@ -1971,6 +1934,15 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         document.getElementById('TS_' + prr.toUpperCase()).addEventListener('click', function() {
             map.spin(true)
             getWdgTimestamps(prr)
+
+            var elemsToHideAgain = document.getElementsByClassName('false-anchor')
+            for (var x = 0; x < elemsToHideAgain.length; x++) {
+                elemsToHideAgain[x].style.display = 'none'
+            }
+            var elemsToHideAgain2 = document.getElementsByClassName('false-anchor-grey')
+            for (var x = 0; x < elemsToHideAgain2.length; x++) {
+                elemsToHideAgain2[x].style.display = 'inline'
+            }
         })
     }
 

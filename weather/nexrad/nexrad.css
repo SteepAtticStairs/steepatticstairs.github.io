@@ -136,22 +136,22 @@ body, html {
 .false-anchor {
     cursor: pointer;
     text-decoration: underline;
-    color:rgb(0, 0, 238);
+    color:rgb(0, 0, 238) !important;
 }
 .false-anchor:hover {
     cursor: pointer;
     text-decoration: underline;
-    color:rgb(0, 0, 137);
+    color:rgb(0, 0, 137) !important;
 }
 .false-anchor-grey {
     cursor: pointer;
     text-decoration: underline;
-    color:rgb(145, 145, 145);
+    color:rgb(122, 121, 121) !important;
 }
 .false-anchor-grey:hover {
     cursor: pointer;
     text-decoration: underline;
-    color:rgb(195, 28, 28);
+    color:rgb(74, 74, 74) !important;
 }
 
 .icon-selected {
