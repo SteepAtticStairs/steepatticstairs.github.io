@@ -620,26 +620,25 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     */
 
     var contents = `
-        <div id="icanhidethis">
+        <div class='false-anchor' id='timestampGenerator'><b>Click to generate radar timestamps.</b></div>
+        <div id='timestampProgress'></div>
+        <div id="icanhidethis" style="display: none">
         <div><b>Please choose a radar product.</b></div>
-        <div class='other-false-anchor-grey'><u>GREY:</u> Timestamps not generated</div>
-        <div class='other-false-anchor'><u>BLUE:</u> Timestamps generated, layer not displayed</div>
-        <div class='other-false-anchor-green'><u>GREEN:</u> Layer displayed</div>
         <br>
         <div><u>Level 2</u></div>
-        <div class='getTs'>Base Reflectivity (<a class="false-anchor-grey" id="TS_BREF_RAW">BREF_RAW</a><a class="false-anchor" id="BREF_RAW">BREF_RAW</a>)</div>
-        <div class='getTs'>Base Velocity (<a class="false-anchor-grey" id="TS_BVEL_RAW">BVEL_RAW</a><a class="false-anchor" id="BVEL_RAW">BVEL_RAW</a>)</div>
+        <div class='getTs'>Base Reflectivity (<a class="false-anchor" id="BREF_RAW">BREF_RAW</a>)</div>
+        <div class='getTs'>Base Velocity (<a class="false-anchor" id="BVEL_RAW">BVEL_RAW</a>)</div>
         <br>
         <div><u>Level 3</u></div>
-        <div class='getTs'>Digital Hydrometeor Classification (<a class="false-anchor-grey" id="TS_BDHC">BDHC</a><a class="false-anchor" id="BDHC">BDHC</a>)</div>
-        <div class='getTs'>Digital Storm Total Precipitation (<a class="false-anchor-grey" id="TS_BDSA">BDSA</a><a class="false-anchor" id="BDSA">BDSA</a>)</div>
-        <div class='getTs'>Digital Differential Reflectivity (<a class="false-anchor-grey" id="TS_BDZD">BDZD</a><a class="false-anchor" id="BDZD">BDZD</a>)</div>
-        <div class='getTs'>Enhanced Echo Tops (<a class="false-anchor-grey" id="TS_BEET">BEET</a><a class="false-anchor" id="BEET">BEET</a>)</div>
-        <div class='getTs'>Rainfall Accumulation One Hour Classification (<a class="false-anchor-grey" id="TS_BOHP">BOHP</a><a class="false-anchor" id="BOHP">BOHP</a>)</div>
-        <div class='getTs'>Storm Relative Mean Radial Velocity (<a class="false-anchor-grey" id="TS_BSRM">BSRM</a><a class="false-anchor" id="BSRM">BSRM</a>)</div>
-        <div class='getTs'>Rainfall Accumulation Storm Total (<a class="false-anchor-grey" id="TS_BSTP">BSTP</a><a class="false-anchor" id="BSTP">BSTP</a>)</div>
-        <div class='getTs'>Composite Reflectivity (<a class="false-anchor-grey" id="TS_CREF">CREF</a><a class="false-anchor" id="CREF">CREF</a>)</div>
-        <div class='getTs'>Vertical Integrated Liquid (<a class="false-anchor-grey" id="TS_HVIL">HVIL</a><a class="false-anchor" id="HVIL">HVIL</a>)</div>
+        <div class='getTs'>Digital Hydrometeor Classification (<a class="false-anchor" id="BDHC">BDHC</a>)</div>
+        <div class='getTs'>Digital Storm Total Precipitation (<a class="false-anchor" id="BDSA">BDSA</a>)</div>
+        <div class='getTs'>Digital Differential Reflectivity (<a class="false-anchor" id="BDZD">BDZD</a>)</div>
+        <div class='getTs'>Enhanced Echo Tops (<a class="false-anchor" id="BEET">BEET</a>)</div>
+        <div class='getTs'>Rainfall Accumulation One Hour Classification (<a class="false-anchor" id="BOHP">BOHP</a>)</div>
+        <div class='getTs'>Storm Relative Mean Radial Velocity (<a class="false-anchor" id="BSRM">BSRM</a>)</div>
+        <div class='getTs'>Rainfall Accumulation Storm Total (<a class="false-anchor" id="BSTP">BSTP</a>)</div>
+        <div class='getTs'>Composite Reflectivity (<a class="false-anchor" id="CREF">CREF</a>)</div>
+        <div class='getTs'>Vertical Integrated Liquid (<a class="false-anchor" id="HVIL">HVIL</a>)</div>
         </div>`
 
     L.control.slideMenu(contents, {
@@ -1853,7 +1852,10 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     function displayWDGLayer(prodd) {
         var urlToGet = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}/ows?`;
         var theService = `${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}`;
-        var arraye = JSON.parse(document.getElementById('wdgArray').innerHTML)
+        var fullxmltoparse = JSON.parse(document.getElementById('fullWdgTimestampXml').innerHTML)
+        var timestampString = fullxmltoparse.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[prodd][0]].Dimension.hashtext
+        var arraye = timestampString.split(',').slice(-11)
+        console.log(arraye)
         var radarLayers = [];
         for (let i = 0; i <= 11; i++) {
             radarLayers[i] = L.tileLayer.wms(urlToGet, {
@@ -1872,56 +1874,40 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }
 
     function getWdgTimestamps(whatprod) {
-        function whatToDoAtTheEnd() {
-            map.spin(false)
-            document.getElementById('TS_' + whatprod.toUpperCase()).style.display = 'none'
-            console.log('TS_' + whatprod.toUpperCase())
-            document.getElementById(whatprod.toUpperCase()).style.display = 'inline';
+        var wdgTsUrl = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`;
+        var WDGxhttp = new XMLHttpRequest();
+        WDGxhttp.onprogress = (event) => {
+            // event.loaded returns how many bytes are downloaded
+            // event.total returns the total number of bytes
+            // event.total is only available if server sends `Content-Length` header
+            //console.log(`%c Downloaded ${formatBytes(event.loaded)} of ${formatBytes(event.total)}`, 'color: #bada55');
+            //var complete = (event.loaded / event.total * 50 | 0);
+            document.getElementById('timestampProgress').innerHTML = formatBytes(event.loaded)
         }
-        if (document.getElementById('fullWdgTimestampXml').innerHTML == '') {
-            var wdgTsUrl = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`;
-            var WDGxhttp = new XMLHttpRequest();
-            WDGxhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var txt = this.responseText;
-                    var xmlDoc = parseXml(txt);
-                    var theJson = xmlToJson(xmlDoc);
-                    // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
-                    // @ json to string
-                    var stringjson = JSON.stringify(theJson);
-                    // replace @ with AT
-                    var stringjsonwithouthash = stringjson.replace(/#/g, 'hash');
-                    // re-parse the AT json
-                    var nohashjson = JSON.parse(stringjsonwithouthash);
-                    document.getElementById('fullWdgTimestampXml').innerHTML = JSON.stringify(nohashjson)
-                    var timestampString = nohashjson.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[whatprod][0]].Dimension.hashtext
-                    var tsArray = timestampString.split(',')
-                    document.getElementById('wdgArray').innerHTML = JSON.stringify(tsArray.slice(-11))
-                    whatToDoAtTheEnd()
-                }
-            };
-            WDGxhttp.open("GET", wdgTsUrl, true);
-            WDGxhttp.send();
-        } else if (document.getElementById('fullWdgTimestampXml').innerHTML != '') {
-            //var parsedthing = JSON.parse(document.getElementById('fullWdgTimestampXml').innerHTML)
-            //var timestampString = parsedthing.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[whatprod][0]].Dimension.hashtext
-            //var tsArray = timestampString.split(',')
-            //document.getElementById('wdgArray').innerHTML = JSON.stringify(tsArray.slice(-11))
-            //whatToDoAtTheEnd()
-
-            var myblob = new Blob([document.getElementById('fullWdgTimestampXml').innerHTML], {
-                type: 'text/plain'
-            });
-            var thingthing = URL.createObjectURL(myblob)
-            $.get(thingthing, function(data) {
-                //console.log(thingthing)
-                var parsedthing = JSON.parse(data)
-                var timestampString = parsedthing.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[whatprod][0]].Dimension.hashtext
-                var tsArray = timestampString.split(',')
-                document.getElementById('wdgArray').innerHTML = JSON.stringify(tsArray.slice(-11))
-                whatToDoAtTheEnd()
-            })
-        }
+        WDGxhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var txt = this.responseText;
+                var xmlDoc = parseXml(txt);
+                var theJson = xmlToJson(xmlDoc);
+                // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
+                // @ json to string
+                var stringjson = JSON.stringify(theJson);
+                // replace @ with AT
+                var stringjsonwithouthash = stringjson.replace(/#/g, 'hash');
+                // re-parse the AT json
+                var nohashjson = JSON.parse(stringjsonwithouthash);
+                document.getElementById('fullWdgTimestampXml').innerHTML = JSON.stringify(nohashjson)
+                document.getElementById('icanhidethis').style.display = 'block'
+                document.getElementById('timestampGenerator').style.display = 'none'
+                map.spin(false)
+                //var timestampString = nohashjson.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[whatprod][0]].Dimension.hashtext
+                //var tsArray = timestampString.split(',')
+                //document.getElementById('wdgArray').innerHTML = JSON.stringify(tsArray.slice(-11))
+                //whatToDoAtTheEnd()
+            }
+        };
+        WDGxhttp.open("GET", wdgTsUrl, true);
+        WDGxhttp.send();
     }
 
     function initImageDisplayListner(theprod, frame) {
@@ -1960,25 +1946,10 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }
 
     function initTsListner(prr) {
-        document.getElementById('TS_' + prr.toUpperCase()).addEventListener('click', function() {
+        document.getElementById('timestampGenerator').addEventListener('click', function() {
             map.spin(true)
+            //console.log(document.getElementById('statti').innerHTML.toLowerCase())
             getWdgTimestamps(prr)
-
-            var elemsToHideAgain = document.querySelectorAll('.false-anchor, .false-anchor-green')
-            for (var x = 0; x < elemsToHideAgain.length; x++) {
-                elemsToHideAgain[x].style.display = 'none'
-            }
-            var elemsToHideAgain2 = document.getElementsByClassName('false-anchor-grey')
-            for (var x = 0; x < elemsToHideAgain2.length; x++) {
-                elemsToHideAgain2[x].style.display = 'inline'
-            }
-        })
-
-        document.getElementById(prr.toUpperCase()).addEventListener('click', function() {
-            if ($(this).hasClass('false-anchor')) {
-                $(this).removeClass('false-anchor');
-                $(this).addClass('false-anchor-green');
-            }
         })
     }
 
@@ -1995,10 +1966,6 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     initImageDisplayListner("cref", "0")
     initImageDisplayListner("hvil", "0")
 
-    var elemsToHide = document.getElementsByClassName('false-anchor')
-    for (var x = 0; x < elemsToHide.length; x++) {
-        elemsToHide[x].style.display = 'none'
-    }
     initTsListner("bref_raw")
     initTsListner("bvel_raw")
     initTsListner("bdhc")
