@@ -133,7 +133,8 @@ body, html {
     display: block;
 }
 
-.false-anchor {
+
+.false-anchor, .other-false-anchor {
     cursor: pointer;
     text-decoration: underline;
     color:rgb(0, 0, 238) !important;
@@ -143,7 +144,17 @@ body, html {
     text-decoration: underline;
     color:rgb(0, 0, 137) !important;
 }
-.false-anchor-grey {
+.false-anchor-green, .other-false-anchor-green {
+    cursor: pointer;
+    text-decoration: underline;
+    color:rgb(37, 162, 48) !important;
+}
+.false-anchor-green:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color:rgb(32, 118, 39) !important;
+}
+.false-anchor-grey, .other-false-anchor-grey {
     cursor: pointer;
     text-decoration: underline;
     color:rgb(122, 121, 121) !important;

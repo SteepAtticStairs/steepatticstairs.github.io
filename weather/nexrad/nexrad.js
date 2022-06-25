@@ -622,6 +622,9 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     var contents = `
         <div id="icanhidethis">
         <div><b>Please choose a radar product.</b></div>
+        <div class='other-false-anchor-grey'><u>GREY:</u> Timestamps not generated</div>
+        <div class='other-false-anchor'><u>BLUE:</u> Timestamps generated, layer not displayed</div>
+        <div class='other-false-anchor-green'><u>GREEN:</u> Layer displayed</div>
         <br>
         <div><u>Level 2</u></div>
         <div class='getTs'>Base Reflectivity (<a class="false-anchor-grey" id="TS_BREF_RAW">BREF_RAW</a><a class="false-anchor" id="BREF_RAW">BREF_RAW</a>)</div>
@@ -1869,30 +1872,56 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }
 
     function getWdgTimestamps(whatprod) {
-        var wdgTsUrl = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`;
-        var WDGxhttp = new XMLHttpRequest();
-        WDGxhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var txt = this.responseText;
-                var xmlDoc = parseXml(txt);
-                var theJson = xmlToJson(xmlDoc);
-                // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
-                // @ json to string
-                var stringjson = JSON.stringify(theJson);
-                // replace @ with AT
-                var stringjsonwithouthash = stringjson.replace(/#/g, 'hash');
-                // re-parse the AT json
-                var nohashjson = JSON.parse(stringjsonwithouthash);
-                var timestampString = nohashjson.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[whatprod][0]].Dimension.hashtext
+        function whatToDoAtTheEnd() {
+            map.spin(false)
+            document.getElementById('TS_' + whatprod.toUpperCase()).style.display = 'none'
+            console.log('TS_' + whatprod.toUpperCase())
+            document.getElementById(whatprod.toUpperCase()).style.display = 'inline';
+        }
+        if (document.getElementById('fullWdgTimestampXml').innerHTML == '') {
+            var wdgTsUrl = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/ows?service=wms&version=1.3.0&request=GetCapabilities`;
+            var WDGxhttp = new XMLHttpRequest();
+            WDGxhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var txt = this.responseText;
+                    var xmlDoc = parseXml(txt);
+                    var theJson = xmlToJson(xmlDoc);
+                    // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
+                    // @ json to string
+                    var stringjson = JSON.stringify(theJson);
+                    // replace @ with AT
+                    var stringjsonwithouthash = stringjson.replace(/#/g, 'hash');
+                    // re-parse the AT json
+                    var nohashjson = JSON.parse(stringjsonwithouthash);
+                    document.getElementById('fullWdgTimestampXml').innerHTML = JSON.stringify(nohashjson)
+                    var timestampString = nohashjson.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[whatprod][0]].Dimension.hashtext
+                    var tsArray = timestampString.split(',')
+                    document.getElementById('wdgArray').innerHTML = JSON.stringify(tsArray.slice(-11))
+                    whatToDoAtTheEnd()
+                }
+            };
+            WDGxhttp.open("GET", wdgTsUrl, true);
+            WDGxhttp.send();
+        } else if (document.getElementById('fullWdgTimestampXml').innerHTML != '') {
+            //var parsedthing = JSON.parse(document.getElementById('fullWdgTimestampXml').innerHTML)
+            //var timestampString = parsedthing.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[whatprod][0]].Dimension.hashtext
+            //var tsArray = timestampString.split(',')
+            //document.getElementById('wdgArray').innerHTML = JSON.stringify(tsArray.slice(-11))
+            //whatToDoAtTheEnd()
+
+            var myblob = new Blob([document.getElementById('fullWdgTimestampXml').innerHTML], {
+                type: 'text/plain'
+            });
+            var thingthing = URL.createObjectURL(myblob)
+            $.get(thingthing, function(data) {
+                //console.log(thingthing)
+                var parsedthing = JSON.parse(data)
+                var timestampString = parsedthing.WMS_Capabilities.Capability.Layer.Layer[timestampLocationObject[whatprod][0]].Dimension.hashtext
                 var tsArray = timestampString.split(',')
                 document.getElementById('wdgArray').innerHTML = JSON.stringify(tsArray.slice(-11))
-                map.spin(false)
-                document.getElementById('TS_' + whatprod.toUpperCase()).style.display = 'none'
-                document.getElementById(whatprod.toUpperCase()).style.display = 'inline';
-            }
-        };
-        WDGxhttp.open("GET", wdgTsUrl, true);
-        WDGxhttp.send();
+                whatToDoAtTheEnd()
+            })
+        }
     }
 
     function initImageDisplayListner(theprod, frame) {
@@ -1935,13 +1964,20 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             map.spin(true)
             getWdgTimestamps(prr)
 
-            var elemsToHideAgain = document.getElementsByClassName('false-anchor')
+            var elemsToHideAgain = document.querySelectorAll('.false-anchor, .false-anchor-green')
             for (var x = 0; x < elemsToHideAgain.length; x++) {
                 elemsToHideAgain[x].style.display = 'none'
             }
             var elemsToHideAgain2 = document.getElementsByClassName('false-anchor-grey')
             for (var x = 0; x < elemsToHideAgain2.length; x++) {
                 elemsToHideAgain2[x].style.display = 'inline'
+            }
+        })
+
+        document.getElementById(prr.toUpperCase()).addEventListener('click', function() {
+            if ($(this).hasClass('false-anchor')) {
+                $(this).removeClass('false-anchor');
+                $(this).addClass('false-anchor-green');
             }
         })
     }
