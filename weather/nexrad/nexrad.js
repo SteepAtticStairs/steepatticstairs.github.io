@@ -649,6 +649,27 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         icon: "fa fa-bars",
     }).addTo(map);
 
+    var satelliteButton = 
+        L.easyButton({
+            states: [{
+                icon: 'fa-cloud',
+                stateName: 'add',
+                onClick: function(control) {
+                    showSatellite();
+                    control.state('remove');
+                }
+            }, {
+                icon: 'fa-cloud icon-selected',
+                stateName: 'remove',
+                onClick: function(control) {
+                    satelliteLayerGroup.clearLayers();
+                    control.state('add');
+                },
+            }],
+                tagName: 'a',
+                position: 'topright'
+        }).addTo(map);
+
     // https://stackoverflow.com/a/57961941
     L.Control.addDiv = L.Control.extend({
         onAdd: function(map) {
@@ -767,6 +788,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     var alertLayerGroup = L.layerGroup().addTo(map);
     var geojsonAlertLayerGroup = L.layerGroup().addTo(map);
     var lightningLayerGroup = L.layerGroup().addTo(map);
+    var satelliteLayerGroup = L.layerGroup().addTo(map);
     var productLayerGroup = L.layerGroup().addTo(map);
     var alertClusterGroup = L.markerClusterGroup().addTo(map);
 
@@ -1290,6 +1312,23 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         }
     }
     //setImageFromCenter(950, '/weather/nexrad/radar.png');
+
+    function showSatellite() {
+        $.getJSON('https://api.rainviewer.com/public/weather-maps.json', function(data) {
+            var lengthofsatellitearray = Object.keys(data.satellite.infrared).length
+            //console.log(lengthofsatellitearray)
+            var satTimestamp = data.satellite.infrared[lengthofsatellitearray - 1].time
+            console.log(satTimestamp)
+            console.log(printFancyTime(new Date(satTimestamp * 1000)))
+            var hashForCurSat = data.satellite.infrared[lengthofsatellitearray - 1].path.toString().slice(14)
+            console.log(hashForCurSat)
+
+            var satelliteLayer = 
+            L.tileLayer(`https://tilecache.rainviewer.com/v2/satellite/${hashForCurSat}/512/{z}/{x}/{y}/0/0_0.png`, {
+            }).addTo(satelliteLayerGroup);
+            //tileLayers.addLayer(satelliteLayer);
+        })
+    }
 
     function showLightning() {
         var lightningLayer = 
