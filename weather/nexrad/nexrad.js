@@ -649,7 +649,64 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         icon: "fa fa-bars",
     }).addTo(map);
 
-    var radarLegend = `<div id='radarLegendImg'><b>Plese select a radar product.</b></div>`
+    var radarLegend = `
+        <div id='radarLegendImg'><b>Please select a radar product.</b></div>
+        <div id='bdhcLegend' style='display: none'>
+        <div class='tooltip' style='background-color: rgb(0, 0, 0); color: white'>
+            No Data
+            <span class="tooltiptext">No Data</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(191, 191, 191); color: black'>
+            Biological
+            <span class="tooltiptext">Biological</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(115, 115, 115); color: white'>
+            Ground Clutter
+            <span class="tooltiptext">Ground Clutter</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(245, 182, 181); color: black'>
+            Ice Crystals
+            <span class="tooltiptext">Ice Crystals</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(147, 252, 253); color: black'>
+            Dry Snow
+            <span class="tooltiptext">Dry Snow</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(87, 120, 246); color: white'>
+            Wet Snow
+            <span class="tooltiptext">Wet Snow</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(177, 251, 162); color: black'>
+            Light - Mod. Rain
+            <span class="tooltiptext">Light - Mod. Rain</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(80, 176, 51); color: white'>
+            Heavy Rain
+            <span class="tooltiptext">Heavy Rain</span>
+        </div>
+        <br>
+        <div class='tooltip' style='background-color: rgb(230, 230, 75); color: black'>
+            Big Drops
+            <span class="tooltiptext">Big Drops</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(187, 109, 93); color: white'>
+            Graupel
+            <span class="tooltiptext">Graupel</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(235, 51, 35); color: white'>
+            Hail/Rain
+            <span class="tooltiptext">Hail/Rain</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(188, 39, 246); color: white'>
+            Unknown Type
+            <span class="tooltiptext">Unknown Type</span>
+        </div>
+        <div class='tooltip' style='background-color: rgb(117, 20, 124); color: white'>
+            Range Folded
+            <span class="tooltiptext">Range Folded</span>
+        </div>
+        </div>`
+
     L.control.slideMenu(radarLegend, {
         position: "bottomright",
         menuposition: "bottomright",
@@ -1902,6 +1959,11 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         document.getElementById('radarLegendImg').innerHTML = `
             <img style='width: 70vw; min-width: 450px' src='/icons/radarKeys/${prodd}.png'>
             <div><b>${prodd.toUpperCase() + ": " + productObject[prodd][0]}</b></div>`
+        if (prodd == "bdhc") {
+            document.getElementById('bdhcLegend').style.display = 'inline'
+        } else if (prodd != 'bdhc') {
+            document.getElementById('bdhcLegend').style.display = 'none'
+        }
         var urlToGet = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}/ows?`;
         var theService = `${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}`;
         var fullxmltoparse = JSON.parse(document.getElementById('fullWdgTimestampXml').innerHTML)
