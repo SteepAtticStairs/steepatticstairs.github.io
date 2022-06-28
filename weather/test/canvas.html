@@ -1,0 +1,158 @@
+<!-- https://stackoverflow.com/a/55823067/18758797 
+https://jsfiddle.net/89wLbh3q/14/ 
+
+https://stackoverflow.com/a/72778560/18758797 -->
+
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+
+<body>
+    <canvas id="example" width="500" height="30"></canvas>
+    <div id="status"></div>
+
+    <script>
+        function findPos(obj) {
+            var curleft = 0, curtop = 0;
+            if (obj.offsetParent) {
+                do {
+                    curleft += obj.offsetLeft;
+                    curtop += obj.offsetTop;
+                } while (obj = obj.offsetParent);
+                return { x: curleft, y: curtop };
+            }
+            return undefined;
+        }
+        
+        function rgbToHex(r, g, b) {
+            if (r > 255 || g > 255 || b > 255)
+                throw "Invalid color component";
+            return ((r << 16) | (g << 8) | b).toString(16);
+        }
+        
+        
+        // set up some squares
+        var canvas = document.getElementById('example');
+        var context = example.getContext('2d');
+        /* context.fillStyle = "rgb(0, 0, 0)";
+        context.fillRect(55*0, 20, 50, 20);
+        context.fillStyle = "rgb(191, 191, 191)";
+        context.fillRect(55*1, 20, 50, 20);
+        context.fillStyle = "rgb(115, 115, 115)";
+        context.fillRect(55*2, 20, 50, 20);
+        context.fillStyle = "rgb(245, 182, 181)";
+        context.fillRect(55*3, 20, 50, 20);
+        context.fillStyle = "rgb(147, 252, 253)";
+        context.fillRect(55*4, 20, 50, 20);
+        context.fillStyle = "rgb(87, 120, 246)";
+        context.fillRect(55*5, 20, 50, 20);
+        context.fillStyle = "rgb(177, 251, 162)";
+        context.fillRect(55*6, 20, 50, 20);
+        context.fillStyle = "rgb(80, 176, 51)";
+        context.fillRect(55*0, 50, 50, 20);
+        context.fillStyle = "rgb(230, 230, 75)";
+        context.fillRect(55*1, 50, 50, 20);
+        context.fillStyle = "rgb(187, 109, 93)";
+        context.fillRect(55*2, 50, 50, 20);
+        context.fillStyle = "rgb(235, 51, 35)";
+        context.fillRect(55*3, 50, 50, 20);
+        context.fillStyle = "rgb(188, 39, 246)";
+        context.fillRect(55*4, 50, 50, 20);
+        context.fillStyle = "rgb(117, 20, 124)";
+        context.fillRect(55*5, 50, 50, 20);
+        context.fillStyle = "rgb(191, 191, 191)";
+        context.fillRect(55*6, 50, 50, 20); */
+        
+        // Create gradient
+        var grdBnds = [0, 0, 390, 0]
+        var rectBnds = [0, 0, 360, 30]
+        var grd = context.createLinearGradient(grdBnds[0], grdBnds[1], grdBnds[2], grdBnds[3]);
+        grd.addColorStop((1/14)*0, "rgb(0, 0, 0)");
+        grd.addColorStop((1/14)*1, "rgb(191, 191, 191)");
+        grd.addColorStop((1/14)*2, "rgb(115, 115, 115)");
+        grd.addColorStop((1/14)*3, "rgb(245, 182, 181)");
+        grd.addColorStop((1/14)*4, "rgb(147, 252, 253)");
+        grd.addColorStop((1/14)*5, "rgb(87, 120, 246)");
+        grd.addColorStop((1/14)*6, "rgb(177, 251, 162)");
+        grd.addColorStop((1/14)*7, "rgb(80, 176, 51)");
+        grd.addColorStop((1/14)*8, "rgb(230, 230, 75)");
+        grd.addColorStop((1/14)*9, "rgb(187, 109, 93)");
+        grd.addColorStop((1/14)*10, "rgb(235, 51, 35)");
+        grd.addColorStop((1/14)*11, "rgb(188, 39, 246)");
+        grd.addColorStop((1/14)*12, "rgb(117, 20, 124)");
+        grd.addColorStop((1/14)*13, "rgb(191, 191, 191)");
+
+        var colors = [
+            "rgb(0, 0, 0)",
+            "rgb(191, 191, 191)",
+            "rgb(115, 115, 115)",
+            "rgb(245, 182, 181)",
+            "rgb(147, 252, 253)",
+            "rgb(87, 120, 246)",
+            "rgb(177, 251, 162)",
+            "rgb(80, 176, 51)",
+            "rgb(230, 230, 75)",
+            "rgb(187, 109, 93)",
+            "rgb(235, 51, 35)",
+            "rgb(188, 39, 246)",
+            "rgb(117, 20, 124)",
+            "rgb(191, 191, 191)"
+        ];
+
+        // Horizontally
+        var grd = context.createLinearGradient(0, 0, canvas.width, 0);
+
+        // Vertically
+        // var grd = context.createLinearGradient(0, 0, 0, canvas.height);
+
+        for (let index = 0; index < colors.length; index++) {
+            const color = colors[index];
+            grd.addColorStop(index/colors.length, color);
+            //context.fillStyle = color;
+            //context.fillRect((index / colors.length * canvas.width), 0, (canvas.width / colors.length), canvas.height);
+        }
+
+        context.fillStyle = grd;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        /* //var sussyballs = [0, 0.14, 0.21, 0.28, 0.35, 0.42, 0.49, 0.56, 0.63, 0.70, 0.77, 0.84, 0.91, 1]
+        var sussyballs = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]
+        grd.addColorStop(sussyballs[0], "rgb(0, 0, 0)");
+        grd.addColorStop(sussyballs[1], "rgb(191, 191, 191)");
+        grd.addColorStop(sussyballs[2], "rgb(115, 115, 115)");
+        grd.addColorStop(sussyballs[3], "rgb(245, 182, 181)");
+        grd.addColorStop(sussyballs[4], "rgb(147, 252, 253)");
+        grd.addColorStop(sussyballs[5], "rgb(87, 120, 246)");
+        grd.addColorStop(sussyballs[6], "rgb(177, 251, 162)");
+        grd.addColorStop(sussyballs[7], "rgb(80, 176, 51)");
+        grd.addColorStop(sussyballs[8], "rgb(230, 230, 75)");
+        grd.addColorStop(sussyballs[9], "rgb(187, 109, 93)");
+        grd.addColorStop(sussyballs[10], "rgb(235, 51, 35)");
+        grd.addColorStop(sussyballs[11], "rgb(188, 39, 246)");
+        grd.addColorStop(sussyballs[12], "rgb(117, 20, 124)");
+        grd.addColorStop(sussyballs[13], "rgb(191, 191, 191)"); */
+        
+        // Fill with gradient
+        //context.fillStyle = grd;
+        //context.fillRect(rectBnds[0], rectBnds[1], rectBnds[2], rectBnds[3]);
+        
+        $('#example').mousemove(function(e) {
+            var pos = findPos(this);
+            var x = e.pageX - pos.x;
+            var y = e.pageY - pos.y;
+            var coord = "x=" + x + ", y=" + y;
+            var c = this.getContext('2d');
+            var p = c.getImageData(x, y, 1, 1).data; 
+            var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+            $('#status').html(`
+                <!-- <div>${coord}</div> -->
+                <div>${hex}</div>
+                <div>rgb(${p[0]}, ${p[1]}, ${p[2]})</div>
+                <span style='background-color: ${hex}'>${"&nbsp;".repeat(14)}</span>
+            `);
+            // $('#status').html(coord + "<br>" + hex);
+        });
+    </script>
+</body>
+</html>
