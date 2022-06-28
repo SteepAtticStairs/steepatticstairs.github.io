@@ -488,11 +488,119 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
             }],
                 tagName: 'a'
         });
+    var tileLayers = L.layerGroup([]);
+    var testAlertButton = 
+        L.easyButton({
+            states: [{
+                icon: 'fa-triangle-exclamation',
+                stateName: 'add',
+                onClick: function(control) {
+                    control.state('remove');
+
+                    /* $.getJSON('https://api.weather.gov/alerts/active', function(data) {
+                        for (let n = 0; n < data.features.length; n++) {
+                            if (data.features[n].geometry != null) {
+                                //console.log(data.features[n].properties.event + ", " + data.features[n].properties.senderName);
+                                var alertLat = data.features[n].geometry.coordinates[0][0][1];
+                                var alertLon = data.features[n].geometry.coordinates[0][0][0];
+                                var alertEvent = data.features[n].properties.event;
+                                var alertSenderName = data.features[n].properties.senderName;
+                                var alertHeadline = data.features[n].properties.headline;
+                                var alertDescription = data.features[n].properties.description;
+                                var alertInstruction = data.features[n].properties.instruction;
+
+                                var alertID = data.features[n].id;
+                                var alertWMOidenifier = data.features[n].properties.parameters.WMOidentifier;
+                                var alertVTEC = data.features[n].properties.parameters.VTEC;
+                                var alertNWSheadline = "No headline for this alert."
+
+                                if (alertInstruction == null) {
+                                    alertInstruction = "No instruction for this alert."
+                                }
+
+                                if (data.features[n].properties.parameters.hasOwnProperty('NWSheadline')) {
+                                    alertNWSheadline = data.features[n].properties.parameters.NWSheadline;
+                                }
+
+                                var alertSeverity = data.features[n].properties.severity;
+                                var alertUrgency = data.features[n].properties.urgency;
+
+                                var alertSentTime = new Date(data.features[n].properties.sent);
+                                var alertEffectiveTime = new Date(data.features[n].properties.effective);
+                                var alertOnsetTime = new Date(data.features[n].properties.onset);
+                                var alertExpiresTime = new Date(data.features[n].properties.expires);
+                                var alertEndsTime = new Date(data.features[n].properties.ends);
+
+                                var alertPopupContent = "<div><b>" + alertEvent + "<br>" + alertSenderName + "</b><br>\
+                                    <br><b>Send Time: </b>" + printFancyTime(alertSentTime) + "\
+                                    <br><b>Effective Time: </b>" + printFancyTime(alertEffectiveTime) + "\
+                                    <br><b>Onset Time: </b>" + printFancyTime(alertOnsetTime) + "\
+                                    <br><b>Expires Time: </b>" + printFancyTime(alertExpiresTime) + "\
+                                    <br><b>Ends Time: </b>" + printFancyTime(alertEndsTime) + "\
+                                    <br><br><b><i>" + alertSeverity + "</i></b>, <b><i>" + alertUrgency + "</i></b><br><br>\
+                                    <b>WMO Identifier:</b> " + alertWMOidenifier + "<br>\
+                                    <b>VTEC:</b> " + alertVTEC + "<br>\
+                                    <b>NWS Headline:</b> " + alertNWSheadline + "<br>\
+                                    <b>ID:</b> " + alertID + "<br><br>\
+                                    <b>Headline:</b> " + alertHeadline + "<br>\
+                                    <b>Description:</b> " + alertDescription + "<br>\
+                                    <b>Instructions:</b> " + alertInstruction + "</div>";
+                                var alertPopup = L.popup({maxHeight: 100}).setContent(alertPopupContent);
+                            }
+                        }
+                    }) */
+
+                    var urlToGet = `https://opengeo.ncep.noaa.gov/geoserver/wwa/hazards/ows?`;
+                    var alertWmsLayer = L.tileLayer.wms(urlToGet, {
+                        SERVICE: 'WMS',
+                        LAYERS: 'hazards',
+                        format: 'image/png',
+                        transparent: true
+                    });
+                    tileLayers.addLayer(alertWmsLayer);
+                    alertWmsLayer.addTo(alertLayerGroup)
+
+                    document.getElementById('map').style.cursor = "crosshair"
+                    map.on('click', addMarker);
+                    function addMarker(e) {
+                        if (testAlertButton.state() == 'remove') {
+                            alertMarkerLayerGroup.clearLayers();
+                            var theContent = `<div><b>Active Alerts:</b></div>`
+                            var pointURL = `https://api.weather.gov/alerts?active=1&point=${e.latlng.lat},${e.latlng.lng}`
+                            $.getJSON(pointURL, function(data) {
+                                console.log(data)
+                                for (var y = 0; y < data.features.length; y++) {
+                                    theContent += `<div><a href='${data.features[y].id}'>${data.features[y].properties.event}</a></div>`
+                                    if (y != data.features.length - 1) {
+                                        theContent += '<br>'
+                                    }
+                                }
+                                var popup = L.popup({maxHeight: 100})
+                                .setLatLng(e.latlng)
+                                .setContent(theContent)
+                                .openOn(alertMarkerLayerGroup);
+                            })
+                        }
+                    }
+                }
+            }, {
+                icon: 'fa-triangle-exclamation icon-selected',
+                stateName: 'remove',
+                onClick: function(control) {
+                    control.state('add');
+                    alertLayerGroup.clearLayers();
+                    alertMarkerLayerGroup.clearLayers();
+                    document.getElementById('map').style.cursor = ""
+                },
+            }],
+                tagName: 'a'
+        });
 
     var editBarBL = L.easyBar([
         stationButton,
         lightningButton,
         alertButton,
+        testAlertButton,
     ], {position: 'bottomleft'});
     editBarBL.addTo(map);
 
@@ -850,7 +958,6 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     //     subdomains: ['cdn','cdn1','cdn2','cdn3','cdn4']
     // }).addTo(map);
 
-    var tileLayers = L.layerGroup([]);
     var allLayerGroup = L.layerGroup();
     var markerLayerGroup = L.layerGroup().addTo(map);
     var imageLayerGroup = L.layerGroup().addTo(map);
@@ -860,6 +967,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     var satelliteLayerGroup = L.layerGroup().addTo(map);
     var productLayerGroup = L.layerGroup().addTo(map);
     var alertClusterGroup = L.markerClusterGroup().addTo(map);
+    var alertMarkerLayerGroup = L.layerGroup().addTo(map);
 
     var radarIcon = L.icon({
         iconUrl: '/icons/radar.png',
