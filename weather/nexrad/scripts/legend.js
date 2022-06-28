@@ -16,25 +16,9 @@ function rgbToHex(r, g, b) {
     return ((r << 16) | (g << 8) | b).toString(16);
 }
 
-function setLegend(blocksOrGrad, theActuallyProduct) {
+function setLegend(blocksOrGrad, gradientSteps, theColors, theActuallyProduct) {
     var canvas = document.getElementById('legendCanvas');
     var context = canvas.getContext('2d');
-    var colors = [
-        "rgb(0, 0, 0)",
-        "rgb(191, 191, 191)",
-        "rgb(115, 115, 115)",
-        "rgb(245, 182, 181)",
-        "rgb(147, 252, 253)",
-        "rgb(87, 120, 246)",
-        "rgb(177, 251, 162)",
-        "rgb(80, 176, 51)",
-        "rgb(230, 230, 75)",
-        "rgb(187, 109, 93)",
-        "rgb(235, 51, 35)",
-        "rgb(188, 39, 246)",
-        "rgb(117, 20, 124)",
-        "rgb(191, 191, 191)"
-    ];
 
     // Horizontally
     var grd = context.createLinearGradient(0, 0, canvas.width, 0);
@@ -43,12 +27,19 @@ function setLegend(blocksOrGrad, theActuallyProduct) {
     // var grd = context.createLinearGradient(0, 0, 0, canvas.height);
 
     var hehearr = []
-    for (let index = 0; index < colors.length; index++) {
-        const color = colors[index];
-        //grd.addColorStop(index/colors.length, color);
-        context.fillStyle = color;
-        context.fillRect((index / colors.length * canvas.width), 0, (canvas.width / colors.length), canvas.height);
-        hehearr.push((index / colors.length * canvas.width) / canvas.width)
+    for (let index = 0; index < theColors.length; index++) {
+        const color = theColors[index];
+        if (blocksOrGrad == 'gradient') {
+            if (gradientSteps == undefined) {
+                grd.addColorStop(index/theColors.length, color);
+            } else if (gradientSteps != undefined) {
+                grd.addColorStop(gradientSteps[index], color);
+            }
+        } else if (blocksOrGrad == 'blocks') {
+            context.fillStyle = color;
+            context.fillRect((index / theColors.length * canvas.width), 0, (canvas.width / theColors.length), canvas.height);
+            hehearr.push((index / theColors.length * canvas.width) / canvas.width)
+        }
     }
     //console.log(hehearr)
     var hehearrelem = document.createElement('div')
@@ -63,7 +54,7 @@ function setLegend(blocksOrGrad, theActuallyProduct) {
     newDiv.id = 'ballsy'
     newDiv.innerHTML = `
         <div id="tooltips-span" class='tooltip' style='background-color: rgb(0, 0, 0); color: white'>
-            <span class="tooltiptext" id="icanchangethistext">No Data</span>
+            <span class="no-tooltiptext" id="icanchangethistext">No Data</span>
         </div>`
     newDiv.style.display = 'none'
     document.body.appendChild(newDiv)

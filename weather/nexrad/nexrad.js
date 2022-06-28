@@ -650,7 +650,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }).addTo(map);
 
     var radarLegend = `
-        <canvas style="display: none" id="legendCanvas" width="500" height="30"></canvas>
+        <canvas id="legendCanvas" width="500" height="30"></canvas>
         <div style="display: none" id="status"></div>
         <div id='radarLegendImg'><b>Please select a radar product.</b></div>
         <div id='bdhcLegend' style='display: none'>
@@ -2095,7 +2095,24 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     initTsListner("cref")
     initTsListner("hvil")
 
-    //setLegend('gradient');
+    var colors = [
+        "rgb(0, 0, 0)",
+        "rgb(191, 191, 191)",
+        "rgb(115, 115, 115)",
+        "rgb(245, 182, 181)",
+        "rgb(147, 252, 253)",
+        "rgb(87, 120, 246)",
+        "rgb(177, 251, 162)",
+        "rgb(80, 176, 51)",
+        "rgb(230, 230, 75)",
+        "rgb(187, 109, 93)",
+        "rgb(235, 51, 35)",
+        "rgb(188, 39, 246)",
+        "rgb(117, 20, 124)",
+        "rgb(191, 191, 191)"
+    ];
+    var steps = [0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65]
+    setLegend('blocks', steps, colors);
 
     function playAnimation() {
         var i = 0;
