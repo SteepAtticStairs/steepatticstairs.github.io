@@ -146,7 +146,7 @@ https://stackoverflow.com/a/72778560/18758797 -->
             var p = c.getImageData(x, y, 1, 1).data; 
             var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
             $('#status').html(`
-                <!-- <div>${coord}</div> -->
+                <div>${x / canvas.width}</div>
                 <div>${hex}</div>
                 <div>rgb(${p[0]}, ${p[1]}, ${p[2]})</div>
                 <span style='background-color: ${hex}'>${"&nbsp;".repeat(14)}</span>

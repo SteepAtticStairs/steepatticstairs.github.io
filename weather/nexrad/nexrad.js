@@ -650,6 +650,8 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     }).addTo(map);
 
     var radarLegend = `
+        <canvas style="display: none" id="legendCanvas" width="500" height="30"></canvas>
+        <div style="display: none" id="status"></div>
         <div id='radarLegendImg'><b>Please select a radar product.</b></div>
         <div id='bdhcLegend' style='display: none'>
         <div class='tooltip' style='background-color: rgb(0, 0, 0); color: white'>
@@ -1964,6 +1966,7 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
         } else if (prodd != 'bdhc') {
             document.getElementById('bdhcLegend').style.display = 'none'
         }
+        //setLegend();
         var urlToGet = `https://opengeo.ncep.noaa.gov/geoserver/${document.getElementById('statti').innerHTML.toLowerCase()}/${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}/ows?`;
         var theService = `${document.getElementById('statti').innerHTML.toLowerCase()}_${prodd}`;
         var fullxmltoparse = JSON.parse(document.getElementById('fullWdgTimestampXml').innerHTML)
@@ -2091,6 +2094,8 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
     initTsListner("bstp")
     initTsListner("cref")
     initTsListner("hvil")
+
+    //setLegend('gradient');
 
     function playAnimation() {
         var i = 0;
