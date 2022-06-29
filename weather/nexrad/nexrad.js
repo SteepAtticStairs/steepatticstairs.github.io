@@ -565,20 +565,95 @@ function setView(lat, lon, zoom, opac, shouldBeFullscreen) {
                     function addMarker(e) {
                         if (testAlertButton.state() == 'remove') {
                             alertMarkerLayerGroup.clearLayers();
-                            var theContent = `<div><b>Active Alerts:</b></div>`
+                            var theContent = `<div><b>No Alerts</b></div>`
                             var pointURL = `https://api.weather.gov/alerts?active=1&point=${e.latlng.lat},${e.latlng.lng}`
                             $.getJSON(pointURL, function(data) {
                                 console.log(data)
-                                for (var y = 0; y < data.features.length; y++) {
-                                    theContent += `<div><a href='${data.features[y].id}'>${data.features[y].properties.event}</a></div>`
-                                    if (y != data.features.length - 1) {
+                                if (data.features.length != 0) {
+                                    theContent = ''
+                                }
+                                for (var n = 0; n < data.features.length; n++) {
+
+                                    var alertEvent = data.features[n].properties.event;
+                                    var alertSenderName = data.features[n].properties.senderName;
+                                    var alertHeadline = data.features[n].properties.headline;
+                                    var alertDescription = data.features[n].properties.description;
+                                    var alertInstruction = data.features[n].properties.instruction;
+
+                                    var alertID = data.features[n].id;
+                                    var alertWMOidenifier = data.features[n].properties.parameters.WMOidentifier;
+                                    var alertVTEC = data.features[n].properties.parameters.VTEC;
+                                    var alertNWSheadline = "No headline for this alert."
+
+                                    if (alertInstruction == null) {
+                                        alertInstruction = "No instruction for this alert."
+                                    }
+
+                                    if (data.features[n].properties.parameters.hasOwnProperty('NWSheadline')) {
+                                        alertNWSheadline = data.features[n].properties.parameters.NWSheadline;
+                                    }
+
+                                    var alertSeverity = data.features[n].properties.severity;
+                                    var alertUrgency = data.features[n].properties.urgency;
+
+                                    var alertSentTime = new Date(data.features[n].properties.sent);
+                                    var alertEffectiveTime = new Date(data.features[n].properties.effective);
+                                    var alertOnsetTime = new Date(data.features[n].properties.onset);
+                                    var alertExpiresTime = new Date(data.features[n].properties.expires);
+                                    var alertEndsTime = new Date(data.features[n].properties.ends);
+
+                                    theContent += `
+                                        <div>
+                                            <div class='ughh' id='headlineExpander${n}' style='cursor: pointer'>
+                                                <b>${alertEvent}<br>${alertSenderName}</b>
+                                            </div>
+                                            <div id='alertBody${n}' style='display: none'>
+                                                <br><b>Send Time: </b>${printFancyTime(alertSentTime)}
+                                                <br><b>Effective Time: </b>${printFancyTime(alertEffectiveTime)}
+                                                <br><b>Onset Time: </b>${printFancyTime(alertOnsetTime)}
+                                                <br><b>Expires Time: </b>${printFancyTime(alertExpiresTime)}
+                                                <br><b>Ends Time: </b>${printFancyTime(alertEndsTime)}
+                                                <br><br><b><i>${alertSeverity}</i></b>, <b><i>${alertUrgency}</i></b><br><br>
+                                                <b>WMO Identifier:</b> ${alertWMOidenifier}<br>
+                                                <b>VTEC:</b> ${alertVTEC}<br>
+                                                <b>NWS Headline:</b> ${alertNWSheadline}<br>
+                                                <b>ID:</b> ${alertID}<br><br>
+                                                <b>Headline:</b> ${alertHeadline}<br>
+                                                <b>Description:</b> ${alertDescription}<br>
+                                                <b>Instructions:</b> ${alertInstruction}
+                                            </div>
+                                        </div>`;
+                                    if (n != data.features.length - 1) {
                                         theContent += '<br>'
                                     }
+                                    console.log(alertEvent, alertSenderName)
                                 }
-                                var popup = L.popup({maxHeight: 100})
+                                var myPopup = L.popup({maxHeight: 100, autoPan: false})
                                 .setLatLng(e.latlng)
                                 .setContent(theContent)
                                 .openOn(alertMarkerLayerGroup);
+
+                                function toggleDisplay(theelem) {
+                                    if (document.getElementById(theelem).style.display == 'none') {
+                                        document.getElementById(theelem).style.display = 'block'
+                                    } else if (document.getElementById(theelem).style.display == 'block') {
+                                        document.getElementById(theelem).style.display = 'none'
+                                    }
+                                }
+
+                                function addAlertListner(numbe) {
+                                    console.log('headlineExpander' + numbe)
+                                    document.getElementById('headlineExpander' + numbe).addEventListener('click', function() {
+                                        console.log('alertBody' + numbe)
+                                        toggleDisplay('alertBody' + numbe)
+                                        myPopup._updateLayout()
+                                    })
+                                }
+
+                                var allHeadlines = document.getElementsByClassName('ughh')
+                                for (var f = 0; f < allHeadlines.length; f++) {
+                                    addAlertListner(f)
+                                }
                             })
                         }
                     }
