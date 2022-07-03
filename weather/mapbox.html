@@ -6,10 +6,15 @@
     <link rel="icon" href="/logo.png">
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
+
     <!-- https://cdnjs.com/libraries/font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- https://github.com/tobinbradley/mapbox-gl-pitch-toggle-control -->
+    <link href="/weather/nexrad/scripts/css/pitchtogglecontrol.css" rel="stylesheet">
+    <script src="/weather/nexrad/scripts/js/pitchtogglecontrol.js"></script>
 
     <style>
         body {
@@ -33,6 +38,27 @@
         }
         .icon-selected {
             color:rgb(0, 132, 255);
+        }
+
+        .mapboxgl-ctrl-top-center {
+            position: relative !important;
+            left: 0;
+            right: 0;
+            top: 10px;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .mapboxgl-ctrl-bottom-center {
+            position: absolute !important;
+            left: 0;
+            right: 0;
+            bottom: 15px;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
     </style>
 </head>
@@ -64,16 +90,31 @@
         center: [-98.5606744, 36.8281576],
         //projection: 'globe'
     });
+    map.addControl(new mapboxgl.NavigationControl(), "top-left");
+    map.addControl(new PitchToggle({ minpitchzoom: 11 }), "top-left");
+
+    // https://github.com/mapbox/mapbox-gl-js/issues/3039#issuecomment-401964567
+    function registerControlPosition(map, positionName) {
+        if (map._controlPositions[positionName]) {
+            return;
+        }
+        var positionContainer = document.createElement('div');
+        positionContainer.className = `mapboxgl-ctrl-${positionName}`;
+        map._controlContainer.appendChild(positionContainer);
+        map._controlPositions[positionName] = positionContainer;
+    }
+    registerControlPosition(map, 'top-center');
+    registerControlPosition(map, 'bottom-center');
 
     class infoControl {
         onAdd(map) {
             this._map = map;
             this._container = document.createElement('div');
             this._container.innerHTML = "\
-                <div style='\
+                <div id='infoContainer' style='\
                 width: auto;\
-                padding: 5px 10px;\
                 height: auto;\
+                padding: 5px 10px;\
                 /* line-height: 25px; */\
                 background-color: white;\
                 border: 1px solid black;\
@@ -93,7 +134,8 @@
         }
     }
     var theInfoControl = new infoControl
-    map.addControl(theInfoControl, 'top-left')
+    map.addControl(theInfoControl, 'top-center');
+
 
     var msPerMinute = 60000;
     var currentTime = new Date();
