@@ -41,6 +41,10 @@
 <div id="map"></div>
 
 <script>
+    function printFancyTime(dateObj) {
+        return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
+    }
+
 	mapboxgl.accessToken = 'pk.eyJ1Ijoic3RlZXBhdHRpY3N0YWlycyIsImEiOiJjbDNvaGFod2EwbXluM2pwZTJiMDYzYjh5In0.J_HeH00ry0tbLmGmTy4z5w';
     const map = new mapboxgl.Map({
         container: 'map',
@@ -61,7 +65,42 @@
         //projection: 'globe'
     });
 
+    class infoControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = "\
+                <div style='\
+                width: auto;\
+                padding: 5px 10px;\
+                height: auto;\
+                /* line-height: 25px; */\
+                background-color: white;\
+                border: 1px solid black;\
+                border-radius: 5px;\
+                '>\
+                    <div id='timestampDisplay'>KLWX</div>\
+                </div>"
+            this._container.addEventListener('click', function() {
+                console.log('sus')
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theInfoControl = new infoControl
+    map.addControl(theInfoControl, 'top-left')
+
+    var msPerMinute = 60000;
+    var currentTime = new Date();
+    document.getElementById('timestampDisplay').innerHTML = printFancyTime(currentTime)
     var nexradTimestamps = ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m']
+    var minutesToSubtract = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+    minutesToSubtract.reverse();
     map.on('load', () => {
         // Set the default atmosphere style
         //map.setFog({});
@@ -125,10 +164,6 @@
             },
             'aeroway-line'
         ); */
-
-        function printFancyTime(dateObj) {
-            return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
-        }
 
         var alertArr = [];
         var sourceArr = [];
@@ -445,6 +480,8 @@
                                 //}
                                 console.log(`wms-test-layer${i}`)
                                 setNexradLayerOpacity(i, 1)
+                                var displayedRadarTime = new Date(currentTime - minutesToSubtract[i] * msPerMinute);
+                                document.getElementById('timestampDisplay').innerHTML = printFancyTime(displayedRadarTime)
                                 i++;
                                 if (!$('#pausePlayThing').hasClass('fa-play')) {
                                     if (i < nexradTimestamps.length) {
