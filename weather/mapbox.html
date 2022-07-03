@@ -55,20 +55,42 @@
         //projection: 'globe'
     });
 
+    var nexradTimestamps = ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m']
     map.on('load', () => {
         // Set the default atmosphere style
         //map.setFog({});
-        map.addLayer({
-            id: `nexrad`,
-            type: "raster",
-            source: {
-                type: "raster",
-                tiles: [
-                    'https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::USCOMP-N0Q-0/{z}/{x}/{y}.png'
-                ],
-                tileSize: 256
-            },
-        });
+        function addNexradLayer(indexInArray, opacity) {
+            if (map.getLayer(`wms-test-layer`)) {
+                map.removeLayer(`wms-test-layer`)
+            }
+            if (map.getSource(`wms-test-layer`)) {
+                map.removeSource(`wms-test-layer`)
+            }
+            map.addLayer({
+                'id': `wms-test-layer`,
+                'type': 'raster',
+                'source': {
+                    'type': 'raster',
+                    // use the tiles option to specify a WMS tile source URL
+                    // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
+                    'tiles': [
+                        `https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi?service=WMS&request=GetMap&layers=nexrad-n0q-900913${nexradTimestamps[indexInArray]}&styles=&format=image%2Fpng&transparent=true&version=1.1.1&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}`
+                        //'https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015'
+                        //'https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}'
+                        //https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox=-20037508.342789244,0,-10018754.171394622,10018754.17139462
+                    ],
+                    'tileSize': 256
+                },
+                'paint': {
+                    'raster-opacity': opacity,
+                    "raster-fade-duration": 0
+                }
+            });
+        }
+        for (var t = 0; t < nexradTimestamps.length; t++) {
+            addNexradLayer(t, 0);
+        }
+        addNexradLayer(0, 1);
         /* map.addSource('wms-test-source', {
             'type': 'raster',
             // use the tiles option to specify a WMS tile source URL
@@ -379,6 +401,62 @@
         }
         var theAlertControl = new alertControl
         map.addControl(theAlertControl)
+
+        class pausePlayControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
+                                <span class="fa fa-play icon-black" id="pausePlayThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    if ($('#pausePlayThing').hasClass('fa-play')) {
+                        $('#pausePlayThing').removeClass('fa-play');
+                        $('#pausePlayThing').addClass('fa-pause');
+                        var i = 0;
+                        function myLoop() {
+                            var radarLoopTimeout = setTimeout(function() {
+                                //for (var q = 0; q < iterations.length; q++) {
+                                //    map.removeLayer(`wms-test-layer${q}`)
+                                //    map.removeSource(`wms-test-layer${q}`)
+                                //}
+                                console.log(`wms-test-layer${i}`)
+                                addNexradLayer(i, 1)
+                                i++;
+                                if (!$('#pausePlayThing').hasClass('fa-play')) {
+                                    if (i < nexradTimestamps.length) {
+                                        myLoop();
+                                    } else if (i == nexradTimestamps.length) {
+                                        i = 0;
+                                        myLoop();
+                                    }
+                                } else {
+                                    clearTimeout(radarLoopTimeout)
+                                }
+                            }, 700)
+                        }
+                        myLoop();
+                    } else if (!$('#pausePlayThing').hasClass('fa-play')) {
+                        $('#pausePlayThing').removeClass('fa-pause');
+                        $('#pausePlayThing').addClass('fa-play');
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var thePausePlayControl = new pausePlayControl
+        map.addControl(thePausePlayControl)
     });
 </script>
 
