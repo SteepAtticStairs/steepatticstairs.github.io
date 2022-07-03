@@ -1,0 +1,273 @@
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1Ijoic3RlZXBhdHRpY3N0YWlycyIsImEiOiJjbDNvaGFod2EwbXluM2pwZTJiMDYzYjh5In0.J_HeH00ry0tbLmGmTy4z5w';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/bright-v9',
+        /*
+        OTHER MAPBOX STYLES:
+        https://docs.mapbox.com/api/maps/styles/
+        mapbox://styles/mapbox/bright-v9
+        mapbox://styles/mapbox/streets-v11
+        mapbox://styles/mapbox/light-v10
+        mapbox://styles/mapbox/dark-v10
+        mapbox://styles/mapbox/navigation-night-v1
+        */
+        //36.8281576, -98.5606744, 4
+        //1.5, [30, 50]
+        zoom: 2,
+        center: [-98.5606744, 36.8281576],
+        //projection: 'globe'
+    });
+
+    map.on('load', () => {
+        // Set the default atmosphere style
+        //map.setFog({});
+        map.addLayer({
+            id: `nexrad`,
+            type: "raster",
+            source: {
+                type: "raster",
+                tiles: [
+                    'https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::USCOMP-N0Q-0/{z}/{x}/{y}.png'
+                ],
+                tileSize: 256
+            },
+        });
+        /* map.addSource('wms-test-source', {
+            'type': 'raster',
+            // use the tiles option to specify a WMS tile source URL
+            // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
+            'tiles': [
+                //'https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015'
+                'https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}'
+                //https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox=-20037508.342789244,0,-10018754.171394622,10018754.17139462
+            ],
+            'tileSize': 256
+        });
+        map.addLayer(
+            {
+                'id': 'wms-test-layer',
+                'type': 'raster',
+                'source': 'wms-test-source',
+                'paint': {}
+            },
+            'aeroway-line'
+        ); */
+
+        function printFancyTime(dateObj) {
+            return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
+        }
+
+        $.getJSON('https://api.weather.gov/alerts/active', function(data) {
+            for (let n = 0; n < data.features.length; n++) {
+                if (data.features[n].geometry != null) {
+                    //L.marker([alertLat, alertLon], {icon: yellowMarkerIcon}).addTo(alertLayerGroup)
+                    //    .bindPopup(alertPopup);
+                    var allCoordinates = data.features[n].geometry.coordinates[0];
+                    var coordinateArray = [];
+
+                    for (let x = 0; x < Object.keys(allCoordinates).length; x++) {
+                        coordinateArray.push(allCoordinates[x]);
+                    }
+                    var properties = data.features[n].properties
+                    var geojson = {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                                coordinateArray
+                            ]
+                        },
+                        properties
+                    }
+                    console.log(geojson)
+
+                    map.addSource(`alert${n}`, {
+                        'type': 'geojson',
+                        'data': geojson
+                    });
+                    // Add a new layer to visualize the polygon.
+                    map.addLayer({
+                        'id': `alert${n}`,
+                        'type': 'fill',
+                        'source': `alert${n}`, // reference the data source
+                        'layout': {},
+                        'paint': {
+                            'fill-color': '#0080ff', // blue color fill
+                            'fill-opacity': 0.5
+                        }
+                    });
+                    // Add a black outline around the polygon.
+                    map.addLayer({
+                        'id': `outline${n}`,
+                        'type': 'line',
+                        'source': `alert${n}`,
+                        'layout': {},
+                        'paint': {
+                            'line-color': '#014385',
+                            'line-width': 3
+                        }
+                    });
+                    map.on('click', `alert${n}`, (e) => {
+                        var alertEvent = e.features[0].properties.event;
+                        var alertSenderName = e.features[0].properties.senderName;
+                        var alertHeadline = e.features[0].properties.headline;
+                        var alertDescription = e.features[0].properties.description;
+                        var alertInstruction = e.features[0].properties.instruction;
+
+                        var alertID = e.features[0].id;
+                        var alertWMOidenifier = e.features[0].properties.parameters.WMOidentifier;
+                        var alertVTEC = e.features[0].properties.parameters.VTEC;
+                        var alertNWSheadline = "No headline for this alert."
+
+                        if (alertInstruction == null) {
+                            alertInstruction = "No instruction for this alert."
+                        }
+
+                        if (e.features[0].properties.parameters.hasOwnProperty('NWSheadline')) {
+                            alertNWSheadline = e.features[0].properties.parameters.NWSheadline;
+                        }
+
+                        var alertSeverity = e.features[0].properties.severity;
+                        var alertUrgency = e.features[0].properties.urgency;
+
+                        var alertSentTime = new Date(e.features[0].properties.sent);
+                        var alertEffectiveTime = new Date(e.features[0].properties.effective);
+                        var alertOnsetTime = new Date(e.features[0].properties.onset);
+                        var alertExpiresTime = new Date(e.features[0].properties.expires);
+                        var alertEndsTime = new Date(e.features[0].properties.ends);
+                        var alertPopupContent = `
+                        <div style="overflow-y: scroll; height: 100px;">
+                            <div class='ughh' id='headlineExpander${n}' style='cursor: pointer'>
+                                <b>${alertEvent}<br>${alertSenderName}</b>
+                            </div>
+                            <div id='alertBody${n}'>
+                                <br><b>Send Time: </b>${printFancyTime(alertSentTime)}
+                                <br><b>Effective Time: </b>${printFancyTime(alertEffectiveTime)}
+                                <br><b>Onset Time: </b>${printFancyTime(alertOnsetTime)}
+                                <br><b>Expires Time: </b>${printFancyTime(alertExpiresTime)}
+                                <br><b>Ends Time: </b>${printFancyTime(alertEndsTime)}
+                                <br><br><b><i>${alertSeverity}</i></b>, <b><i>${alertUrgency}</i></b><br><br>
+                                <b>WMO Identifier:</b> ${alertWMOidenifier}<br>
+                                <b>VTEC:</b> ${alertVTEC}<br>
+                                <b>NWS Headline:</b> ${alertNWSheadline}<br>
+                                <b>ID:</b> ${alertID}<br><br>
+                                <b>Headline:</b> ${alertHeadline}<br>
+                                <b>Description:</b> ${alertDescription}<br>
+                                <b>Instructions:</b> ${alertInstruction}
+                            </div>
+                        </div>`;
+                        var popup = new mapboxgl.Popup()
+                        .setLngLat(e.lngLat)
+                        .setHTML(alertPopupContent)
+                        .addTo(map);
+                    });
+                }
+            }
+        })
+
+        //map.addSource('overlay', {
+        //    type: 'image',
+        //    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif',
+        //    coordinates: [
+        //        [-80.425, 46.437],
+        //        [-71.516, 46.437],
+        //        [-71.516, 37.936],
+        //        [-80.425, 37.936]
+        //    ]
+        //});
+        //map.addLayer({
+        //    'id': 'overlay',
+        //    'source': 'overlay',
+        //    'type': 'raster',
+        //});
+        //map.removeLayer('overlay')
+
+        /* $.getJSON('https://steepatticstairs.github.io/weather/json/wdg_radar-stations_05042022.json', function(data) {
+            for (let n = 0; n < 208; n++) {
+                var radarStation = data.features[n].properties.id;
+                var latt = data.features[n].geometry.coordinates[1];
+                var lonn = data.features[n].geometry.coordinates[0];
+                var stationType = data.features[n].properties.stationType;
+                
+                if (stationType == "WSR-88D") {
+                    //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
+                    //L.marker([latt, lonn]).addTo(markerLayerGroup)
+                    //    .bindPopup(radarStation);
+
+                    var initMarker = new mapboxgl.Marker({
+                        color: "#4287f5",
+                    }).setLngLat([lonn, latt])
+                        .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>"))
+                        .addTo(map)
+                    console.log(initMarker.getElement())
+                }
+            }
+            $.getJSON('https://api.weather.gov/radar/stations', function(data) {
+                //map.removeLayerGroup('markerLayerGroup')
+                initMarker.remove();
+                for (let n = 0; n < 208; n++) {
+                    var radarStation = data.features[n].properties.id;
+                    var latt = data.features[n].geometry.coordinates[1];
+                    var lonn = data.features[n].geometry.coordinates[0];
+                    var stationType = data.features[n].properties.stationType;
+
+                    var radstatLastReceivedData = new Date(data.features[n].properties.latency.levelTwoLastReceivedTime);
+                    var currentTimeForStatus = new Date();
+                    var timeDiff = currentTimeForStatus - radstatLastReceivedData;
+                    var formattedLastReceivedData = printFancyTime(radstatLastReceivedData);
+                    
+                    if (stationType == "WSR-88D") {
+                        //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
+                        //L.marker([latt, lonn]).addTo(markerLayerGroup)
+                        //    .bindPopup(radarStation);
+
+                        if (timeDiff >= 900000) {
+                            //$('body').append
+                            var isRadarDown = true;
+                            var down = new mapboxgl.Marker({
+                                color: "#fc0303",
+                            }).setLngLat([lonn, latt])
+                                .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
+                                //.addTo(map)//map.addLayerToGroup('markerLayerGroup', down)
+                        } else if (timeDiff < 900000) {
+                            //$('body').append
+                            var isRadarDown = false;
+                            var up = new mapboxgl.Marker({
+                                color: "#1bb50d",
+                            }).setLngLat([lonn, latt])
+                                .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
+                                //.addTo(map)//map.addLayerToGroup('markerLayerGroup', up)
+                        }
+                    }
+                }
+            })
+        })*/
+    });
+</script>
+
+</body>
+</html>
