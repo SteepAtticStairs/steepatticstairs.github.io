@@ -1,5 +1,10 @@
 <html>
 <head>
+    <meta name="viewport" content="width=device-width,initial-scale=0.7,maximum-scale=1,user-scalable=no"/>
+    <meta charset="UTF-8" />
+    <title>NEXRAD</title>
+    <link rel="icon" href="/logo.png">
+
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
@@ -16,6 +21,9 @@
             top: 0;
             bottom: 0;
             width: 100%;
+        }
+        .icon-black {
+            color:rgb(0, 0, 0);
         }
         .icon-selected {
             color:rgb(0, 132, 255);
@@ -171,7 +179,7 @@
                             var alertExpiresTime = new Date(e.features[0].properties.expires);
                             var alertEndsTime = new Date(e.features[0].properties.ends);
                             var alertPopupContent = `
-                            <div style="overflow-y: scroll; height: 100px;">
+                            <div style="overflow-y: scroll; height: 150px;">
                                 <div class='ughh' id='headlineExpander${n}' style='cursor: pointer'>
                                     <b>${alertEvent}<br>${alertSenderName}</b>
                                 </div>
@@ -286,6 +294,8 @@
                 })
             })
         }
+        var btnStyle = 'style="width: 35px; height: 35px"'
+        var btnIconStyle = 'style="font-size: 16"'
         // Control implemented as ES6 class
         class stationControl {
             onAdd(map) {
@@ -296,18 +306,20 @@
                     <div class="mapboxgl-control-container">
                         <div class="mapboxgl-ctrl-top-right">
                             <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                                <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen">
-                                    <span class="fa fa-satellite-dish" id="stationThing" aria-hidden="true" title="Enter fullscreen"></span>
+                                <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
+                                    <span class="fa fa-satellite-dish icon-black" id="stationThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
                                 </button>
                             </div>
                         </div>
                     </div>`
                 this._container.addEventListener('click', function() {
                     if (!$('#stationThing').hasClass('icon-selected')) {
-                        $('#stationThing').addClass('icon-selected')
+                        $('#stationThing').addClass('icon-selected');
+                        $('#stationThing').removeClass('icon-black');
                         stationMarkers();
                     } else if ($('#stationThing').hasClass('icon-selected')) {
-                        $('#stationThing').removeClass('icon-selected')
+                        $('#stationThing').removeClass('icon-selected');
+                        $('#stationThing').addClass('icon-black');
                         for (var u = 0; u < markerArr.length; u++) {
                             markerArr[u].remove();
                         }
@@ -332,17 +344,19 @@
                 this._container.innerHTML = `
                     <div class="mapboxgl-control-container" style="margin-top: 100%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen">
-                                <span class="fa fa-circle-exclamation" id="alertThing" aria-hidden="true" title="Enter fullscreen"></span>
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
+                                <span class="fa fa-circle-exclamation icon-black" id="alertThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
                             </button>
                         </div>
                     </div>`
                 this._container.addEventListener('click', function() {
                     if (!$('#alertThing').hasClass('icon-selected')) {
-                        $('#alertThing').addClass('icon-selected')
+                        $('#alertThing').addClass('icon-selected');
+                        $('#alertThing').removeClass('icon-black');
                         showAlerts();
                     } else if ($('#alertThing').hasClass('icon-selected')) {
-                        $('#alertThing').removeClass('icon-selected')
+                        $('#alertThing').removeClass('icon-selected');
+                        $('#alertThing').addClass('icon-black');
                         for (var u = 0; u < alertArr.length; u++) {
                             if (map.getLayer(alertArr[u])) {
                                 map.removeLayer(alertArr[u])
