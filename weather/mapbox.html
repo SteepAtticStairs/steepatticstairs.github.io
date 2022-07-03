@@ -25,6 +25,12 @@
         .icon-black {
             color:rgb(0, 0, 0);
         }
+        .green-icon {
+            color:rgb(17, 167, 17);
+        }
+        .red-icon {
+            color:red;
+        }
         .icon-selected {
             color:rgb(0, 132, 255);
         }
@@ -411,14 +417,17 @@
                     <div class="mapboxgl-control-container" style="margin-top: 100%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
                             <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
-                                <span class="fa fa-play icon-black" id="pausePlayThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
+                                <span class="fa fa-play green-icon" id="pausePlayThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
                             </button>
                         </div>
                     </div>`
                 this._container.addEventListener('click', function() {
                     if ($('#pausePlayThing').hasClass('fa-play')) {
                         $('#pausePlayThing').removeClass('fa-play');
+                        $('#pausePlayThing').removeClass('green-icon');
+
                         $('#pausePlayThing').addClass('fa-pause');
+                        $('#pausePlayThing').addClass('red-icon');
                         var i = 0;
                         function myLoop() {
                             var radarLoopTimeout = setTimeout(function() {
@@ -444,7 +453,10 @@
                         myLoop();
                     } else if (!$('#pausePlayThing').hasClass('fa-play')) {
                         $('#pausePlayThing').removeClass('fa-pause');
+                        $('#pausePlayThing').removeClass('red-icon');
+
                         $('#pausePlayThing').addClass('fa-play');
+                        $('#pausePlayThing').addClass('green-icon');
                     }
                 })
                 return this._container;
