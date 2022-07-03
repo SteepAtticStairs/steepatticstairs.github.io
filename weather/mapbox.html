@@ -66,14 +66,8 @@
         // Set the default atmosphere style
         //map.setFog({});
         function addNexradLayer(indexInArray, opacity) {
-            if (map.getLayer(`wms-test-layer`)) {
-                map.removeLayer(`wms-test-layer`)
-            }
-            if (map.getSource(`wms-test-layer`)) {
-                map.removeSource(`wms-test-layer`)
-            }
             map.addLayer({
-                'id': `wms-test-layer`,
+                'id': `wms-test-layer${indexInArray}`,
                 'type': 'raster',
                 'source': {
                     'type': 'raster',
@@ -96,7 +90,21 @@
         for (var t = 0; t < nexradTimestamps.length; t++) {
             addNexradLayer(t, 0);
         }
-        addNexradLayer(0, 1);
+        function setNexradLayerOpacity(layerum, theopacity) {
+            for (var r = 0; r < nexradTimestamps.length; r++) {
+                map.setPaintProperty(
+                    `wms-test-layer${r}`,
+                    'raster-opacity',
+                    0
+                );
+            }
+            map.setPaintProperty(
+                `wms-test-layer${layerum}`,
+                'raster-opacity',
+                theopacity
+            );
+        }
+        setNexradLayerOpacity(0, 1)
         /* map.addSource('wms-test-source', {
             'type': 'raster',
             // use the tiles option to specify a WMS tile source URL
@@ -436,7 +444,7 @@
                                 //    map.removeSource(`wms-test-layer${q}`)
                                 //}
                                 console.log(`wms-test-layer${i}`)
-                                addNexradLayer(i, 1)
+                                setNexradLayerOpacity(i, 1)
                                 i++;
                                 if (!$('#pausePlayThing').hasClass('fa-play')) {
                                     if (i < nexradTimestamps.length) {
