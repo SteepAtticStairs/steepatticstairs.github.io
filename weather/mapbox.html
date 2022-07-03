@@ -3,6 +3,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
+    <!-- https://cdnjs.com/libraries/font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
     <style>
         body {
@@ -14,6 +16,9 @@
             top: 0;
             bottom: 0;
             width: 100%;
+        }
+        .icon-selected {
+            color:rgb(0, 132, 255);
         }
     </style>
 </head>
@@ -81,113 +86,120 @@
             return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
         }
 
-        $.getJSON('https://api.weather.gov/alerts/active', function(data) {
-            for (let n = 0; n < data.features.length; n++) {
-                if (data.features[n].geometry != null) {
-                    //L.marker([alertLat, alertLon], {icon: yellowMarkerIcon}).addTo(alertLayerGroup)
-                    //    .bindPopup(alertPopup);
-                    var allCoordinates = data.features[n].geometry.coordinates[0];
-                    var coordinateArray = [];
+        var alertArr = [];
+        var sourceArr = [];
+        function showAlerts() {
+            $.getJSON('https://api.weather.gov/alerts/active', function(data) {
+                for (let n = 0; n < data.features.length; n++) {
+                    if (data.features[n].geometry != null) {
+                        //L.marker([alertLat, alertLon], {icon: yellowMarkerIcon}).addTo(alertLayerGroup)
+                        //    .bindPopup(alertPopup);
+                        var allCoordinates = data.features[n].geometry.coordinates[0];
+                        var coordinateArray = [];
 
-                    for (let x = 0; x < Object.keys(allCoordinates).length; x++) {
-                        coordinateArray.push(allCoordinates[x]);
+                        for (let x = 0; x < Object.keys(allCoordinates).length; x++) {
+                            coordinateArray.push(allCoordinates[x]);
+                        }
+                        var properties = data.features[n].properties
+                        var geojson = {
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    coordinateArray
+                                ]
+                            },
+                            properties
+                        }
+                        console.log(geojson)
+
+                        map.addSource(`alert${n}`, {
+                            'type': 'geojson',
+                            'data': geojson
+                        });
+                        sourceArr.push(`alert${n}`);
+                        // Add a new layer to visualize the polygon.
+                        map.addLayer({
+                            'id': `alert${n}`,
+                            'type': 'fill',
+                            'source': `alert${n}`, // reference the data source
+                            'layout': {},
+                            'paint': {
+                                'fill-color': '#0080ff', // blue color fill
+                                'fill-opacity': 0.5
+                            }
+                        });
+                        alertArr.push(`alert${n}`);
+                        // Add a black outline around the polygon.
+                        map.addLayer({
+                            'id': `outline${n}`,
+                            'type': 'line',
+                            'source': `alert${n}`,
+                            'layout': {},
+                            'paint': {
+                                'line-color': '#014385',
+                                'line-width': 3
+                            }
+                        });
+                        alertArr.push(`outline${n}`);
+                        map.on('click', `alert${n}`, (e) => {
+                            var alertEvent = e.features[0].properties.event;
+                            var alertSenderName = e.features[0].properties.senderName;
+                            var alertHeadline = e.features[0].properties.headline;
+                            var alertDescription = e.features[0].properties.description;
+                            var alertInstruction = e.features[0].properties.instruction;
+
+                            var alertID = e.features[0].id;
+                            var alertWMOidenifier = e.features[0].properties.parameters.WMOidentifier;
+                            var alertVTEC = e.features[0].properties.parameters.VTEC;
+                            var alertNWSheadline = "No headline for this alert."
+
+                            if (alertInstruction == null) {
+                                alertInstruction = "No instruction for this alert."
+                            }
+
+                            if (e.features[0].properties.parameters.hasOwnProperty('NWSheadline')) {
+                                alertNWSheadline = e.features[0].properties.parameters.NWSheadline;
+                            }
+
+                            var alertSeverity = e.features[0].properties.severity;
+                            var alertUrgency = e.features[0].properties.urgency;
+
+                            var alertSentTime = new Date(e.features[0].properties.sent);
+                            var alertEffectiveTime = new Date(e.features[0].properties.effective);
+                            var alertOnsetTime = new Date(e.features[0].properties.onset);
+                            var alertExpiresTime = new Date(e.features[0].properties.expires);
+                            var alertEndsTime = new Date(e.features[0].properties.ends);
+                            var alertPopupContent = `
+                            <div style="overflow-y: scroll; height: 100px;">
+                                <div class='ughh' id='headlineExpander${n}' style='cursor: pointer'>
+                                    <b>${alertEvent}<br>${alertSenderName}</b>
+                                </div>
+                                <div id='alertBody${n}'>
+                                    <br><b>Send Time: </b>${printFancyTime(alertSentTime)}
+                                    <br><b>Effective Time: </b>${printFancyTime(alertEffectiveTime)}
+                                    <br><b>Onset Time: </b>${printFancyTime(alertOnsetTime)}
+                                    <br><b>Expires Time: </b>${printFancyTime(alertExpiresTime)}
+                                    <br><b>Ends Time: </b>${printFancyTime(alertEndsTime)}
+                                    <br><br><b><i>${alertSeverity}</i></b>, <b><i>${alertUrgency}</i></b><br><br>
+                                    <b>WMO Identifier:</b> ${alertWMOidenifier}<br>
+                                    <b>VTEC:</b> ${alertVTEC}<br>
+                                    <b>NWS Headline:</b> ${alertNWSheadline}<br>
+                                    <b>ID:</b> ${alertID}<br><br>
+                                    <b>Headline:</b> ${alertHeadline}<br>
+                                    <b>Description:</b> ${alertDescription}<br>
+                                    <b>Instructions:</b> ${alertInstruction}
+                                </div>
+                            </div>`;
+                            var popup = new mapboxgl.Popup()
+                            .setLngLat(e.lngLat)
+                            .setHTML(alertPopupContent)
+                            .addTo(map);
+                        });
                     }
-                    var properties = data.features[n].properties
-                    var geojson = {
-                        "type": "Feature",
-                        "geometry": {
-                            "type": "Polygon",
-                            "coordinates": [
-                                coordinateArray
-                            ]
-                        },
-                        properties
-                    }
-                    console.log(geojson)
-
-                    map.addSource(`alert${n}`, {
-                        'type': 'geojson',
-                        'data': geojson
-                    });
-                    // Add a new layer to visualize the polygon.
-                    map.addLayer({
-                        'id': `alert${n}`,
-                        'type': 'fill',
-                        'source': `alert${n}`, // reference the data source
-                        'layout': {},
-                        'paint': {
-                            'fill-color': '#0080ff', // blue color fill
-                            'fill-opacity': 0.5
-                        }
-                    });
-                    // Add a black outline around the polygon.
-                    map.addLayer({
-                        'id': `outline${n}`,
-                        'type': 'line',
-                        'source': `alert${n}`,
-                        'layout': {},
-                        'paint': {
-                            'line-color': '#014385',
-                            'line-width': 3
-                        }
-                    });
-                    map.on('click', `alert${n}`, (e) => {
-                        var alertEvent = e.features[0].properties.event;
-                        var alertSenderName = e.features[0].properties.senderName;
-                        var alertHeadline = e.features[0].properties.headline;
-                        var alertDescription = e.features[0].properties.description;
-                        var alertInstruction = e.features[0].properties.instruction;
-
-                        var alertID = e.features[0].id;
-                        var alertWMOidenifier = e.features[0].properties.parameters.WMOidentifier;
-                        var alertVTEC = e.features[0].properties.parameters.VTEC;
-                        var alertNWSheadline = "No headline for this alert."
-
-                        if (alertInstruction == null) {
-                            alertInstruction = "No instruction for this alert."
-                        }
-
-                        if (e.features[0].properties.parameters.hasOwnProperty('NWSheadline')) {
-                            alertNWSheadline = e.features[0].properties.parameters.NWSheadline;
-                        }
-
-                        var alertSeverity = e.features[0].properties.severity;
-                        var alertUrgency = e.features[0].properties.urgency;
-
-                        var alertSentTime = new Date(e.features[0].properties.sent);
-                        var alertEffectiveTime = new Date(e.features[0].properties.effective);
-                        var alertOnsetTime = new Date(e.features[0].properties.onset);
-                        var alertExpiresTime = new Date(e.features[0].properties.expires);
-                        var alertEndsTime = new Date(e.features[0].properties.ends);
-                        var alertPopupContent = `
-                        <div style="overflow-y: scroll; height: 100px;">
-                            <div class='ughh' id='headlineExpander${n}' style='cursor: pointer'>
-                                <b>${alertEvent}<br>${alertSenderName}</b>
-                            </div>
-                            <div id='alertBody${n}'>
-                                <br><b>Send Time: </b>${printFancyTime(alertSentTime)}
-                                <br><b>Effective Time: </b>${printFancyTime(alertEffectiveTime)}
-                                <br><b>Onset Time: </b>${printFancyTime(alertOnsetTime)}
-                                <br><b>Expires Time: </b>${printFancyTime(alertExpiresTime)}
-                                <br><b>Ends Time: </b>${printFancyTime(alertEndsTime)}
-                                <br><br><b><i>${alertSeverity}</i></b>, <b><i>${alertUrgency}</i></b><br><br>
-                                <b>WMO Identifier:</b> ${alertWMOidenifier}<br>
-                                <b>VTEC:</b> ${alertVTEC}<br>
-                                <b>NWS Headline:</b> ${alertNWSheadline}<br>
-                                <b>ID:</b> ${alertID}<br><br>
-                                <b>Headline:</b> ${alertHeadline}<br>
-                                <b>Description:</b> ${alertDescription}<br>
-                                <b>Instructions:</b> ${alertInstruction}
-                            </div>
-                        </div>`;
-                        var popup = new mapboxgl.Popup()
-                        .setLngLat(e.lngLat)
-                        .setHTML(alertPopupContent)
-                        .addTo(map);
-                    });
                 }
-            }
-        })
+            })
+        }
 
         //map.addSource('overlay', {
         //    type: 'image',
@@ -206,66 +218,153 @@
         //});
         //map.removeLayer('overlay')
 
-        /* $.getJSON('https://steepatticstairs.github.io/weather/json/wdg_radar-stations_05042022.json', function(data) {
-            for (let n = 0; n < 208; n++) {
-                var radarStation = data.features[n].properties.id;
-                var latt = data.features[n].geometry.coordinates[1];
-                var lonn = data.features[n].geometry.coordinates[0];
-                var stationType = data.features[n].properties.stationType;
-                
-                if (stationType == "WSR-88D") {
-                    //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
-                    //L.marker([latt, lonn]).addTo(markerLayerGroup)
-                    //    .bindPopup(radarStation);
-
-                    var initMarker = new mapboxgl.Marker({
-                        color: "#4287f5",
-                    }).setLngLat([lonn, latt])
-                        .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>"))
-                        .addTo(map)
-                    console.log(initMarker.getElement())
-                }
-            }
-            $.getJSON('https://api.weather.gov/radar/stations', function(data) {
-                //map.removeLayerGroup('markerLayerGroup')
-                initMarker.remove();
+        var markerArr = [];
+        function stationMarkers() {
+            $.getJSON('/weather/json/wdg_radar-stations_05042022.json', function(data) {
                 for (let n = 0; n < 208; n++) {
                     var radarStation = data.features[n].properties.id;
                     var latt = data.features[n].geometry.coordinates[1];
                     var lonn = data.features[n].geometry.coordinates[0];
                     var stationType = data.features[n].properties.stationType;
-
-                    var radstatLastReceivedData = new Date(data.features[n].properties.latency.levelTwoLastReceivedTime);
-                    var currentTimeForStatus = new Date();
-                    var timeDiff = currentTimeForStatus - radstatLastReceivedData;
-                    var formattedLastReceivedData = printFancyTime(radstatLastReceivedData);
                     
                     if (stationType == "WSR-88D") {
                         //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
                         //L.marker([latt, lonn]).addTo(markerLayerGroup)
                         //    .bindPopup(radarStation);
 
-                        if (timeDiff >= 900000) {
-                            //$('body').append
-                            var isRadarDown = true;
-                            var down = new mapboxgl.Marker({
-                                color: "#fc0303",
-                            }).setLngLat([lonn, latt])
-                                .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
-                                //.addTo(map)//map.addLayerToGroup('markerLayerGroup', down)
-                        } else if (timeDiff < 900000) {
-                            //$('body').append
-                            var isRadarDown = false;
-                            var up = new mapboxgl.Marker({
-                                color: "#1bb50d",
-                            }).setLngLat([lonn, latt])
-                                .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
-                                //.addTo(map)//map.addLayerToGroup('markerLayerGroup', up)
-                        }
+                        var initMarker = new mapboxgl.Marker({
+                            color: "#4287f5",
+                        }).setLngLat([lonn, latt])
+                            .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>"))
+                            .addTo(map)
+                        markerArr.push(initMarker)
                     }
                 }
+                $.getJSON('https://api.weather.gov/radar/stations', function(data) {
+                    //map.removeLayerGroup('markerLayerGroup')
+                    for (var u = 0; u < markerArr.length; u++) {
+                        markerArr[u].remove();
+                    }
+                    markerArr = []
+                    for (let n = 0; n < 208; n++) {
+                        var radarStation = data.features[n].properties.id;
+                        var latt = data.features[n].geometry.coordinates[1];
+                        var lonn = data.features[n].geometry.coordinates[0];
+                        var stationType = data.features[n].properties.stationType;
+
+                        var radstatLastReceivedData = new Date(data.features[n].properties.latency.levelTwoLastReceivedTime);
+                        var currentTimeForStatus = new Date();
+                        var timeDiff = currentTimeForStatus - radstatLastReceivedData;
+                        var formattedLastReceivedData = printFancyTime(radstatLastReceivedData);
+                        
+                        if (stationType == "WSR-88D") {
+                            //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
+                            //L.marker([latt, lonn]).addTo(markerLayerGroup)
+                            //    .bindPopup(radarStation);
+
+                            if (timeDiff >= 900000) {
+                                //$('body').append
+                                var isRadarDown = true;
+                                var down = new mapboxgl.Marker({
+                                    color: "#fc0303",
+                                }).setLngLat([lonn, latt])
+                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
+                                    .addTo(map)
+                                markerArr.push(down)
+                            } else if (timeDiff < 900000) {
+                                //$('body').append
+                                var isRadarDown = false;
+                                var up = new mapboxgl.Marker({
+                                    color: "#1bb50d",
+                                }).setLngLat([lonn, latt])
+                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
+                                    .addTo(map)
+                                markerArr.push(up)
+                            }
+                        }
+                    }
+                })
             })
-        })*/
+        }
+        // Control implemented as ES6 class
+        class stationControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container">
+                        <div class="mapboxgl-ctrl-top-right">
+                            <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                                <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen">
+                                    <span class="fa fa-satellite-dish" id="stationThing" aria-hidden="true" title="Enter fullscreen"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    if (!$('#stationThing').hasClass('icon-selected')) {
+                        $('#stationThing').addClass('icon-selected')
+                        stationMarkers();
+                    } else if ($('#stationThing').hasClass('icon-selected')) {
+                        $('#stationThing').removeClass('icon-selected')
+                        for (var u = 0; u < markerArr.length; u++) {
+                            markerArr[u].remove();
+                        }
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theStationControl = new stationControl
+        map.addControl(theStationControl)
+
+        class alertControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen">
+                                <span class="fa fa-circle-exclamation" id="alertThing" aria-hidden="true" title="Enter fullscreen"></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    if (!$('#alertThing').hasClass('icon-selected')) {
+                        $('#alertThing').addClass('icon-selected')
+                        showAlerts();
+                    } else if ($('#alertThing').hasClass('icon-selected')) {
+                        $('#alertThing').removeClass('icon-selected')
+                        for (var u = 0; u < alertArr.length; u++) {
+                            if (map.getLayer(alertArr[u])) {
+                                map.removeLayer(alertArr[u])
+                            }
+                        }
+                        for (var u = 0; u < sourceArr.length; u++) {
+                            if (map.getSource(sourceArr[u])) {
+                                map.removeSource(sourceArr[u])
+                            }
+                        }
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theAlertControl = new alertControl
+        map.addControl(theAlertControl)
     });
 </script>
 
