@@ -557,6 +557,36 @@
         var thePausePlayControl = new pausePlayControl
         map.addControl(thePausePlayControl)
     });
+
+    function setView(lat, lng, zoom) {
+        map.setCenter([lng, lat])
+        map.setZoom(zoom)
+    }
+    function setFromStation(stat, zoo) {
+        $.getJSON('/weather/json/radarStations.json', function(data) {
+            var theLat = data[stat][1]
+            var theLng = data[stat][2]
+            console.log(theLat, theLng)
+            setView(theLat, theLng, zoo)
+        })
+    }
+
+    var singleStationZoom = 7.5;
+    function getDownStation() {
+        var downStationDiv = document.getElementById('downRadarStation');
+        console.log(downStationDiv.innerHTML);
+        setFromStation(downStationDiv.innerHTML, singleStationZoom);
+    }
+    function getUpStation() {
+        var upStationDiv = document.getElementById('upRadarStation');
+        console.log(upStationDiv.innerHTML);
+        setFromStation(upStationDiv.innerHTML, singleStationZoom);
+    }
+    function getStation() {
+        var stationDiv = document.getElementById('radarStationDiv');
+        console.log(stationDiv.innerHTML);
+        setFromStation(stationDiv.innerHTML, singleStationZoom);
+    }
 </script>
 
 </body>
