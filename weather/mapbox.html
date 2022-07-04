@@ -124,7 +124,7 @@
                 border-radius: 5px;\
                 '>\
                     <div id='timestampDisplay'></div>\
-                    <b><div id='stationDisplay'></div></b>\
+                    <b><div id='stationDisplay' style='cursor: pointer' onclick='setStation()'></div></b>\
                 </div>"
             this._container.addEventListener('click', function() {
                 console.log('sus')
@@ -527,6 +527,15 @@
                         if (map.getSource('rpv')) {
                             map.removeSource('rpv')
                         }
+                        for (var t = 0; t < nexradTimestamps.length; t++) {
+                            if (map.getLayer(`wms-test-layer${t}`)) {
+                                map.removeLayer(`wms-test-layer${t}`)
+                            }
+                            if (map.getSource(`wms-test-layer${t}`)) {
+                                map.removeSource(`wms-test-layer${t}`)
+                            }
+                            addNexradLayer(t, 0);
+                        }
                         map.addLayer({
                             id: 'rpv',
                             type: "raster",
@@ -548,6 +557,7 @@
                         if (map.getSource('rpv')) {
                             map.removeSource('rpv')
                         }
+                        setNexradLayerOpacity(10, 1)
                     }
                 })
                 return this._container;
@@ -663,6 +673,11 @@
         var stationDiv = document.getElementById('radarStationDiv');
         console.log(stationDiv.innerHTML);
         setFromStation(stationDiv.innerHTML, singleStationZoom);
+    }
+    function setStation() {
+        var curStationDiv = document.getElementById('stationDisplay');
+        console.log(curStationDiv.innerHTML);
+        setFromStation(curStationDiv.innerHTML, singleStationZoom);
     }
 </script>
 
