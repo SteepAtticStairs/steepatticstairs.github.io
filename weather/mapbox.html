@@ -64,6 +64,8 @@
 </head>
 <body>
 
+<input id="timestampSlider" type="range" min="0" max="10" step="1" value="0">
+
 <div id="map"></div>
 
 <script>
@@ -188,6 +190,9 @@
             );
         }
         setNexradLayerOpacity(10, 1)
+        document.getElementById('timestampSlider').addEventListener("input", function() {
+            setNexradLayerOpacity(this.value, 1)
+        });
         /* map.addSource('wms-test-source', {
             'type': 'raster',
             // use the tiles option to specify a WMS tile source URL
