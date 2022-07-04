@@ -86,7 +86,7 @@
         */
         //36.8281576, -98.5606744, 4
         //1.5, [30, 50]
-        zoom: 2,
+        zoom: 3,
         center: [-98.5606744, 36.8281576],
         //projection: 'globe'
     });
@@ -112,6 +112,7 @@
             this._container = document.createElement('div');
             this._container.innerHTML = "\
                 <div id='infoContainer' style='\
+                text-align: center;\
                 width: auto;\
                 height: auto;\
                 padding: 5px 10px;\
@@ -120,7 +121,8 @@
                 border: 1px solid black;\
                 border-radius: 5px;\
                 '>\
-                    <div id='timestampDisplay'>KLWX</div>\
+                    <div id='timestampDisplay'></div>\
+                    <b><div id='stationDisplay'></div></b>\
                 </div>"
             this._container.addEventListener('click', function() {
                 console.log('sus')
@@ -407,6 +409,7 @@
                 })
             })
         }
+
         var btnStyle = 'style="width: 35px; height: 35px"'
         var btnIconStyle = 'style="font-size: 16"'
         // Control implemented as ES6 class
@@ -493,6 +496,66 @@
         var theAlertControl = new alertControl
         map.addControl(theAlertControl)
 
+        class rpvControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
+                                <span class="fa fa-tower-cell icon-black" id="rpvThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    console.log('rpv')
+                    if (!$('#rpvThing').hasClass('icon-selected')) {
+                        $('#rpvThing').addClass('icon-selected');
+                        $('#rpvThing').removeClass('icon-black');
+
+                        var currentStation = document.getElementById('stationDisplay').innerHTML.toUpperCase().substring(1)
+                        if (map.getLayer('rpv')) {
+                            map.removeLayer('rpv')
+                        }
+                        if (map.getSource('rpv')) {
+                            map.removeSource('rpv')
+                        }
+                        map.addLayer({
+                            id: 'rpv',
+                            type: "raster",
+                            source: {
+                                type: "raster",
+                                tiles: [
+                                    `https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::${currentStation}-N0B-0/{z}/{x}/{y}.png`
+                                ],
+                                tileSize: 256
+                            },
+                        });
+                    } else if ($('#rpvThing').hasClass('icon-selected')) {
+                        $('#rpvThing').removeClass('icon-selected');
+                        $('#rpvThing').addClass('icon-black');
+
+                        if (map.getLayer('rpv')) {
+                            map.removeLayer('rpv')
+                        }
+                        if (map.getSource('rpv')) {
+                            map.removeSource('rpv')
+                        }
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theRPVControl = new rpvControl
+        map.addControl(theRPVControl)
+
         class pausePlayControl {
             onAdd(map) {
                 this._map = map;
@@ -559,8 +622,16 @@
     });
 
     function setView(lat, lng, zoom) {
-        map.setCenter([lng, lat])
-        map.setZoom(zoom)
+        map.setCenter([lng, lat]);
+        map.setZoom(zoom);
+        if (map.getLayer('rpv')) {
+            map.removeLayer('rpv')
+        }
+        if (map.getSource('rpv')) {
+            map.removeSource('rpv')
+        }
+        $('#rpvThing').removeClass('icon-selected');
+        $('#rpvThing').addClass('icon-black');
     }
     function setFromStation(stat, zoo) {
         $.getJSON('/weather/json/radarStations.json', function(data) {
@@ -568,6 +639,7 @@
             var theLng = data[stat][2]
             console.log(theLat, theLng)
             setView(theLat, theLng, zoo)
+            document.getElementById('stationDisplay').innerHTML = stat.toUpperCase();
         })
     }
 
