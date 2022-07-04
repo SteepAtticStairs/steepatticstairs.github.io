@@ -16,6 +16,9 @@
     <link href="/weather/nexrad/scripts/css/pitchtogglecontrol.css" rel="stylesheet">
     <script src="/weather/nexrad/scripts/js/pitchtogglecontrol.js"></script>
 
+    <script src="/weather/nexrad/scripts/js/spin.umd.js"></script>
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/spin.css">
+
     <style>
         body {
             margin: 0;
@@ -107,6 +110,10 @@
     }
     registerControlPosition(map, 'top-center');
     registerControlPosition(map, 'bottom-center');
+    registerControlPosition(map, 'center');
+
+    var btnStyle = 'style="width: 35px; height: 35px"'
+    var btnIconStyle = 'style="font-size: 16"'
 
     class infoControl {
         onAdd(map) {
@@ -139,6 +146,49 @@
     }
     var theInfoControl = new infoControl
     map.addControl(theInfoControl, 'top-center');
+
+    class spinnerControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;" id='spinner-parent'>
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen">
+                                <div id='spinner'></div>
+                            </button>
+                        </div>
+                    </div>`
+            this._container.addEventListener('click', function() {
+                console.log('sus')
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theSpinnerControl = new spinnerControl
+    var spinner = new Spin.Spinner({scale: 0.5});
+    map.addControl(theSpinnerControl, 'top-left');
+    function toggleSpinner(tf) {
+        if (tf) {
+            document.getElementById('spinner-parent').style.display = 'block'
+            spinner.spin(document.getElementById('spinner'));
+        } else if (!tf) {
+            spinner.stop();
+            document.getElementById('spinner-parent').style.display = 'none'
+        }
+    }
+
+    map.on('dataloading', () => {
+        toggleSpinner(true);
+    });
+    map.on('idle', () => {
+        toggleSpinner(false);
+    });
 
 
     var msPerMinute = 60000;
@@ -415,8 +465,6 @@
             })
         }
 
-        var btnStyle = 'style="width: 35px; height: 35px"'
-        var btnIconStyle = 'style="font-size: 16"'
         // Control implemented as ES6 class
         class stationControl {
             onAdd(map) {
