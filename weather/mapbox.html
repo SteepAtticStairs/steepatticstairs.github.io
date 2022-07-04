@@ -6,6 +6,8 @@
     <link rel="icon" href="/logo.png">
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+    <link href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css" rel="stylesheet">
 
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
@@ -69,6 +71,20 @@
 
 <input id="timestampSlider" type="range" min="0" max="10" step="1" value="0">
 
+<div id="dialog">
+    <div><b>Radar Status: <a id="radstat"></a></b></div>
+    <br>
+    <div><b>Radar Station: </b><a id="radstatStation"></a></div>
+    <div><b>Radar Name: </b><a id="radstatName"></a></div>
+    <div><b>Data Last Received: </b><a id="radstatLastData"></a></div>
+    <br>
+    <div><b>Message ID: </b><a id="radstatMessageID"></a></div>
+    <div><b>Message Name: </b><a id="radstatMessageName"></a></div>
+    <br>
+    <div><b>Message Time: </b><a id="radstatMessageTime"></a></div>
+    <div style="white-space: pre-wrap;"><b>Message: </b><ul><a id="radstatMessage"></a></ul></div>
+</div>
+
 <div id="map"></div>
 
 <script>
@@ -119,20 +135,20 @@
         onAdd(map) {
             this._map = map;
             this._container = document.createElement('div');
-            this._container.innerHTML = "\
-                <div id='infoContainer' style='\
-                text-align: center;\
-                width: auto;\
-                height: auto;\
-                padding: 5px 10px;\
-                /* line-height: 25px; */\
-                background-color: white;\
-                border: 1px solid black;\
-                border-radius: 5px;\
-                '>\
-                    <div id='timestampDisplay'></div>\
-                    <b><div id='stationDisplay' style='cursor: pointer' onclick='setStation()'></div></b>\
-                </div>"
+            this._container.innerHTML = `
+                <div id='infoContainer' style='
+                text-align: center;
+                width: auto;
+                height: auto;
+                padding: 5px 10px;
+                /* line-height: 25px; */
+                background-color: white;
+                border: 1px solid black;
+                border-radius: 5px;
+                '>
+                    <div id='timestampDisplay'></div>
+                    <b><div id='stationDisplay' style='cursor: pointer' onclick='setStation()'></div></b>
+                </div>`
             this._container.addEventListener('click', function() {
                 console.log('sus')
             })
@@ -703,8 +719,128 @@
             console.log(theLat, theLng)
             setView(theLat, theLng, zoo)
             document.getElementById('stationDisplay').innerHTML = stat.toUpperCase();
+            var radstat = stat.toUpperCase();
+
+            var radstatURL = `https://api.weather.gov/radar/stations/${radstat}`;
+            $.getJSON(radstatURL, function(data) {
+
+                var radstatLastReceivedData = new Date(data.properties.latency.levelTwoLastReceivedTime);
+                var currentTime = new Date();
+                var timeDiff = currentTime - radstatLastReceivedData;
+
+                var radstatELEM = document.getElementById('radstat');
+                // if it has been 15 minutes (900000 ms) since last radar data, radar is down
+                if (timeDiff >= 900000) {
+                    var isRadarDown = true;
+                    radstatELEM.style.color = 'rgb(226, 0, 0)';
+                    document.getElementById('radstat').innerHTML = "OFFLINE";
+                } else if (timeDiff < 900000) {
+                    var isRadarDown = false;
+                    radstatELEM.style.color = 'rgb(16, 160, 10)';
+                    document.getElementById('radstat').innerHTML = "ONLINE";
+                }
+
+                document.getElementById('radstatStation').innerHTML = radstat;
+                document.getElementById('radstatName').innerHTML = data.properties.name;
+                document.getElementById('radstatLastData').innerHTML = printFancyTime(radstatLastReceivedData);
+
+
+                var radmessageURL = `https://api.weather.gov/products/types/FTM/locations/${radstat.substring(1)}`;
+                $.getJSON(radmessageURL, function(data) {
+
+                    // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
+                    // @ json to string
+                    var stringjson = JSON.stringify(data);
+                    // replace @ with AT
+                    var stringjsonwithoutat = stringjson.replace(/@/g, 'AT');
+                    // re-parse the AT json
+                    var PARSEDstringjsonwithoutat = JSON.parse(stringjsonwithoutat);
+
+                    var emptyJsonString = '{"ATcontext":{"ATversion":"1.1"},"ATgraph":[]}';
+
+                    if (JSON.stringify(PARSEDstringjsonwithoutat) === emptyJsonString) {
+                        console.log("has no message");
+                        document.getElementById('radstatMessage').innerHTML = "No active message for this radar station.";
+                        document.getElementById('radstatMessageID').innerHTML = "None";
+                        document.getElementById('radstatMessageName').innerHTML = "None";
+                        document.getElementById('radstatMessageTime').innerHTML = "None";
+                    } else {
+                        console.log("has message");
+                        var msgURL = PARSEDstringjsonwithoutat.ATgraph[0].ATid;
+                        $.getJSON(msgURL, function(data) {
+                            var radstatMessageIssuanceTime = new Date(data.issuanceTime);
+                            var radstatMessageText = data.productText;
+
+                            // extract the text in between the \n\n sequences -
+                            // that text is all we need
+                            var middle = radstatMessageText.slice(
+                                radstatMessageText.indexOf('\n\n') + 1,
+                                radstatMessageText.lastIndexOf('\n\n'),
+                            );
+
+                            radstatMessageText.replace(/\n/g, '<br>');
+
+                            document.getElementById('radstatMessageID').innerHTML = data.id;
+                            document.getElementById('radstatMessageName').innerHTML = data.productName;
+                            document.getElementById('radstatMessage').innerHTML = radstatMessageText;
+                            document.getElementById('radstatMessageTime').innerHTML = printFancyTime(radstatMessageIssuanceTime);
+
+                            console.log(radstatMessageText);
+                        });
+                    }
+                });
+            });
         })
     }
+
+    function initDialog() {
+        $("#dialog").dialog({
+            modal: true,
+            // https://stackoverflow.com/a/30624445/18758797
+            open: function () {
+                $(this).parent().css({
+                    position: 'relative',
+                    top: 10,
+                });
+                $('.ui-dialog, #dialog').css({
+                    maxHeight: '50vh',
+                    overflow: 'scroll'
+                })
+            }
+        });
+    }
+    $(window).on('resize', function() {
+        $('#dialog').dialog('destroy');
+        initDialog();
+    });
+
+    class messageControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.className = 'mapboxgl-ctrl-fullscreen';
+            this._container.innerHTML = `
+                <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                    <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                        <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
+                            <span class="fa fa-envelope icon-black" id="rpvThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
+                        </button>
+                    </div>
+                </div>`
+            this._container.addEventListener('click', function() {
+                console.log('user wants to show message');
+                initDialog();
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theMessageControl = new messageControl
+    map.addControl(theMessageControl);
 
     var singleStationZoom = 7.5;
     function getDownStation() {
