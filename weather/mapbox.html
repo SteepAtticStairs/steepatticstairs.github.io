@@ -20,6 +20,8 @@
 
     <script src="/weather/nexrad/scripts/js/spin.umd.js"></script>
     <link rel="stylesheet" href="/weather/nexrad/scripts/css/spin.css">
+    <!-- https://github.com/MazeMap/mapbox-gl-fps -->
+    <script src="/weather/nexrad/scripts/js/MapboxFPS.js"></script>
 
     <style>
         body {
@@ -148,9 +150,22 @@
     map.addControl(new mapboxgl.NavigationControl({visualizePitch: true}), "top-left");
     map.addControl(new PitchToggle({ minpitchzoom: 11 }), "top-left");
 
+    map.addControl(new MapboxFPS.FPSControl(), 'bottom-left');
+
     function setGlobe(truefalse) {
         if (truefalse) {
             map.setProjection('globe');
+            map.setZoom(2)
+            var center = map.getCenter();
+            // find antipode (coordiates on the other side of the earth from you)
+            // https://github.com/zeke/antipodes/blob/main/index.js
+            var centerLat = center.lat > 0 ? -center.lat : Math.abs(center.lat);
+            var centerLng = center.lng > 0 ? center.lng - 180 : center.lng + 180;
+            map.setCenter([centerLng, centerLat]);
+            map.flyTo({
+                center: center,
+                essential: true // this animation is considered essential with respect to prefers-reduced-motion
+            });
         } else if (!truefalse) {
             map.setProjection('mercator');
         }
