@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="/weather/nexrad/scripts/css/spin.css">
     <!-- https://github.com/MazeMap/mapbox-gl-fps -->
     <script src="/weather/nexrad/scripts/js/MapboxFPS.js"></script>
+    <!-- https://github.com/smithmicro/mapbox-gl-circle -->
+    <script src='/weather/nexrad/scripts/js/mapbox-gl-circle.min.js'></script>
 
     <style>
         body {
@@ -131,6 +133,7 @@
 	mapboxgl.accessToken = 'pk.eyJ1Ijoic3RlZXBhdHRpY3N0YWlycyIsImEiOiJjbDNvaGFod2EwbXluM2pwZTJiMDYzYjh5In0.J_HeH00ry0tbLmGmTy4z5w';
     const map = new mapboxgl.Map({
         container: 'map',
+        //hash: true,
         style: 'mapbox://styles/mapbox/bright-v9',
         /*
         OTHER MAPBOX STYLES:
@@ -158,13 +161,30 @@
             function showPosition(position) {
                 var posLat = position.coords.latitude;
                 var posLng = position.coords.longitude;
+                var accuracy = position.coords.accuracy;
 
                 var locationMarker = new mapboxgl.Marker({
                     color: "#03d3fc",
                 }).setLngLat([posLng, posLat])
-                    .setPopup(new mapboxgl.Popup().setHTML(`<div><b>Location:</b></div><div>${posLat}<br>${posLng}</div>`))
+                    .setPopup(new mapboxgl.Popup().setHTML(`
+                        <div><b>Location:</b></div>
+                        <div>${posLat}<br>${posLng}</div>
+                        <br>
+                        <div><b>Accuracy:</b></div>
+                        <div>${accuracy} meters</div>
+                    `))
                     .addTo(map)
                 locationMarkerArray.push(locationMarker)
+
+                var myCircle = new MapboxCircle({lat: posLat, lng: posLng}, accuracy, {
+                    editable: false,
+                    fillColor: '#0097fc'
+                }).addTo(map);
+                locationMarkerArray.push(myCircle)
+
+                // you need to change the zoom to initially render the circle
+                map.setZoom(map.getZoom() + 0.01)
+                map.setZoom(map.getZoom() - 0.01)
             }
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
@@ -173,6 +193,7 @@
             for (var w = 0; w < locationMarkerArray.length; w++) {
                 locationMarkerArray[w].remove();
             }
+            locationMarkerArray = [];
         }
     }
     //getLocation();
