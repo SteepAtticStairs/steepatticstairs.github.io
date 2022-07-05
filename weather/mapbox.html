@@ -152,6 +152,31 @@
 
     map.addControl(new MapboxFPS.FPSControl(), 'bottom-left');
 
+    var locationMarkerArray = []
+    function getLocation(trfa) {
+        if (trfa) {
+            function showPosition(position) {
+                var posLat = position.coords.latitude;
+                var posLng = position.coords.longitude;
+
+                var locationMarker = new mapboxgl.Marker({
+                    color: "#03d3fc",
+                }).setLngLat([posLng, posLat])
+                    .setPopup(new mapboxgl.Popup().setHTML(`<div><b>Location:</b></div><div>${posLat}<br>${posLng}</div>`))
+                    .addTo(map)
+                locationMarkerArray.push(locationMarker)
+            }
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+        } else if (!trfa) {
+            for (var w = 0; w < locationMarkerArray.length; w++) {
+                locationMarkerArray[w].remove();
+            }
+        }
+    }
+    //getLocation();
+
     function setGlobe(truefalse) {
         if (truefalse) {
             map.setProjection('globe');
@@ -253,6 +278,40 @@
     }
     var theGlobeControl = new globeControl;
     map.addControl(theGlobeControl, 'top-left');
+
+    class locationControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+            <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                    <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Current Location">
+                        <span class="fa fa-location-crosshairs icon-black" id="locationThing" aria-hidden="true" title="Globe Toggle"></span>
+                    </button>
+                </div>
+            </div>`
+            this._container.addEventListener('click', function() {
+                if (!$('#locationThing').hasClass('icon-selected')) {
+                    $('#locationThing').addClass('icon-selected');
+                    $('#locationThing').removeClass('icon-black');
+                    getLocation(true);
+                } else if ($('#locationThing').hasClass('icon-selected')) {
+                    $('#locationThing').removeClass('icon-selected');
+                    $('#locationThing').addClass('icon-black');
+                    getLocation(false);
+                }
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theLocationControl = new locationControl
+    map.addControl(theLocationControl, 'top-left');
 
     class spinnerControl {
         onAdd(map) {
