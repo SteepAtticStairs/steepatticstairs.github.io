@@ -148,6 +148,14 @@
     map.addControl(new mapboxgl.NavigationControl({visualizePitch: true}), "top-left");
     map.addControl(new PitchToggle({ minpitchzoom: 11 }), "top-left");
 
+    function setGlobe(truefalse) {
+        if (truefalse) {
+            map.setProjection('globe');
+        } else if (!truefalse) {
+            map.setProjection('mercator');
+        }
+    }
+
     // https://github.com/mapbox/mapbox-gl-js/issues/3039#issuecomment-401964567
     function registerControlPosition(map, positionName) {
         if (map._controlPositions[positionName]) {
@@ -196,6 +204,40 @@
     }
     var theInfoControl = new infoControl
     map.addControl(theInfoControl, 'top-center');
+
+    class globeControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Globe Toggle">
+                                <span class="fa fa-globe icon-black" id="globeThing" aria-hidden="true" title="Globe Toggle"></span>
+                            </button>
+                        </div>
+                    </div>`
+            this._container.addEventListener('click', function() {
+                if (!$('#globeThing').hasClass('icon-selected')) {
+                    $('#globeThing').addClass('icon-selected');
+                    $('#globeThing').removeClass('icon-black');
+                    setGlobe(true);
+                } else if ($('#globeThing').hasClass('icon-selected')) {
+                    $('#globeThing').removeClass('icon-selected');
+                    $('#globeThing').addClass('icon-black');
+                    setGlobe(false);
+                }
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theGlobeControl = new globeControl;
+    map.addControl(theGlobeControl, 'top-left');
 
     class spinnerControl {
         onAdd(map) {
@@ -249,7 +291,7 @@
     minutesToSubtract.reverse();
     map.on('load', () => {
         // Set the default atmosphere style
-        //map.setFog({});
+        map.setFog({});
         function addNexradLayer(indexInArray, opacity) {
             map.addLayer({
                 'id': `wms-test-layer${indexInArray}`,
