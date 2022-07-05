@@ -65,6 +65,40 @@
             flex-direction: column;
             justify-content: center;
         }
+
+        .false-anchor {
+            cursor: pointer;
+            text-decoration: underline;
+            color:rgb(0, 0, 238) !important;
+        }
+
+        .ui-dialog {
+            /*
+            * https://stackoverflow.com/a/34299947/18758797
+            */
+            background:
+                /* Shadow covers */
+                linear-gradient(white 30%, rgba(255,255,255,0)),
+                linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+                
+                /* Shadows */
+                radial-gradient(50% 0, farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)),
+                radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+            background:
+                /* Shadow covers */
+                linear-gradient(white 30%, rgba(255,255,255,0)),
+                linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+                
+                /* Shadows */
+                radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+                radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+            background-repeat: no-repeat;
+            background-color: white;
+            background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+            
+            /* Opera doesn't support this in the shorthand */
+            background-attachment: local, local, scroll, scroll;
+        }
     </style>
 </head>
 <body>
@@ -111,7 +145,7 @@
         center: [-98.5606744, 36.8281576],
         //projection: 'globe'
     });
-    map.addControl(new mapboxgl.NavigationControl(), "top-left");
+    map.addControl(new mapboxgl.NavigationControl({visualizePitch: true}), "top-left");
     map.addControl(new PitchToggle({ minpitchzoom: 11 }), "top-left");
 
     // https://github.com/mapbox/mapbox-gl-js/issues/3039#issuecomment-401964567
@@ -170,7 +204,7 @@
             this._container.innerHTML = `
                     <div class="mapboxgl-control-container" style="margin-top: 100%;" id='spinner-parent'>
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Spinner">
                                 <div id='spinner'></div>
                             </button>
                         </div>
@@ -491,8 +525,8 @@
                     <div class="mapboxgl-control-container">
                         <div class="mapboxgl-ctrl-top-right">
                             <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                                <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
-                                    <span class="fa fa-satellite-dish icon-black" id="stationThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
+                                <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Radar Stations" ${btnStyle}>
+                                    <span class="fa fa-satellite-dish icon-black" id="stationThing" aria-hidden="true" title="Show Radar Stations" ${btnIconStyle}></span>
                                 </button>
                             </div>
                         </div>
@@ -529,8 +563,8 @@
                 this._container.innerHTML = `
                     <div class="mapboxgl-control-container" style="margin-top: 100%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
-                                <span class="fa fa-circle-exclamation icon-black" id="alertThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Alert Polygons" ${btnStyle}>
+                                <span class="fa fa-circle-exclamation icon-black" id="alertThing" aria-hidden="true" title="Show Alert Polygons" ${btnIconStyle}></span>
                             </button>
                         </div>
                     </div>`
@@ -573,8 +607,8 @@
                 this._container.innerHTML = `
                     <div class="mapboxgl-control-container" style="margin-top: 100%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
-                                <span class="fa fa-tower-cell icon-black" id="rpvThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Product Viewer" ${btnStyle}>
+                                <span class="fa fa-tower-cell icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
                             </button>
                         </div>
                     </div>`
@@ -643,8 +677,8 @@
                 this._container.innerHTML = `
                     <div class="mapboxgl-control-container" style="margin-top: 100%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
-                                <span class="fa fa-play green-icon" id="pausePlayThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Toggle Radar Animation" ${btnStyle}>
+                                <span class="fa fa-play green-icon" id="pausePlayThing" aria-hidden="true" title="Toggle Radar Animation" ${btnIconStyle}></span>
                             </button>
                         </div>
                     </div>`
@@ -780,7 +814,7 @@
 
                             radstatMessageText.replace(/\n/g, '<br>');
 
-                            document.getElementById('radstatMessageID').innerHTML = data.id;
+                            document.getElementById('radstatMessageID').innerHTML = `${data.id}<br><div class='false-anchor' onclick='window.location.href = "${msgURL}"'>${msgURL}</a>`;
                             document.getElementById('radstatMessageName').innerHTML = data.productName;
                             document.getElementById('radstatMessage').innerHTML = radstatMessageText;
                             document.getElementById('radstatMessageTime').innerHTML = printFancyTime(radstatMessageIssuanceTime);
@@ -791,6 +825,9 @@
                 });
             });
         })
+        if (document.getElementById('stationDisplay').innerHTML == '') {
+            map.addControl(new messageControl);
+        }
     }
 
     function initDialog() {
@@ -801,11 +838,9 @@
                 $(this).parent().css({
                     position: 'relative',
                     top: 10,
-                });
-                $('.ui-dialog, #dialog').css({
                     maxHeight: '50vh',
                     overflow: 'scroll'
-                })
+                });
             }
         });
     }
@@ -822,8 +857,8 @@
             this._container.innerHTML = `
                 <div class="mapboxgl-control-container" style="margin-top: 100%;">
                     <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                        <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Enter fullscreen" ${btnStyle}>
-                            <span class="fa fa-envelope icon-black" id="rpvThing" aria-hidden="true" title="Enter fullscreen" ${btnIconStyle}></span>
+                        <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Status Message" ${btnStyle}>
+                            <span class="fa fa-envelope icon-black" id="rpvThing" aria-hidden="true" title="Radar Status Message" ${btnIconStyle}></span>
                         </button>
                     </div>
                 </div>`
@@ -839,8 +874,6 @@
             this._map = undefined;
         }
     }
-    var theMessageControl = new messageControl
-    map.addControl(theMessageControl);
 
     var singleStationZoom = 7.5;
     function getDownStation() {
