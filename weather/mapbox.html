@@ -309,7 +309,7 @@
                 border: 1px solid black;
                 border-radius: 5px;
                 '>
-                    <b>Tiles: </b><a id='tilesLoadedDisplay'>Done</a>
+                    <div id='tileThing'><b>Tiles: </b><a id='tilesLoadedDisplay'>Done</a></div>
                     <div id='timestampDisplay'></div>
                     <b><div id='stationDisplay' style='cursor: pointer' onclick='setStation()'></div></b>
                     <a href=${phpProxy} id='proxyStatus' style='display: none'>Proxy</a>
@@ -427,6 +427,7 @@
         if (tf) {
             if (document.getElementById('spinner-parent').style.display != 'block') {
                 th = 0;
+                document.getElementById('tileThing').style.display = 'inline';
                 map.on('data', () => {
                     //console.log('A thingy event occurred. ' + th);
                     document.getElementById('tilesLoadedDisplay').innerHTML = th;
@@ -441,6 +442,7 @@
 
             th = 0;
             document.getElementById('tilesLoadedDisplay').innerHTML = 'Done';
+            document.getElementById('tileThing').style.display = 'none';
             map.off('data');
         }
     }
