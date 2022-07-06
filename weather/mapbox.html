@@ -674,6 +674,31 @@
             })
         }
 
+        function beforeTileInit(layerName) {
+            for (var t = 0; t < 11; t++) {
+                if (map.getLayer(`wms-test-layer${t}`)) {
+                    map.removeLayer(`wms-test-layer${t}`)
+                }
+                if (map.getSource(`wms-test-layer${t}`)) {
+                    map.removeSource(`wms-test-layer${t}`)
+                }
+            }
+
+            if (map.getLayer(layerName)) {
+                map.removeLayer(layerName)
+            }
+            if (map.getSource(layerName)) {
+                map.removeSource(layerName)
+            }
+        }
+        function afterTileInit() {
+            if (document.getElementById('isDown').innerHTML != 'down') {
+                initializeNexradLayer();
+                console.log('not down after tile layer')
+            }
+            setLayerOrder();
+        }
+
         class lightningControl {
             onAdd(map) {
                 this._map = map;
@@ -692,22 +717,8 @@
                     if (!$('#lightningThing').hasClass('icon-selected')) {
                         $('#lightningThing').addClass('icon-selected');
                         $('#lightningThing').removeClass('icon-black');
-    
-                        for (var t = 0; t < 11; t++) {
-                            if (map.getLayer(`wms-test-layer${t}`)) {
-                                map.removeLayer(`wms-test-layer${t}`)
-                            }
-                            if (map.getSource(`wms-test-layer${t}`)) {
-                                map.removeSource(`wms-test-layer${t}`)
-                            }
-                        }
-    
-                        if (map.getLayer('lightning')) {
-                            map.removeLayer('lightning')
-                        }
-                        if (map.getSource('lightning')) {
-                            map.removeSource('lightning')
-                        }
+
+                        beforeTileInit('lightning');
                         map.addLayer({
                             id: 'lightning',
                             type: "raster",
@@ -719,15 +730,11 @@
                                 tileSize: 256
                             },
                         });
-                        if (document.getElementById('isDown').innerHTML != 'down') {
-                            initializeNexradLayer();
-                            console.log('not down after lightning')
-                        }
-                        map.moveLayer('lightning');
+                        afterTileInit();
                     } else if ($('#lightningThing').hasClass('icon-selected')) {
                         $('#lightningThing').removeClass('icon-selected');
                         $('#lightningThing').addClass('icon-black');
-    
+
                         if (map.getLayer('lightning')) {
                             map.removeLayer('lightning')
                         }
@@ -746,6 +753,70 @@
         }
         var theLightningControl = new lightningControl
         map.addControl(theLightningControl)
+
+        class cloudControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Lightning Layer" ${btnStyle}>
+                                <span class="fa fa-cloud icon-black" id="cloudThing" aria-hidden="true" title="Lightning Layer" ${btnIconStyle}></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    if (!$('#cloudThing').hasClass('icon-selected')) {
+                        $('#cloudThing').addClass('icon-selected');
+                        $('#cloudThing').removeClass('icon-black');
+
+                        $.getJSON('https://api.rainviewer.com/public/weather-maps.json', function(data) {
+                            var lengthofsatellitearray = Object.keys(data.satellite.infrared).length
+                            //console.log(lengthofsatellitearray)
+                            var satTimestamp = data.satellite.infrared[lengthofsatellitearray - 1].time
+                            console.log(satTimestamp)
+                            console.log(printFancyTime(new Date(satTimestamp * 1000)))
+                            var hashForCurSat = data.satellite.infrared[lengthofsatellitearray - 1].path.toString().slice(14)
+                            console.log(hashForCurSat)
+
+                            beforeTileInit('clouds');
+                            map.addLayer({
+                                id: 'clouds',
+                                type: "raster",
+                                source: {
+                                    type: "raster",
+                                    tiles: [
+                                    `https://tilecache.rainviewer.com/v2/satellite/${hashForCurSat}/512/{z}/{x}/{y}/0/0_0.png`
+                                    ],
+                                    tileSize: 256
+                                },
+                            });
+                            afterTileInit();
+                        })
+                    } else if ($('#cloudThing').hasClass('icon-selected')) {
+                        $('#cloudThing').removeClass('icon-selected');
+                        $('#cloudThing').addClass('icon-black');
+
+                        if (map.getLayer('clouds')) {
+                            map.removeLayer('clouds')
+                        }
+                        if (map.getSource('clouds')) {
+                            map.removeSource('clouds')
+                        }
+                    }
+                })
+                return this._container;
+            }
+    
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theCloudControl = new cloudControl
+        map.addControl(theCloudControl)
 
         // Control implemented as ES6 class
         class stationControl {
@@ -1127,6 +1198,16 @@
         var curStationDiv = document.getElementById('stationDisplay');
         console.log(curStationDiv.innerHTML);
         setFromStation(curStationDiv.innerHTML, singleStationZoom);
+    }
+
+    function setLayerOrder() {
+        for (var t = 0; t < 11; t++) {
+            if (map.getLayer(`wms-test-layer${t}`)) {
+                map.moveLayer(`wms-test-layer${t}`);
+            }
+        }
+        map.moveLayer('clouds');
+        map.moveLayer('lightning');
     }
 </script>
 
