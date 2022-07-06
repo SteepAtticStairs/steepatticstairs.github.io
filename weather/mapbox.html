@@ -443,6 +443,7 @@
     var currentTime = new Date();
     document.getElementById('timestampDisplay').innerHTML = printFancyTime(currentTime)
     var nexradTimestamps = ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m']
+    nexradTimestamps.reverse();
     var minutesToSubtract = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
     minutesToSubtract.reverse();
     map.on('load', () => {
