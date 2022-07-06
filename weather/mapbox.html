@@ -505,10 +505,13 @@
             if (shouldProxy == undefined) {
                 shouldProxy = '';
             }
-            for (var t = 0; t < nexradTimestamps.length; t++) {
-                addNexradLayer(t, 0, shouldProxy);
+            for (var t = 10; t > -1; t--) {
+                if (t == 10) {
+                    addNexradLayer(t, 1, shouldProxy);
+                } else {
+                    addNexradLayer(t, 0, shouldProxy);
+                }
             }
-            setNexradLayerOpacity(10, 1)
             document.getElementById('timestampSlider').addEventListener("input", function() {
                 setNexradLayerOpacity(this.value, 1)
             });
