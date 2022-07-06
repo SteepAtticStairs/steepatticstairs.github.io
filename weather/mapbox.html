@@ -596,9 +596,9 @@
                             var alertDescription = e.features[0].properties.description;
                             var alertInstruction = e.features[0].properties.instruction;
 
-                            var alertID = e.features[0].id;
-                            var alertWMOidenifier = e.features[0].properties.parameters.WMOidentifier;
-                            var alertVTEC = e.features[0].properties.parameters.VTEC;
+                            var alertID = e.features[0].properties.id;
+                            var alertWMOidenifier = JSON.parse(e.features[0].properties.parameters).WMOidentifier[0];
+                            var alertVTEC = JSON.parse(e.features[0].properties.parameters).VTEC[0];
                             var alertNWSheadline = "No headline for this alert."
 
                             if (alertInstruction == null) {
@@ -1204,7 +1204,7 @@
             open: function () {
                 $(this).parent().css({
                     position: 'relative',
-                    top: 10,
+                    top: -100,
                     maxHeight: '50vh',
                     overflow: 'scroll'
                 });
