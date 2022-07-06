@@ -123,7 +123,7 @@
     <div style="white-space: pre-wrap;"><b>Message: </b><ul><a id="radstatMessage"></a></ul></div>
 </div>
 
-<div id="isDown" style="display: none"></div>
+<div id="isDown" style="display: none">down</div>
 
 <div id="map"></div>
 
@@ -133,12 +133,13 @@
     }
 
     function testISUDown(ms) {
+        // https://mesonet.agron.iastate.edu/images/rss.gif
         $.get('https://mesonet.agron.iastate.edu/json/example.php', function(data) {
             console.log(data)
             document.getElementById('isDown').innerHTML = data;
         })
         setTimeout((function() {
-            if (document.getElementById('isDown').innerHTML == '') {
+            if (document.getElementById('isDown').innerHTML == 'down') {
                 document.getElementById('isDown').innerHTML = 'down'
                 console.log('down')
             } else if (document.getElementById('isDown').innerHTML != '') {
@@ -718,7 +719,7 @@
                                 tileSize: 256
                             },
                         });
-                        if (document.getElementById('isDown').innerHTML != '') {
+                        if (document.getElementById('isDown').innerHTML != 'down') {
                             initializeNexradLayer();
                             console.log('not down after lightning')
                         }
