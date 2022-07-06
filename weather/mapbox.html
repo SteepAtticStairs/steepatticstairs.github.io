@@ -309,6 +309,7 @@
                 border: 1px solid black;
                 border-radius: 5px;
                 '>
+                    <b>Tiles: </b><a id='tilesLoadedDisplay'>Done</a>
                     <div id='timestampDisplay'></div>
                     <b><div id='stationDisplay' style='cursor: pointer' onclick='setStation()'></div></b>
                     <a href=${phpProxy} id='proxyStatus' style='display: none'>Proxy</a>
@@ -421,13 +422,26 @@
     var theSpinnerControl = new spinnerControl
     var spinner = new Spin.Spinner({scale: 0.5});
     map.addControl(theSpinnerControl, 'top-left');
+    var th;
     function toggleSpinner(tf) {
         if (tf) {
+            if (document.getElementById('spinner-parent').style.display != 'block') {
+                th = 0;
+                map.on('data', () => {
+                    //console.log('A thingy event occurred. ' + th);
+                    document.getElementById('tilesLoadedDisplay').innerHTML = th;
+                    th++;
+                });
+            }
             document.getElementById('spinner-parent').style.display = 'block'
             spinner.spin(document.getElementById('spinner'));
         } else if (!tf) {
             spinner.stop();
             document.getElementById('spinner-parent').style.display = 'none'
+
+            th = 0;
+            document.getElementById('tilesLoadedDisplay').innerHTML = 'Done';
+            map.off('data');
         }
     }
 
