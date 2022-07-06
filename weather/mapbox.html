@@ -123,12 +123,30 @@
     <div style="white-space: pre-wrap;"><b>Message: </b><ul><a id="radstatMessage"></a></ul></div>
 </div>
 
+<div id="isDown" style="display: none"></div>
+
 <div id="map"></div>
 
 <script>
     function printFancyTime(dateObj) {
         return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
     }
+
+    function testISUDown(ms) {
+        $.get('https://mesonet.agron.iastate.edu/json/example.php', function(data) {
+            console.log(data)
+            document.getElementById('isDown').innerHTML = data;
+        })
+        setTimeout((function() {
+            if (document.getElementById('isDown').innerHTML == '') {
+                document.getElementById('isDown').innerHTML = 'down'
+                console.log('down')
+            } else if (document.getElementById('isDown').innerHTML != '') {
+                console.log('up')
+            }
+        }), ms)
+    }
+    testISUDown(3000);
 
 	mapboxgl.accessToken = 'pk.eyJ1Ijoic3RlZXBhdHRpY3N0YWlycyIsImEiOiJjbDNvaGFod2EwbXluM2pwZTJiMDYzYjh5In0.J_HeH00ry0tbLmGmTy4z5w';
     const map = new mapboxgl.Map({
@@ -409,27 +427,30 @@
                 }
             });
         }
-        for (var t = 0; t < nexradTimestamps.length; t++) {
-            addNexradLayer(t, 0);
-        }
-        function setNexradLayerOpacity(layerum, theopacity) {
-            for (var r = 0; r < nexradTimestamps.length; r++) {
+        function initializeNexradLayer() {
+            for (var t = 0; t < nexradTimestamps.length; t++) {
+                addNexradLayer(t, 0);
+            }
+            function setNexradLayerOpacity(layerum, theopacity) {
+                for (var r = 0; r < nexradTimestamps.length; r++) {
+                    map.setPaintProperty(
+                        `wms-test-layer${r}`,
+                        'raster-opacity',
+                        0
+                    );
+                }
                 map.setPaintProperty(
-                    `wms-test-layer${r}`,
+                    `wms-test-layer${layerum}`,
                     'raster-opacity',
-                    0
+                    theopacity
                 );
             }
-            map.setPaintProperty(
-                `wms-test-layer${layerum}`,
-                'raster-opacity',
-                theopacity
-            );
+            setNexradLayerOpacity(10, 1)
+            document.getElementById('timestampSlider').addEventListener("input", function() {
+                setNexradLayerOpacity(this.value, 1)
+            });
         }
-        setNexradLayerOpacity(10, 1)
-        document.getElementById('timestampSlider').addEventListener("input", function() {
-            setNexradLayerOpacity(this.value, 1)
-        });
+        initializeNexradLayer();
         /* map.addSource('wms-test-source', {
             'type': 'raster',
             // use the tiles option to specify a WMS tile source URL
@@ -651,6 +672,79 @@
                 })
             })
         }
+
+        class lightningControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Lightning Layer" ${btnStyle}>
+                                <span class="fa fa-bolt icon-black" id="lightningThing" aria-hidden="true" title="Lightning Layer" ${btnIconStyle}></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    console.log('lightning')
+                    if (!$('#lightningThing').hasClass('icon-selected')) {
+                        $('#lightningThing').addClass('icon-selected');
+                        $('#lightningThing').removeClass('icon-black');
+    
+                        for (var t = 0; t < 11; t++) {
+                            if (map.getLayer(`wms-test-layer${t}`)) {
+                                map.removeLayer(`wms-test-layer${t}`)
+                            }
+                            if (map.getSource(`wms-test-layer${t}`)) {
+                                map.removeSource(`wms-test-layer${t}`)
+                            }
+                        }
+    
+                        if (map.getLayer('lightning')) {
+                            map.removeLayer('lightning')
+                        }
+                        if (map.getSource('lightning')) {
+                            map.removeSource('lightning')
+                        }
+                        map.addLayer({
+                            id: 'lightning',
+                            type: "raster",
+                            source: {
+                                type: "raster",
+                                tiles: [
+                                    'https://php-cors-proxy.herokuapp.com/?https://tiles.lightningmaps.org/?x={x}&y={y}&z={z}&s=256'
+                                ],
+                                tileSize: 256
+                            },
+                        });
+                        if (document.getElementById('isDown').innerHTML != '') {
+                            initializeNexradLayer();
+                            console.log('not down after lightning')
+                        }
+                        map.moveLayer('lightning');
+                    } else if ($('#lightningThing').hasClass('icon-selected')) {
+                        $('#lightningThing').removeClass('icon-selected');
+                        $('#lightningThing').addClass('icon-black');
+    
+                        if (map.getLayer('lightning')) {
+                            map.removeLayer('lightning')
+                        }
+                        if (map.getSource('lightning')) {
+                            map.removeSource('lightning')
+                        }
+                    }
+                })
+                return this._container;
+            }
+    
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theLightningControl = new lightningControl
+        map.addControl(theLightningControl)
 
         // Control implemented as ES6 class
         class stationControl {
