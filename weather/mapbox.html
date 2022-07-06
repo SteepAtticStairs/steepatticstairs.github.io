@@ -427,23 +427,23 @@
                 }
             });
         }
+        function setNexradLayerOpacity(layerum, theopacity) {
+            for (var r = 0; r < nexradTimestamps.length; r++) {
+                map.setPaintProperty(
+                    `wms-test-layer${r}`,
+                    'raster-opacity',
+                    0
+                );
+            }
+            map.setPaintProperty(
+                `wms-test-layer${layerum}`,
+                'raster-opacity',
+                theopacity
+            );
+        }
         function initializeNexradLayer() {
             for (var t = 0; t < nexradTimestamps.length; t++) {
                 addNexradLayer(t, 0);
-            }
-            function setNexradLayerOpacity(layerum, theopacity) {
-                for (var r = 0; r < nexradTimestamps.length; r++) {
-                    map.setPaintProperty(
-                        `wms-test-layer${r}`,
-                        'raster-opacity',
-                        0
-                    );
-                }
-                map.setPaintProperty(
-                    `wms-test-layer${layerum}`,
-                    'raster-opacity',
-                    theopacity
-                );
             }
             setNexradLayerOpacity(10, 1)
             document.getElementById('timestampSlider').addEventListener("input", function() {
