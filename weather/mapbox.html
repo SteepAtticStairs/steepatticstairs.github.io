@@ -148,6 +148,10 @@
 <script>
     var phpProxy = 'https://php-cors-proxy.herokuapp.com/?'
 
+    var parser = document.createElement('a');
+    parser.href = window.location.href;
+    console.log(parser.hash);
+
     function printFancyTime(dateObj) {
         return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
     }
@@ -163,18 +167,22 @@
                 document.getElementById('isDown').innerHTML = 'down'
                 console.log('down')
 
-                $("#proxyDialog").dialog({
-                    modal: true,
-                    // https://stackoverflow.com/a/30624445/18758797
-                    open: function () {
-                        $(this).parent().css({
-                            position: 'relative',
-                            top: -200,
-                            maxHeight: '70vh',
-                            overflow: 'scroll'
-                        });
-                    }
-                });
+                if (parser.hash == "#proxy") {
+                    $('#proxyButton').click();
+                } else if (parser.hash != "#proxy") {
+                    $("#proxyDialog").dialog({
+                        modal: true,
+                        // https://stackoverflow.com/a/30624445/18758797
+                        open: function () {
+                            $(this).parent().css({
+                                position: 'relative',
+                                top: -200,
+                                maxHeight: '70vh',
+                                overflow: 'scroll'
+                            });
+                        }
+                    });
+                }
             } else if (document.getElementById('isDown').innerHTML != '') {
                 console.log('up')
             }
@@ -490,6 +498,7 @@
         }
         initializeNexradLayer();
         document.getElementById('proxyButton').addEventListener('click', function() {
+            console.log('clicked proxy button')
             for (var t = 0; t < 11; t++) {
                 if (map.getLayer(`wms-test-layer${t}`)) {
                     map.removeLayer(`wms-test-layer${t}`)
@@ -500,8 +509,8 @@
             }
             initializeNexradLayer(phpProxy);
             document.getElementById('isDown').innerHTML = 'proxy'
-            $("#proxyDialog").dialog('destroy');
             document.getElementById('proxyStatus').style.display = 'inline';
+            $("#proxyDialog").dialog('destroy');
         });
         /* map.addSource('wms-test-source', {
             'type': 'raster',
