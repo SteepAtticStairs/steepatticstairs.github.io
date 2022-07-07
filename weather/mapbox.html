@@ -708,19 +708,23 @@
                             map.removeSource('rpv')
                         }*/
                         beforeTileInit('radar-layer')
-                        setStaticImage(currentStation, "N0S", 0);
+                        //setStaticImage(currentStation, "N0S", 0);
                         //afterTileInit()
-                        /*map.addLayer({
-                            id: 'rpv',
+
+                        //var st = 'klwx';
+                        //var pr = 'bref_raw';
+                        map.addLayer({
+                            id: 'radar-layer',
                             type: "raster",
                             source: {
                                 type: "raster",
                                 tiles: [
-                                    `${phpProxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::${currentStation}-N0B-0/{z}/{x}/{y}.png`
+                                    `${phpProxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::${currentStation}-N0S-0/{z}/{x}/{y}.png`
+                                    //`https://opengeo.ncep.noaa.gov/geoserver/${st}/${st}_${pr}/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=${st}_${pr}&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}`
                                 ],
                                 tileSize: 256
                             },
-                        });*/
+                        });
                     } else if ($('#rpvThing').hasClass('icon-selected')) {
                         $('#rpvThing').removeClass('icon-selected');
                         $('#rpvThing').addClass('icon-black');
