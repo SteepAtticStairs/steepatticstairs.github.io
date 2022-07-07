@@ -108,6 +108,7 @@
 <body>
 
 <input id="timestampSlider" type="range" min="0" max="10" step="1" value="0" style="display: none">
+<input id="slider" type="range" min="1" max="10" step="1" value="10" style="display: none">
 
 <div id="dialog" style="display: none">
     <div><b>Radar Status: <a id="radstat"></a></b></div>
@@ -311,7 +312,7 @@
                 border: 1px solid black;
                 border-radius: 5px;
                 '>
-                    <div id='tileThing'><b>Tiles: </b><a id='tilesLoadedDisplay'>Done</a></div>
+                    <div id='masterTileThing'><div id='tileThing'><b>Tiles: </b><a id='tilesLoadedDisplay'>Done</a></div></div>
                     <div id='timestampDisplay'></div>
                     <b><div id='stationDisplay' style='cursor: pointer' onclick='setStation()'></div></b>
                     <a href=${phpProxy} id='proxyStatus' style='display: none'>Proxy</a>
@@ -468,6 +469,15 @@
         // Set the default atmosphere style
         map.setFog({});
 
+        /*map.addSource('mapbox-dem', {
+            'type': 'raster-dem',
+            'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+            'tileSize': 512,
+            'maxzoom': 14
+        });
+        // add the DEM source as a terrain layer with exaggerated height
+        map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 15 });*/
+
         function setImageFromWld(worldFileArray, imageUrl) {
             // https://gis.stackexchange.com/a/288308/206737
             function worldFileToBoundingBox(pixelSizeX, pixelSizeY, rotationX, rotaionY, centerCoordX, centerCoordY, imagewidth, imageHeight) {
@@ -533,9 +543,11 @@
                     'raster-resampling': 'nearest'
                 }
             });
+            console.log('added radar-layer')
         }
 
-        function setStaticImage(stati, prod, ind) {
+        var he = []
+        function setStaticImage(stati, prod, ind, shouldDisplay) {
             var statio = stati;
             var produ = prod;
             var curYear = currentTime.getFullYear();
@@ -563,17 +575,22 @@
                 var amountToSubtract = 2 + (ind * 2);
                 var fileName = htmlJson.children[2].children[0].children[amountOfFiles - amountToSubtract].children[1].textContent;
                 fileName = fileName.slice(0, -4);
+                he.push(`${currentURL}${fileName}.png`)
 
-                var imgUrl = `${phpProxy}${currentURL}${fileName}.png`;
-                var wldUrl = `${phpProxy}${currentURL}${fileName}.wld`;
-                $.get(wldUrl, function(data) {
-                    // [0.010674, 0.0, 0.0, -0.010674, -82.823878, 44.312878]
-                    var wldArray = data.split(/\r?\n/);
-                    setImageFromWld(wldArray, phpProxy + imgUrl);
-                });
+                if (shouldDisplay) {
+                    var imgUrl = `${phpProxy}${currentURL}${fileName}.png`;
+                    var wldUrl = `${phpProxy}${currentURL}${fileName}.wld`;
+                    $.get(wldUrl, function(data) {
+                        // [0.010674, 0.0, 0.0, -0.010674, -82.823878, 44.312878]
+                        var wldArray = data.split(/\r?\n/);
+                        setImageFromWld(wldArray, phpProxy + imgUrl);
+                    });
+                } else if (!shouldDisplay) {
+                    return fileName;
+                }
             })
         }
-        //setStaticImage("LWX", "N0B", 0);
+        //setStaticImage("LWX", "N0B", 0. true);
 
         function isuTimestamp(dateOb) {
             return dateOb.getFullYear() + 
@@ -1132,7 +1149,36 @@
                             map.removeSource('rpv')
                         }*/
                         beforeTileInit('radar-layer')
-                        setStaticImage(currentStation, "N0S", 0);
+                        for (var s = 0; s < 10; s++) {
+                            setStaticImage(currentStation, "N0S", s, false)
+                        }
+                        setStaticImage(currentStation, "N0S", 0, true)
+                        document.getElementsByClassName('pausePlayBtn')[0].addEventListener('click', function() {
+                            he.reverse();
+                            document.getElementById('masterTileThing').style.display = 'none';
+                            var i = 0
+                            function myLoop() {
+                                var loop = setTimeout(function() {
+                                    i++;
+                                    map.getSource('radar-layer').updateImage({url: he[i]});
+                                    var c = he[i];
+                                    //document.getElementById('timestampDisplay').innerHTML = c.substring(122)
+                                    //console.log(he[i].length)
+                                    if (!$('#pausePlayThing').hasClass('fa-play')) {
+                                        if (i < he.length) {
+                                            myLoop();
+                                        } else if (i == he.length) {
+                                            i = 0;
+                                            myLoop();
+                                        }
+                                    } else {
+                                        clearTimeout(loop)
+                                        document.getElementById('masterTileThing').style.display = 'inline';
+                                    }
+                                }, 700)
+                            }
+                            myLoop();
+                        })
                         //afterTileInit()
                         /*map.addLayer({
                             id: 'rpv',
@@ -1183,6 +1229,7 @@
                             </button>
                         </div>
                     </div>`
+                $(this._container).addClass('pausePlayBtn')
                 this._container.addEventListener('click', function() {
                     if ($('#pausePlayThing').hasClass('fa-play')) {
                         $('#pausePlayThing').removeClass('fa-play');
