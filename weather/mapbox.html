@@ -190,7 +190,6 @@
             }
         }), ms)
     }
-    testISUDown(2000);
 
 	mapboxgl.accessToken = 'pk.eyJ1Ijoic3RlZXBhdHRpY3N0YWlycyIsImEiOiJjbDNvaGFod2EwbXluM2pwZTJiMDYzYjh5In0.J_HeH00ry0tbLmGmTy4z5w';
     const map = new mapboxgl.Map({
@@ -642,8 +641,8 @@
                 this._container.innerHTML = `
                 <div class="mapboxgl-control-container" style="margin-top: 250%;">
                     <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                        <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Current Location" ${btnStyle}>
-                            <span class="fa fa-cloud-showers-heavy icon-black" id="mainRadarThing" aria-hidden="true" title="Globe Toggle" ${btnIconStyle}></span>
+                        <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Main Radar Mosaic" ${btnStyle}>
+                            <span class="fa fa-tower-cell icon-black" id="mainRadarThing" aria-hidden="true" title="Main Radar Mosaic" ${btnIconStyle}></span>
                         </button>
                     </div>
                 </div>`
@@ -651,6 +650,7 @@
                     if (!$('#mainRadarThing').hasClass('icon-selected')) {
                         $('#mainRadarThing').addClass('icon-selected');
                         $('#mainRadarThing').removeClass('icon-black');
+                        testISUDown(2000);
                         initializeNexradLayer();
                     } else if ($('#mainRadarThing').hasClass('icon-selected')) {
                         $('#mainRadarThing').removeClass('icon-selected');
@@ -685,7 +685,7 @@
                     <div class="mapboxgl-control-container" style="margin-top: 100%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
                             <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Product Viewer" ${btnStyle}>
-                                <span class="fa fa-hurricane icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
+                                <span class="fa fa-cloud-showers-heavy icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
                             </button>
                         </div>
                     </div>`
@@ -1053,7 +1053,7 @@
                 })
                 return this._container;
             }
-    
+
             onRemove() {
                 this._container.parentNode.removeChild(this._container);
                 this._map = undefined;
@@ -1070,8 +1070,8 @@
                 this._container.innerHTML = `
                     <div class="mapboxgl-control-container" style="margin-top: 100%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Lightning Layer" ${btnStyle}>
-                                <span class="fa fa-cloud icon-black" id="cloudThing" aria-hidden="true" title="Lightning Layer" ${btnIconStyle}></span>
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Cloud Layer" ${btnStyle}>
+                                <span class="fa fa-cloud icon-black" id="cloudThing" aria-hidden="true" title="Cloud Layer" ${btnIconStyle}></span>
                             </button>
                         </div>
                     </div>`
