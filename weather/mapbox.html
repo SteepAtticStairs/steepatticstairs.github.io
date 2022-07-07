@@ -635,7 +635,112 @@
                 setNexradLayerOpacity(this.value, 1)
             });
         }
-        initializeNexradLayer();
+        class mainRadarControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.innerHTML = `
+                <div class="mapboxgl-control-container" style="margin-top: 250%;">
+                    <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                        <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Current Location" ${btnStyle}>
+                            <span class="fa fa-cloud-showers-heavy icon-black" id="mainRadarThing" aria-hidden="true" title="Globe Toggle" ${btnIconStyle}></span>
+                        </button>
+                    </div>
+                </div>`
+                this._container.addEventListener('click', function() {
+                    if (!$('#mainRadarThing').hasClass('icon-selected')) {
+                        $('#mainRadarThing').addClass('icon-selected');
+                        $('#mainRadarThing').removeClass('icon-black');
+                        initializeNexradLayer();
+                    } else if ($('#mainRadarThing').hasClass('icon-selected')) {
+                        $('#mainRadarThing').removeClass('icon-selected');
+                        $('#mainRadarThing').addClass('icon-black');
+                        for (var t = 0; t < 11; t++) {
+                            if (map.getLayer(`wms-test-layer${t}`)) {
+                                map.removeLayer(`wms-test-layer${t}`)
+                            }
+                            if (map.getSource(`wms-test-layer${t}`)) {
+                                map.removeSource(`wms-test-layer${t}`)
+                            }
+                        }
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theMainRadarControl = new mainRadarControl
+        map.addControl(theMainRadarControl, 'top-right');
+
+        class rpvControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Product Viewer" ${btnStyle}>
+                                <span class="fa fa-hurricane icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    console.log('rpv')
+                    if (!$('#rpvThing').hasClass('icon-selected')) {
+                        $('#rpvThing').addClass('icon-selected');
+                        $('#rpvThing').removeClass('icon-black');
+
+                        var currentStation = document.getElementById('stationDisplay').innerHTML.toUpperCase().substring(1)
+                        /*if (map.getLayer('rpv')) {
+                            map.removeLayer('rpv')
+                        }
+                        if (map.getSource('rpv')) {
+                            map.removeSource('rpv')
+                        }*/
+                        beforeTileInit('radar-layer')
+                        setStaticImage(currentStation, "N0S", 0);
+                        //afterTileInit()
+                        /*map.addLayer({
+                            id: 'rpv',
+                            type: "raster",
+                            source: {
+                                type: "raster",
+                                tiles: [
+                                    `${phpProxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::${currentStation}-N0B-0/{z}/{x}/{y}.png`
+                                ],
+                                tileSize: 256
+                            },
+                        });*/
+                    } else if ($('#rpvThing').hasClass('icon-selected')) {
+                        $('#rpvThing').removeClass('icon-selected');
+                        $('#rpvThing').addClass('icon-black');
+
+                        if (map.getLayer('radar-layer')) {
+                            map.removeLayer('radar-layer')
+                        }
+                        if (map.getSource('radar-layer')) {
+                            map.removeSource('radar-layer')
+                        }
+                        afterTileInit()
+                        //setNexradLayerOpacity(10, 1)
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theRPVControl = new rpvControl
+        map.addControl(theRPVControl)
+
         document.getElementById('proxyButton').addEventListener('click', function() {
             console.log('clicked proxy button')
             for (var t = 0; t < 11; t++) {
@@ -908,7 +1013,7 @@
                 this._container = document.createElement('div');
                 this._container.className = 'mapboxgl-ctrl-fullscreen';
                 this._container.innerHTML = `
-                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                    <div class="mapboxgl-control-container" style="margin-top: 500%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
                             <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Lightning Layer" ${btnStyle}>
                                 <span class="fa fa-bolt icon-black" id="lightningThing" aria-hidden="true" title="Lightning Layer" ${btnIconStyle}></span>
@@ -1059,7 +1164,7 @@
             }
         }
         var theStationControl = new stationControl
-        map.addControl(theStationControl)
+        map.addControl(theStationControl, 'top-right')
 
         class alertControl {
             onAdd(map) {
@@ -1067,11 +1172,13 @@
                 this._container = document.createElement('div');
                 this._container.className = 'mapboxgl-ctrl-fullscreen';
                 this._container.innerHTML = `
-                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
-                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Alert Polygons" ${btnStyle}>
-                                <span class="fa fa-circle-exclamation icon-black" id="alertThing" aria-hidden="true" title="Show Alert Polygons" ${btnIconStyle}></span>
-                            </button>
+                    <div class="mapboxgl-control-container">
+                        <div class="mapboxgl-ctrl-top-right" style="margin-top: 100%;">
+                            <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                                <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Alert Polygons" ${btnStyle}>
+                                    <span class="fa fa-circle-exclamation icon-black" id="alertThing" aria-hidden="true" title="Show Alert Polygons" ${btnIconStyle}></span>
+                                </button>
+                            </div>
                         </div>
                     </div>`
                 this._container.addEventListener('click', function() {
@@ -1105,78 +1212,13 @@
         var theAlertControl = new alertControl
         map.addControl(theAlertControl)
 
-        class rpvControl {
-            onAdd(map) {
-                this._map = map;
-                this._container = document.createElement('div');
-                this._container.className = 'mapboxgl-ctrl-fullscreen';
-                this._container.innerHTML = `
-                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
-                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
-                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Product Viewer" ${btnStyle}>
-                                <span class="fa fa-hurricane icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
-                            </button>
-                        </div>
-                    </div>`
-                this._container.addEventListener('click', function() {
-                    console.log('rpv')
-                    if (!$('#rpvThing').hasClass('icon-selected')) {
-                        $('#rpvThing').addClass('icon-selected');
-                        $('#rpvThing').removeClass('icon-black');
-
-                        var currentStation = document.getElementById('stationDisplay').innerHTML.toUpperCase().substring(1)
-                        /*if (map.getLayer('rpv')) {
-                            map.removeLayer('rpv')
-                        }
-                        if (map.getSource('rpv')) {
-                            map.removeSource('rpv')
-                        }*/
-                        beforeTileInit('radar-layer')
-                        setStaticImage(currentStation, "N0S", 0);
-                        //afterTileInit()
-                        /*map.addLayer({
-                            id: 'rpv',
-                            type: "raster",
-                            source: {
-                                type: "raster",
-                                tiles: [
-                                    `${phpProxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::${currentStation}-N0B-0/{z}/{x}/{y}.png`
-                                ],
-                                tileSize: 256
-                            },
-                        });*/
-                    } else if ($('#rpvThing').hasClass('icon-selected')) {
-                        $('#rpvThing').removeClass('icon-selected');
-                        $('#rpvThing').addClass('icon-black');
-
-                        if (map.getLayer('radar-layer')) {
-                            map.removeLayer('radar-layer')
-                        }
-                        if (map.getSource('radar-layer')) {
-                            map.removeSource('radar-layer')
-                        }
-                        afterTileInit()
-                        setNexradLayerOpacity(10, 1)
-                    }
-                })
-                return this._container;
-            }
-
-            onRemove() {
-                this._container.parentNode.removeChild(this._container);
-                this._map = undefined;
-            }
-        }
-        var theRPVControl = new rpvControl
-        map.addControl(theRPVControl)
-
         class pausePlayControl {
             onAdd(map) {
                 this._map = map;
                 this._container = document.createElement('div');
                 this._container.className = 'mapboxgl-ctrl-fullscreen';
                 this._container.innerHTML = `
-                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                    <div class="mapboxgl-control-container" style="margin-top: 750%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
                             <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Toggle Radar Animation" ${btnStyle}>
                                 <span class="fa fa-play green-icon" id="pausePlayThing" aria-hidden="true" title="Toggle Radar Animation" ${btnIconStyle}></span>
@@ -1359,7 +1401,7 @@
                 <div class="mapboxgl-control-container" style="margin-top: 100%;">
                     <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
                         <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Status Message" ${btnStyle}>
-                            <span class="fa fa-envelope icon-black" id="rpvThing" aria-hidden="true" title="Radar Status Message" ${btnIconStyle}></span>
+                            <span class="fa fa-envelope icon-black" id="messageThing" aria-hidden="true" title="Radar Status Message" ${btnIconStyle}></span>
                         </button>
                     </div>
                 </div>`
