@@ -535,13 +535,45 @@
             });
         }
 
-        /*var imgUrl = 'https://mesonet.agron.iastate.edu/archive/data/2022/07/07/GIS/ridge/LWX/N0B/LWX_N0B_202207070313.png';
-        var wldUrl = 'https://mesonet.agron.iastate.edu/archive/data/2022/07/07/GIS/ridge/LWX/N0B/LWX_N0B_202207070313.wld';
-        $.get(wldUrl, function(data) {
-            // [0.010674, 0.0, 0.0, -0.010674, -82.823878, 44.312878]
-            var wldArray = data.split(/\r?\n/);
-            setImageFromWld(wldArray, imgUrl)
-        });*/
+        function setStaticImage(stati, prod, ind) {
+            var statio = stati;
+            var produ = prod;
+            var curYear = currentTime.getFullYear();
+            var curMonth = ("0" + (currentTime.getUTCMonth() + 1)).slice(-2);
+            var curDay = ("0" + currentTime.getUTCDate()).slice(-2);
+            var currentURL = `${phpProxy}https://mesonet.agron.iastate.edu/archive/data/${curYear}/${curMonth}/${curDay}/GIS/ridge/${statio}/${produ}/`;
+            $.get(currentURL, function(data) {
+                var div = document.createElement('div')
+                div.innerHTML = data;
+                const Elem = e => ({
+                    tagName: 
+                        e.tagName,
+                    textContent:
+                        e.textContent,
+                    attributes:
+                        Array.from(e.attributes, ({name, value}) => [name, value]),
+                    children:
+                        Array.from(e.children, Elem)
+                })
+                const html2json = e =>
+                    JSON.parse(JSON.stringify(Elem(e), null, '  '))
+
+                var htmlJson = html2json(div);
+                var amountOfFiles = Object.keys(htmlJson.children[2].children[0].children).length
+                var amountToSubtract = 2 + (ind * 2);
+                var fileName = htmlJson.children[2].children[0].children[amountOfFiles - amountToSubtract].children[1].textContent;
+                fileName = fileName.slice(0, -4);
+
+                var imgUrl = `${phpProxy}${currentURL}${fileName}.png`;
+                var wldUrl = `${phpProxy}${currentURL}${fileName}.wld`;
+                $.get(wldUrl, function(data) {
+                    // [0.010674, 0.0, 0.0, -0.010674, -82.823878, 44.312878]
+                    var wldArray = data.split(/\r?\n/);
+                    setImageFromWld(wldArray, phpProxy + imgUrl);
+                });
+            })
+        }
+        //setStaticImage("LWX", "N0B", 0);
 
         function isuTimestamp(dateOb) {
             return dateOb.getFullYear() + 
@@ -1082,7 +1114,7 @@
                     <div class="mapboxgl-control-container" style="margin-top: 100%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
                             <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Product Viewer" ${btnStyle}>
-                                <span class="fa fa-tower-cell icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
+                                <span class="fa fa-hurricane icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
                             </button>
                         </div>
                     </div>`
@@ -1093,22 +1125,16 @@
                         $('#rpvThing').removeClass('icon-black');
 
                         var currentStation = document.getElementById('stationDisplay').innerHTML.toUpperCase().substring(1)
-                        if (map.getLayer('rpv')) {
+                        /*if (map.getLayer('rpv')) {
                             map.removeLayer('rpv')
                         }
                         if (map.getSource('rpv')) {
                             map.removeSource('rpv')
-                        }
-                        for (var t = 0; t < nexradTimestamps.length; t++) {
-                            if (map.getLayer(`wms-test-layer${t}`)) {
-                                map.removeLayer(`wms-test-layer${t}`)
-                            }
-                            if (map.getSource(`wms-test-layer${t}`)) {
-                                map.removeSource(`wms-test-layer${t}`)
-                            }
-                            addNexradLayer(t, 0);
-                        }
-                        map.addLayer({
+                        }*/
+                        beforeTileInit('radar-layer')
+                        setStaticImage(currentStation, "N0S", 0);
+                        //afterTileInit()
+                        /*map.addLayer({
                             id: 'rpv',
                             type: "raster",
                             source: {
@@ -1118,17 +1144,18 @@
                                 ],
                                 tileSize: 256
                             },
-                        });
+                        });*/
                     } else if ($('#rpvThing').hasClass('icon-selected')) {
                         $('#rpvThing').removeClass('icon-selected');
                         $('#rpvThing').addClass('icon-black');
 
-                        if (map.getLayer('rpv')) {
-                            map.removeLayer('rpv')
+                        if (map.getLayer('radar-layer')) {
+                            map.removeLayer('radar-layer')
                         }
-                        if (map.getSource('rpv')) {
-                            map.removeSource('rpv')
+                        if (map.getSource('radar-layer')) {
+                            map.removeSource('radar-layer')
                         }
+                        afterTileInit()
                         setNexradLayerOpacity(10, 1)
                     }
                 })
