@@ -107,9 +107,9 @@
 </head>
 <body>
 
-<input id="timestampSlider" type="range" min="0" max="10" step="1" value="0">
+<input id="timestampSlider" type="range" min="0" max="10" step="1" value="0" style="display: none">
 
-<div id="dialog">
+<div id="dialog" style="display: none">
     <div><b>Radar Status: <a id="radstat"></a></b></div>
     <br>
     <div><b>Radar Station: </b><a id="radstatStation"></a></div>
@@ -123,7 +123,7 @@
     <div style="white-space: pre-wrap;"><b>Message: </b><ul><a id="radstatMessage"></a></ul></div>
 </div>
 
-<div id="proxyDialog">
+<div id="proxyDialog" style="display: none">
     <div><b>The Iowa State radar feed is not responding.</b></div>
     <br>
     <div>
@@ -169,6 +169,8 @@
 
                 if (parser.hash == "#proxy") {
                     $('#proxyButton').click();
+                } else if (parser.hash == "#ignore") {
+                    return;
                 } else if (parser.hash != "#proxy") {
                     $("#proxyDialog").dialog({
                         modal: true,
@@ -176,7 +178,7 @@
                         open: function () {
                             $(this).parent().css({
                                 position: 'relative',
-                                top: -200,
+                                top: 10,
                                 maxHeight: '70vh',
                                 overflow: 'scroll'
                             });
@@ -208,7 +210,7 @@
         //1.5, [30, 50]
         zoom: 3,
         center: [-98.5606744, 36.8281576],
-        //projection: 'globe'
+        projection: 'equirectangular'
     });
     map.addControl(new mapboxgl.NavigationControl({visualizePitch: true}), "top-left");
     map.addControl(new PitchToggle({ minpitchzoom: 11 }), "top-left");
@@ -273,7 +275,7 @@
                 essential: true // this animation is considered essential with respect to prefers-reduced-motion
             });
         } else if (!truefalse) {
-            map.setProjection('mercator');
+            map.setProjection('equirectangular');
         }
     }
 
@@ -465,7 +467,92 @@
     map.on('load', () => {
         // Set the default atmosphere style
         map.setFog({});
+
+        function setImageFromWld(worldFileArray, imageUrl) {
+            // https://gis.stackexchange.com/a/288308/206737
+            function worldFileToBoundingBox(pixelSizeX, pixelSizeY, rotationX, rotaionY, centerCoordX, centerCoordY, imagewidth, imageHeight) {
+                var minX = centerCoordX - (pixelSizeX / 2);
+                var maxY = centerCoordY - (pixelSizeY / 2);
+                var maxX = minX + (pixelSizeX * imagewidth);
+                var minY = maxY +(pixelSizeY * imageHeight);
+
+                var data = {
+                    minX: minX,
+                    minY: minY,
+                    maxX: maxX,
+                    maxY: maxY
+                };
+                return data;
+            }
+
+            var arrWorldFile = worldFileArray;
+
+            var pixelSizeX = arrWorldFile[0]; 
+            var rotationX = arrWorldFile[1];
+            var rotaionY = arrWorldFile[2];
+            var pixelSizeY = arrWorldFile[3];
+            var centerCoordX = arrWorldFile[4];
+            var centerCoordY = arrWorldFile[5];
+            var imagewidth = 1000;
+            var imageHeight = 1000;
+
+            var output = worldFileToBoundingBox(pixelSizeX, pixelSizeY, rotationX, rotaionY, centerCoordX, centerCoordY, imagewidth, imageHeight);
+
+            var coord1 = output.minY;
+            var coord2 = output.minX;
+            var coord3 = output.maxY;
+            var coord4 = output.maxX;
+
+            if (map.getLayer('radar-layer')) {
+                map.removeLayer('radar-layer');
+            }
+            if (map.getSource('radar-layer')) {
+                map.removeSource('radar-layer');
+            }
+            map.addLayer({
+                id: 'radar-layer',
+                'type': 'raster',
+                'source': {
+                    'type': 'image',
+                    'url': imageUrl,
+                    'coordinates': [
+                        [coord2, coord3],
+                        [coord4, coord3],
+                        [coord4, coord1],
+                        [coord2, coord1]
+                        /*
+                            2  3
+                            4  3
+                            4  1
+                            2  1
+                        */
+                    ]
+                },
+                'paint': {
+                    'raster-fade-duration': 0,
+                    'raster-resampling': 'nearest'
+                }
+            });
+        }
+
+        /*var imgUrl = 'https://mesonet.agron.iastate.edu/archive/data/2022/07/07/GIS/ridge/LWX/N0B/LWX_N0B_202207070313.png';
+        var wldUrl = 'https://mesonet.agron.iastate.edu/archive/data/2022/07/07/GIS/ridge/LWX/N0B/LWX_N0B_202207070313.wld';
+        $.get(wldUrl, function(data) {
+            // [0.010674, 0.0, 0.0, -0.010674, -82.823878, 44.312878]
+            var wldArray = data.split(/\r?\n/);
+            setImageFromWld(wldArray, imgUrl)
+        });*/
+
+        function isuTimestamp(dateOb) {
+            return dateOb.getFullYear() + 
+            ("0" + (dateOb.getUTCMonth() + 1)).slice(-2) + 
+            ("0" + dateOb.getUTCDate()).slice(-2) + 
+            ("0" + dateOb.getUTCHours() ).slice(-2) + 
+            ("0" + dateOb.getUTCMinutes()).slice(-2);
+        }
+
         function addNexradLayer(indexInArray, opacity, proxy) {
+            var subtractedTime = new Date(currentTime - minutesToSubtract[indexInArray] * msPerMinute)
             map.addLayer({
                 'id': `wms-test-layer${indexInArray}`,
                 'type': 'raster',
@@ -474,7 +561,7 @@
                     // use the tiles option to specify a WMS tile source URL
                     // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
                     'tiles': [
-                        `${proxy}https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0q.cgi?service=WMS&request=GetMap&layers=nexrad-n0q-900913${nexradTimestamps[indexInArray]}&styles=&format=image%2Fpng&transparent=true&version=1.1.1&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}`
+                        `${proxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::USCOMP-N0Q-${isuTimestamp(subtractedTime)}/{z}/{x}/{y}.png`
                         //'https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015'
                         //'https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}'
                         //https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox=-20037508.342789244,0,-10018754.171394622,10018754.17139462
@@ -1224,7 +1311,7 @@
             open: function () {
                 $(this).parent().css({
                     position: 'relative',
-                    top: -100,
+                    top: 10,
                     maxHeight: '50vh',
                     overflow: 'scroll'
                 });
