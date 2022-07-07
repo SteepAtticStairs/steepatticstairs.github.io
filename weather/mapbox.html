@@ -141,7 +141,7 @@
     <br><br>
 </div>
 
-<div id="isDown" style="display: none">down</div>
+<div id="isDown" style="display: none"></div>
 
 <div id="map"></div>
 
@@ -163,7 +163,7 @@
             document.getElementById('isDown').innerHTML = data;
         })
         setTimeout((function() {
-            if (document.getElementById('isDown').innerHTML == 'down') {
+            if (document.getElementById('isDown').innerHTML == '') {
                 document.getElementById('isDown').innerHTML = 'down'
                 console.log('down')
 
@@ -650,8 +650,13 @@
                     if (!$('#mainRadarThing').hasClass('icon-selected')) {
                         $('#mainRadarThing').addClass('icon-selected');
                         $('#mainRadarThing').removeClass('icon-black');
-                        testISUDown(2000);
-                        initializeNexradLayer();
+                        if (document.getElementById('isDown').innerHTML == '') {
+                            testISUDown(2000);
+                            initializeNexradLayer();
+                        } else if (document.getElementById('isDown').innerHTML == 'proxy') {
+                            console.log('aarg')
+                            initializeNexradLayer(phpProxy);
+                        }
                     } else if ($('#mainRadarThing').hasClass('icon-selected')) {
                         $('#mainRadarThing').removeClass('icon-selected');
                         $('#mainRadarThing').addClass('icon-black');
@@ -726,7 +731,7 @@
                         if (map.getSource('radar-layer')) {
                             map.removeSource('radar-layer')
                         }
-                        afterTileInit()
+                        //afterTileInit()
                         //setNexradLayerOpacity(10, 1)
                     }
                 })
