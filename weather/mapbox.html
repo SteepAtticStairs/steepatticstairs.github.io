@@ -1066,7 +1066,7 @@
                         $('#lightningThing').addClass('icon-selected');
                         $('#lightningThing').removeClass('icon-black');
 
-                        beforeTileInit('lightning');
+                        //beforeTileInit('lightning');
                         map.addLayer({
                             id: 'lightning',
                             type: "raster",
@@ -1078,7 +1078,7 @@
                                 tileSize: 256
                             },
                         });
-                        afterTileInit();
+                        //afterTileInit();
                     } else if ($('#lightningThing').hasClass('icon-selected')) {
                         $('#lightningThing').removeClass('icon-selected');
                         $('#lightningThing').addClass('icon-black');
@@ -1129,7 +1129,7 @@
                             var hashForCurSat = data.satellite.infrared[lengthofsatellitearray - 1].path.toString().slice(14)
                             console.log(hashForCurSat)
 
-                            beforeTileInit('clouds');
+                            //beforeTileInit('clouds');
                             map.addLayer({
                                 id: 'clouds',
                                 type: "raster",
@@ -1141,7 +1141,7 @@
                                     tileSize: 256
                                 },
                             });
-                            afterTileInit();
+                            //afterTileInit();
                         })
                     } else if ($('#cloudThing').hasClass('icon-selected')) {
                         $('#cloudThing').removeClass('icon-selected');
