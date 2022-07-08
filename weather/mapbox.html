@@ -819,9 +819,65 @@
 
         var alertArr = [];
         var sourceArr = [];
+        var propertyArr = [];
         function showAlerts() {
             $.getJSON('https://api.weather.gov/alerts/active', function(data) {
                 for (let n = 0; n < data.features.length; n++) {
+                    var properties = data.features[n].properties
+
+                    var alertEvent = properties.event;
+                    var alertSenderName = properties.senderName;
+                    var alertHeadline = properties.headline;
+                    var alertDescription = properties.description;
+                    var alertInstruction = properties.instruction;
+
+                    var alertID = properties.id;
+                    var alertWMOidenifier = properties.parameters.WMOidentifier[0];
+                    var alertVTEC = "No VTEC for this alert."
+                    var alertNWSheadline = "No headline for this alert."
+
+                    if (alertInstruction == null) {
+                        alertInstruction = "No instruction for this alert."
+                    }
+
+                    if (properties.parameters.hasOwnProperty('NWSheadline')) {
+                        alertNWSheadline = properties.parameters.NWSheadline;
+                    }
+                    if (properties.parameters.hasOwnProperty('VTEC')) {
+                        alertVTEC = properties.parameters.VTEC[0];
+                    }
+
+                    var alertSeverity = properties.severity;
+                    var alertUrgency = properties.urgency;
+
+                    var alertSentTime = new Date(properties.sent);
+                    var alertEffectiveTime = new Date(properties.effective);
+                    var alertOnsetTime = new Date(properties.onset);
+                    var alertExpiresTime = new Date(properties.expires);
+                    var alertEndsTime = new Date(properties.ends);
+                    var alertPopupContent = `
+                    <div style="overflow-y: scroll; height: 150px;">
+                        <div class='ughh' id='headlineExpander${n}' style='cursor: pointer'>
+                            <b>${alertEvent}<br>${alertSenderName}</b>
+                        </div>
+                        <div id='alertBody${n}'>
+                            <br><b>Send Time: </b>${printFancyTime(alertSentTime)}
+                            <br><b>Effective Time: </b>${printFancyTime(alertEffectiveTime)}
+                            <br><b>Onset Time: </b>${printFancyTime(alertOnsetTime)}
+                            <br><b>Expires Time: </b>${printFancyTime(alertExpiresTime)}
+                            <br><b>Ends Time: </b>${printFancyTime(alertEndsTime)}
+                            <br><br><b><i>${alertSeverity}</i></b>, <b><i>${alertUrgency}</i></b><br><br>
+                            <b>WMO Identifier:</b> ${alertWMOidenifier}<br>
+                            <b>VTEC:</b> ${alertVTEC}<br>
+                            <b>NWS Headline:</b> ${alertNWSheadline}<br>
+                            <b>ID:</b> ${alertID}<br><br>
+                            <b>Headline:</b> ${alertHeadline}<br>
+                            <b>Description:</b> ${alertDescription}<br>
+                            <b>Instructions:</b> ${alertInstruction}
+                        </div>
+                    </div>`;
+                    propertyArr.push(alertPopupContent);
+
                     if (data.features[n].geometry != null) {
                         //L.marker([alertLat, alertLon], {icon: yellowMarkerIcon}).addTo(alertLayerGroup)
                         //    .bindPopup(alertPopup);
@@ -874,62 +930,44 @@
                         });
                         alertArr.push(`outline${n}`);
                         map.on('click', `alert${n}`, (e) => {
-                            var alertEvent = e.features[0].properties.event;
-                            var alertSenderName = e.features[0].properties.senderName;
-                            var alertHeadline = e.features[0].properties.headline;
-                            var alertDescription = e.features[0].properties.description;
-                            var alertInstruction = e.features[0].properties.instruction;
-
-                            var alertID = e.features[0].properties.id;
-                            var alertWMOidenifier = JSON.parse(e.features[0].properties.parameters).WMOidentifier[0];
-                            var alertVTEC = "No VTEC for this alert."
-                            var alertNWSheadline = "No headline for this alert."
-
-                            if (alertInstruction == null) {
-                                alertInstruction = "No instruction for this alert."
-                            }
-
-                            if (e.features[0].properties.parameters.hasOwnProperty('NWSheadline')) {
-                                alertNWSheadline = e.features[0].properties.parameters.NWSheadline;
-                            }
-                            if (JSON.parse(e.features[0].properties.parameters).hasOwnProperty('VTEC')) {
-                                alertVTEC = JSON.parse(e.features[0].properties.parameters).VTEC[0];
-                            }
-
-                            var alertSeverity = e.features[0].properties.severity;
-                            var alertUrgency = e.features[0].properties.urgency;
-
-                            var alertSentTime = new Date(e.features[0].properties.sent);
-                            var alertEffectiveTime = new Date(e.features[0].properties.effective);
-                            var alertOnsetTime = new Date(e.features[0].properties.onset);
-                            var alertExpiresTime = new Date(e.features[0].properties.expires);
-                            var alertEndsTime = new Date(e.features[0].properties.ends);
-                            var alertPopupContent = `
-                            <div style="overflow-y: scroll; height: 150px;">
-                                <div class='ughh' id='headlineExpander${n}' style='cursor: pointer'>
-                                    <b>${alertEvent}<br>${alertSenderName}</b>
-                                </div>
-                                <div id='alertBody${n}'>
-                                    <br><b>Send Time: </b>${printFancyTime(alertSentTime)}
-                                    <br><b>Effective Time: </b>${printFancyTime(alertEffectiveTime)}
-                                    <br><b>Onset Time: </b>${printFancyTime(alertOnsetTime)}
-                                    <br><b>Expires Time: </b>${printFancyTime(alertExpiresTime)}
-                                    <br><b>Ends Time: </b>${printFancyTime(alertEndsTime)}
-                                    <br><br><b><i>${alertSeverity}</i></b>, <b><i>${alertUrgency}</i></b><br><br>
-                                    <b>WMO Identifier:</b> ${alertWMOidenifier}<br>
-                                    <b>VTEC:</b> ${alertVTEC}<br>
-                                    <b>NWS Headline:</b> ${alertNWSheadline}<br>
-                                    <b>ID:</b> ${alertID}<br><br>
-                                    <b>Headline:</b> ${alertHeadline}<br>
-                                    <b>Description:</b> ${alertDescription}<br>
-                                    <b>Instructions:</b> ${alertInstruction}
-                                </div>
-                            </div>`;
                             var popup = new mapboxgl.Popup()
                             .setLngLat(e.lngLat)
-                            .setHTML(alertPopupContent)
+                            .setHTML(propertyArr[n])
                             .addTo(map);
                         });
+                    } else if (data.features[n].geometry == null) {
+                        //console.log(properties.senderName)
+                        $.getJSON(data.features[n].properties.affectedZones[0], function(data2) {
+                            var singleCoordinateLat = data2.geometry.coordinates[0][0][1];
+                            var singleCoordinateLon = data2.geometry.coordinates[0][0][0];
+                            var geojsonTemplate = {
+                                "type": "FeatureCollection",
+                                "features": []
+                            }
+                            if (!Array.isArray(singleCoordinateLat) && !Array.isArray(singleCoordinateLat)) {
+                                geojsonTemplate.features.push({
+                                    "geometry": {
+                                        "type": "Point", 
+                                        "coordinates":
+                                            [singleCoordinateLon, singleCoordinateLat]
+                                    }
+                                });
+                            }
+                            map.addLayer({
+                                id: `alertDots${n}`,
+                                type: 'circle',
+                                source: {
+                                    type: 'geojson',
+                                    data: geojsonTemplate,
+                                }
+                            });
+                            map.on('click', `alertDots${n}`, (e) => {
+                                new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(propertyArr[n])
+                                .addTo(map);
+                            });
+                        })
                     }
                 }
             })
