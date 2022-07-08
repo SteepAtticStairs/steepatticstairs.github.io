@@ -882,7 +882,7 @@
 
                             var alertID = e.features[0].properties.id;
                             var alertWMOidenifier = JSON.parse(e.features[0].properties.parameters).WMOidentifier[0];
-                            var alertVTEC = JSON.parse(e.features[0].properties.parameters).VTEC[0];
+                            var alertVTEC = "No VTEC for this alert."
                             var alertNWSheadline = "No headline for this alert."
 
                             if (alertInstruction == null) {
@@ -891,6 +891,9 @@
 
                             if (e.features[0].properties.parameters.hasOwnProperty('NWSheadline')) {
                                 alertNWSheadline = e.features[0].properties.parameters.NWSheadline;
+                            }
+                            if (JSON.parse(e.features[0].properties.parameters).hasOwnProperty('VTEC')) {
+                                alertVTEC = JSON.parse(e.features[0].properties.parameters).VTEC[0];
                             }
 
                             var alertSeverity = e.features[0].properties.severity;
