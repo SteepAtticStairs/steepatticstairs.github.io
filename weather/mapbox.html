@@ -109,6 +109,9 @@
 
 <input id="timestampSlider" type="range" min="0" max="10" step="1" value="0" style="display: none">
 
+<button style="display: none" id="polygon">draw</button>
+<button style="display: none" id="clearpolygon">clear</button>
+
 <div id="dialog" style="display: none">
     <div><b>Radar Status: <a id="radstat"></a></b></div>
     <br>
@@ -820,6 +823,7 @@
         var alertArr = [];
         var sourceArr = [];
         var propertyArr = [];
+        var drawnPolygonArr = [];
         function showAlerts() {
             $.getJSON('https://api.weather.gov/alerts/active', function(data) {
                 for (let n = 0; n < data.features.length; n++) {
@@ -870,7 +874,7 @@
                             <b>WMO Identifier:</b> ${alertWMOidenifier}<br>
                             <b>VTEC:</b> ${alertVTEC}<br>
                             <b>NWS Headline:</b> ${alertNWSheadline}<br>
-                            <b>ID:</b> ${alertID}<br><br>
+                            <b>ID:</b><div id='alertNameDiv'>${alertID}</div><br><br>
                             <b>Headline:</b> ${alertHeadline}<br>
                             <b>Description:</b> ${alertDescription}<br>
                             <b>Instructions:</b> ${alertInstruction}
@@ -961,10 +965,14 @@
                                     data: geojsonTemplate,
                                 }
                             });
+                            var drawPolygonHtml = `
+                            <a style='cursor: pointer' onclick='clickOnPolygonBtn()'>Draw Polygon</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a style='cursor: pointer' onclick='clearPolygons()'>Clear</a>
+                            `
                             map.on('click', `alertDots${n}`, (e) => {
                                 new mapboxgl.Popup()
                                 .setLngLat(e.lngLat)
-                                .setHTML(propertyArr[n])
+                                .setHTML(drawPolygonHtml + propertyArr[n])
                                 .addTo(map);
                             });
                         })
@@ -972,6 +980,83 @@
                 }
             })
         }
+
+        var drawPolygonBtn = document.getElementById('polygon');
+        drawPolygonBtn.addEventListener('click', function handleClick() {
+            console.log('drewn')
+            var alertDiv = document.getElementById('alertNameDiv');
+            $.getJSON(`https://api.weather.gov/alerts/${alertDiv.innerHTML}`, function(data) {
+                for (let r = 0; r < data.properties.affectedZones.length; r++) {
+                    var xhttpALERT = new XMLHttpRequest();
+                    xhttpALERT.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var data = JSON.parse(this.responseText);
+                            var allCoordinates2 = data.geometry.coordinates[0];
+                            var coordinateArray2 = [];
+                            for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
+                                coordinateArray2.push(allCoordinates2[x]);
+                            }
+
+                            //console.log(coordinateArray2)
+                            var geojson = {
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "Polygon",
+                                    "coordinates": [
+                                        coordinateArray2
+                                    ]
+                                }
+                            }
+    
+                            if (map.getLayer(`alertPolygon${r}`)) {
+                                map.removeLayer(`alertPolygon${r}`)
+                            }
+                            if (map.getSource(`alertPolygon${r}`)) {
+                                map.removeSource(`alertPolygon${r}`)
+                            }
+                            map.addLayer({
+                                'id': `alertPolygon${r}`,
+                                'type': 'fill',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': geojson
+                                },
+                                'paint': {
+                                    'fill-color': '#838383', // blue color fill
+                                    'fill-opacity': 0.5
+                                }
+                            });
+                            drawnPolygonArr.push(`alertPolygon${r}`)
+                            map.addLayer({
+                                'id': `outlinePolygon${r}`,
+                                'type': 'line',
+                                'source': `alertPolygon${r}`,
+                                'paint': {
+                                    'line-color': '#5e5e5e',
+                                    'line-width': 3
+                                }
+                            });
+                            drawnPolygonArr.push(`outlinePolygon${r}`)
+                        }
+                    };
+                    xhttpALERT.open("GET", data.properties.affectedZones[r], true);
+                    xhttpALERT.send();
+                }
+            });
+        })
+
+        var clearPolygonBtn = document.getElementById('clearpolygon');
+        clearPolygonBtn.addEventListener('click', function handleClick() {
+            console.log('cleerd')
+            for (var u = 0; u < drawnPolygonArr.length; u++) {
+                if (map.getLayer(drawnPolygonArr[u])) {
+                    map.removeLayer(drawnPolygonArr[u])
+                }
+                if (map.getSource(drawnPolygonArr[u])) {
+                    map.removeSource(drawnPolygonArr[u])
+                }
+            }
+        })
 
         //map.addSource('overlay', {
         //    type: 'image',
@@ -1519,6 +1604,12 @@
         var curStationDiv = document.getElementById('stationDisplay');
         console.log(curStationDiv.innerHTML);
         setFromStation(curStationDiv.innerHTML, singleStationZoom);
+    }
+    function clickOnPolygonBtn() {
+        $('#polygon').trigger('click');
+    }
+    function clearPolygons() {
+        $('#clearpolygon').trigger('click');
     }
 
     function setLayerOrder() {
