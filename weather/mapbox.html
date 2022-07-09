@@ -156,12 +156,14 @@
 </div>
 
 <div id="tsDialog" style="display: none">
-    <div><b>Input UNIX Timestamp:</b></div>
+    <div><b>Input Date and Time:</b></div>
     <!-- <input id="theUnixTs" value="1650288960"> -->
     <br>
     <input type="datetime-local" id="tsDateTime">
     <br><br>
     <button id="unixTsSubmit">Ok</button>
+    <br><br>
+    <button id="unixTsReset">Reset</button>
 </div>
 <script>
     // 1650288960 (4.18.2022)
@@ -172,6 +174,11 @@
     var localISOTime = (new Date(Date.now() - tzoffset)).toISOString();
     var currentDateTime = localISOTime.slice(0, -8);
     $('#tsDateTime').val(currentDateTime);
+
+    document.getElementById('unixTsReset').addEventListener('click', function() {
+        $('#tsDateTime').val(currentDateTime);
+        document.getElementById('timestampDisplay').innerHTML = printFancyTime(new Date($('#tsDateTime').val()))
+    })
 </script>
 
 <div id="isDown" style="display: none">undecided</div>
@@ -522,6 +529,7 @@
                         } else if (inputtedTs == currentDateTime) {
                             $('#calendarThing').addClass('icon-black');
                         }
+                        document.getElementById('timestampDisplay').innerHTML = printFancyTime(new Date($('#tsDateTime').val()))
                     })
                 }
             })
@@ -597,7 +605,7 @@
 
     var msPerMinute = 60000;
     var currentTime = new Date();
-    document.getElementById('timestampDisplay').innerHTML = printFancyTime(currentTime)
+    document.getElementById('timestampDisplay').innerHTML = printFancyTime(new Date($('#tsDateTime').val()))
     var nexradTimestamps = ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m']
     nexradTimestamps.reverse();
     var minutesToSubtract = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
@@ -1700,8 +1708,8 @@
                                 //}
                                 console.log(`wms-test-layer${i}`)
                                 setNexradLayerOpacity(i, 1)
-                                var displayedRadarTime = new Date(currentTime - minutesToSubtract[i] * msPerMinute);
-                                document.getElementById('timestampDisplay').innerHTML = printFancyTime(displayedRadarTime)
+                                var displayedRadarTime = new Date(new Date($('#tsDateTime').val()) - minutesToSubtract[i] * msPerMinute);
+                                document.getElementById('timestampDisplay').innerHTML = printFancyTime(displayedRadarTime);
                                 i++;
                                 if (!$('#pausePlayThing').hasClass('fa-play')) {
                                     if (i < nexradTimestamps.length) {
