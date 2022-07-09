@@ -45,6 +45,9 @@
         .red-icon {
             color:red;
         }
+        .orange-icon {
+            color:rgb(255, 157, 0);
+        }
         .icon-selected {
             color:rgb(0, 132, 255);
         }
@@ -152,13 +155,40 @@
     <button id="bvel_raw">BVEL_RAW</button>
 </div>
 
-<div id="isDown" style="display: none"></div>
+<div id="tsDialog" style="display: none">
+    <div><b>Input UNIX Timestamp:</b></div>
+    <!-- <input id="theUnixTs" value="1650288960"> -->
+    <br>
+    <input type="datetime-local" id="tsDateTime">
+    <br><br>
+    <button id="unixTsSubmit">Ok</button>
+</div>
+<script>
+    // 1650288960 (4.18.2022)
+    var currentTs = Math.floor(Date.now() / 1000);
+
+    // https://stackoverflow.com/a/28149561/18758797
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    var localISOTime = (new Date(Date.now() - tzoffset)).toISOString();
+    var currentDateTime = localISOTime.slice(0, -8);
+    $('#tsDateTime').val(currentDateTime);
+</script>
+
+<div id="isDown" style="display: none">undecided</div>
 <div id="isDotPopupOpen" style="display: none">no</div>
 
 <div id="map"></div>
 
 <script>
-    var phpProxy = 'https://php-cors-proxy.herokuapp.com/?'
+    var phpProxy;
+    function useProxy(trufals) {
+        if (trufals) {
+            phpProxy = 'https://php-cors-proxy.herokuapp.com/?';
+        } else if (!trufals) {
+            phpProxy = '';
+        }
+    }
+    useProxy(true);
 
     var parser = document.createElement('a');
     parser.href = window.location.href;
@@ -172,11 +202,11 @@
         // https://mesonet.agron.iastate.edu/images/rss.gif
         $.get('https://mesonet.agron.iastate.edu/json/example.php', function(data) {
             console.log(data)
-            document.getElementById('isDown').innerHTML = data;
+            document.getElementById('isDown').innerHTML = 'up';
         })
         setTimeout((function() {
-            if (document.getElementById('isDown').innerHTML == '') {
-                document.getElementById('isDown').innerHTML = 'down'
+            if (document.getElementById('isDown').innerHTML == 'undecided') {
+                document.getElementById('isDown').innerHTML = 'down';
                 console.log('down')
 
                 if (parser.hash == "#proxy") {
@@ -197,7 +227,7 @@
                         }
                     });
                 }
-            } else if (document.getElementById('isDown').innerHTML != '') {
+            } else if (document.getElementById('isDown').innerHTML == 'up') {
                 console.log('up')
             }
         }), ms)
@@ -327,7 +357,6 @@
                     <div id='tileThing'><b>Tiles: </b><a id='tilesLoadedDisplay'>Done</a></div>
                     <div id='timestampDisplay'></div>
                     <b><div id='stationDisplay' style='cursor: pointer' onclick='setStation()'></div></b>
-                    <a href=${phpProxy} id='proxyStatus' style='display: none'>Proxy</a>
                 </div>`
             this._container.addEventListener('click', function() {
                 console.log('sus')
@@ -444,6 +473,68 @@
     }
     var theThemeControl = new themeControl
     map.addControl(theThemeControl, 'top-left');
+
+    class calendarControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+            <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                    <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Current Location">
+                        <span class="fa fa-calendar-days icon-black" id="calendarThing" aria-hidden="true" title="Globe Toggle"></span>
+                    </button>
+                </div>
+            </div>`
+            this._container.addEventListener('click', function() {
+                if (!$('#calendarThing').hasClass('icon-selected')) {
+                    $('#calendarThing').addClass('icon-selected');
+                    $('#calendarThing').removeClass('icon-black');
+                    $("#tsDialog").dialog({
+                        modal: true,
+                        // https://stackoverflow.com/a/30624445/18758797
+                        open: function () {
+                            $(this).parent().css({
+                                position: 'relative',
+                                top: 10,
+                                maxHeight: '70vh',
+                                overflow: 'scroll'
+                            });
+                        },
+                        close: function () {
+                            $('#calendarThing').removeClass('icon-selected');
+                            $('#calendarThing').addClass('icon-black');
+                        }
+                    });
+                    document.getElementById('unixTsSubmit').addEventListener('click', function() {
+                        $("#tsDialog").dialog('close');
+                        var inputtedTs = $('#tsDateTime').val();
+                        console.log(inputtedTs)
+                        $('#calendarThing').removeClass('icon-selected');
+                        if ($('#calendarThing').hasClass('orange-icon')) {
+                            $('#calendarThing').removeClass('orange-icon');
+                        }
+                        if ($('#calendarThing').hasClass('icon-black')) {
+                            $('#calendarThing').removeClass('icon-black');
+                        }
+                        if (inputtedTs != currentDateTime) {
+                            $('#calendarThing').addClass('orange-icon');
+                        } else if (inputtedTs == currentDateTime) {
+                            $('#calendarThing').addClass('icon-black');
+                        }
+                    })
+                }
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theCalendarControl = new calendarControl
+    map.addControl(theCalendarControl, 'top-left');
 
     class spinnerControl {
         onAdd(map) {
@@ -630,8 +721,10 @@
             ("0" + dateOb.getUTCMinutes()).slice(-2);
         }
 
-        function addNexradLayer(indexInArray, opacity, proxy) {
-            var subtractedTime = new Date(currentTime - minutesToSubtract[indexInArray] * msPerMinute)
+        function addNexradLayer(indexInArray, opacity) {
+            var inputtedTs = $('#tsDateTime').val();
+            var tsTime = new Date(inputtedTs);
+            var subtractedTime = new Date(tsTime - minutesToSubtract[indexInArray] * msPerMinute)
             map.addLayer({
                 'id': `wms-test-layer${indexInArray}`,
                 'type': 'raster',
@@ -640,7 +733,7 @@
                     // use the tiles option to specify a WMS tile source URL
                     // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
                     'tiles': [
-                        `${proxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::USCOMP-N0Q-${isuTimestamp(subtractedTime)}/{z}/{x}/{y}.png`
+                        `${phpProxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::USCOMP-N0Q-${isuTimestamp(subtractedTime)}/{z}/{x}/{y}.png`
                         //'https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015'
                         //'https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}'
                         //https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox=-20037508.342789244,0,-10018754.171394622,10018754.17139462
@@ -667,15 +760,12 @@
                 theopacity
             );
         }
-        function initializeNexradLayer(shouldProxy) {
-            if (shouldProxy == undefined) {
-                shouldProxy = '';
-            }
+        function initializeNexradLayer() {
             for (var t = 10; t > -1; t--) {
                 if (t == 10) {
-                    addNexradLayer(t, 1, shouldProxy);
+                    addNexradLayer(t, 1);
                 } else {
-                    addNexradLayer(t, 0, shouldProxy);
+                    addNexradLayer(t, 0);
                 }
             }
             document.getElementById('timestampSlider').addEventListener("input", function() {
@@ -690,7 +780,7 @@
                 <div class="mapboxgl-control-container" style="margin-top: 250%;">
                     <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
                         <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Main Radar Mosaic" ${btnStyle}>
-                            <span class="fa fa-tower-cell icon-black" id="mainRadarThing" aria-hidden="true" title="Main Radar Mosaic" ${btnIconStyle}></span>
+                            <span class="fa fa-cloud-showers-heavy icon-black" id="mainRadarThing" aria-hidden="true" title="Main Radar Mosaic" ${btnIconStyle}></span>
                         </button>
                     </div>
                 </div>`
@@ -698,13 +788,8 @@
                     if (!$('#mainRadarThing').hasClass('icon-selected')) {
                         $('#mainRadarThing').addClass('icon-selected');
                         $('#mainRadarThing').removeClass('icon-black');
-                        if (document.getElementById('isDown').innerHTML == '') {
-                            testISUDown(2000);
-                            initializeNexradLayer();
-                        } else if (document.getElementById('isDown').innerHTML == 'proxy') {
-                            console.log('aarg')
-                            initializeNexradLayer(phpProxy);
-                        }
+                        //testISUDown(2000);
+                        initializeNexradLayer();
                     } else if ($('#mainRadarThing').hasClass('icon-selected')) {
                         $('#mainRadarThing').removeClass('icon-selected');
                         $('#mainRadarThing').addClass('icon-black');
@@ -738,7 +823,7 @@
                     <div class="mapboxgl-control-container" style="margin-top: 100%;">
                         <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
                             <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Product Viewer" ${btnStyle}>
-                                <span class="fa fa-cloud-showers-heavy icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
+                                <span class="fa fa-tower-cell icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
                             </button>
                         </div>
                     </div>`
@@ -820,22 +905,6 @@
         }
         var theRPVControl = new rpvControl
         map.addControl(theRPVControl)
-
-        document.getElementById('proxyButton').addEventListener('click', function() {
-            console.log('clicked proxy button')
-            for (var t = 0; t < 11; t++) {
-                if (map.getLayer(`wms-test-layer${t}`)) {
-                    map.removeLayer(`wms-test-layer${t}`)
-                }
-                if (map.getSource(`wms-test-layer${t}`)) {
-                    map.removeSource(`wms-test-layer${t}`)
-                }
-            }
-            initializeNexradLayer(phpProxy);
-            document.getElementById('isDown').innerHTML = 'proxy'
-            document.getElementById('proxyStatus').style.display = 'inline';
-            $("#proxyDialog").dialog('destroy');
-        });
         /* map.addSource('wms-test-source', {
             'type': 'raster',
             // use the tiles option to specify a WMS tile source URL
@@ -1258,7 +1327,7 @@
                 map.removeSource(layerName)
             }
         }
-        function afterTileInit() {
+        /*function afterTileInit() {
             if (document.getElementById('isDown').innerHTML != 'down') {
                 if (document.getElementById('isDown').innerHTML == 'proxy') {
                     initializeNexradLayer(phpProxy);
@@ -1268,7 +1337,7 @@
                 console.log('not down after tile layer')
             }
             setLayerOrder();
-        }
+        }*/
 
         class lightningControl {
             onAdd(map) {
