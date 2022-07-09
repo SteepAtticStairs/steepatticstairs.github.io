@@ -167,6 +167,12 @@
         return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
     }
 
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     function testISUDown(ms) {
         // https://mesonet.agron.iastate.edu/images/rss.gif
         $.get('https://mesonet.agron.iastate.edu/json/example.php', function(data) {
@@ -979,9 +985,47 @@
                         });
                     } else if (data.features[n].geometry == null) {
                         //console.log(properties.senderName)
+                        var geometryLayers;
                         $.getJSON(data.features[n].properties.affectedZones[0], function(data2) {
-                            var singleCoordinateLat = data2.geometry.coordinates[0][0][1];
-                            var singleCoordinateLon = data2.geometry.coordinates[0][0][0];
+                            //var singleCoordinateLat = data2.geometry.coordinates[0][0][1];
+                            //var singleCoordinateLon = data2.geometry.coordinates[0][0][0];
+                            var singleCoordinateLat;
+                            var singleCoordinateLon;
+                            var singleCoordinate;
+
+                            if (data2.geometry.coordinates[0]) {
+                                geometryLayers = 1;
+                                if (data2.geometry.coordinates[0][0]) {
+                                    geometryLayers = 2;
+                                    if (data2.geometry.coordinates[0][0][0]) {
+                                        geometryLayers = 3;
+                                        if (data2.geometry.coordinates[0][0][0][0]) {
+                                            geometryLayers = 4;
+                                        }
+                                    }
+                                }
+                            }
+                            //console.log(geometryLayers);
+                            if (geometryLayers == 2) {
+                                var leng = data2.geometry.coordinates.length;
+                                var ran = getRandomInt(0, leng - 1);
+                                singleCoordinate = data2.geometry.coordinates[ran];
+                                console.log(`rando2: ${ran}`)
+                                console.log(singleCoordinate);
+                            } else if (geometryLayers == 3) {
+                                var leng = data2.geometry.coordinates[0].length;
+                                var ran = getRandomInt(0, leng - 1);
+                                singleCoordinate = data2.geometry.coordinates[0][ran];
+                                console.log(`rando3: ${ran}`)
+                                console.log(singleCoordinate);
+                            } else if (geometryLayers == 4) {
+                                var leng = data2.geometry.coordinates[0][0].length;
+                                var ran = getRandomInt(0, leng - 1);
+                                singleCoordinate = data2.geometry.coordinates[0][0][ran];
+                                console.log(`rando4: ${ran}`)
+                                console.log(singleCoordinate);
+                            }
+
                             var geojsonTemplate = {
                                 "type": "FeatureCollection",
                                 "features": []
@@ -991,7 +1035,7 @@
                                     "geometry": {
                                         "type": "Point", 
                                         "coordinates":
-                                            [singleCoordinateLon, singleCoordinateLat]
+                                            singleCoordinate
                                     }
                                 });
                             }
