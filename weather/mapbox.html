@@ -823,7 +823,9 @@
         var alertArr = [];
         var sourceArr = [];
         var propertyArr = [];
+        var alertDotsArr = [];
         var drawnPolygonArr = [];
+        var drawnPolygonSourceArr = [];
         function showAlerts() {
             $.getJSON('https://api.weather.gov/alerts/active', function(data) {
                 for (let n = 0; n < data.features.length; n++) {
@@ -965,6 +967,7 @@
                                     data: geojsonTemplate,
                                 }
                             });
+                            alertDotsArr.push(`alertDots${n}`);
                             var drawPolygonHtml = `
                             <a style='cursor: pointer' onclick='clickOnPolygonBtn()'>Draw Polygon</a>&nbsp;&nbsp;&nbsp;&nbsp;
                             <a style='cursor: pointer' onclick='clearPolygons()'>Clear</a>
@@ -981,6 +984,7 @@
             })
         }
 
+        var randomNumberArr = [];
         var drawPolygonBtn = document.getElementById('polygon');
         drawPolygonBtn.addEventListener('click', function handleClick() {
             console.log('drewn')
@@ -1007,15 +1011,26 @@
                                     ]
                                 }
                             }
-    
-                            if (map.getLayer(`alertPolygon${r}`)) {
-                                map.removeLayer(`alertPolygon${r}`)
+
+                            var randomNumber;
+                            function generateRandomNumber() {
+                                randomNumber = Math.floor((Math.random() * 1000000) + 1);
+                                if (randomNumberArr.includes(randomNumber)) {
+                                    generateRandomNumber();
+                                }
+                                randomNumberArr.push(randomNumber);
                             }
-                            if (map.getSource(`alertPolygon${r}`)) {
-                                map.removeSource(`alertPolygon${r}`)
+                            generateRandomNumber();
+                            console.log(randomNumber);
+
+                            if (map.getLayer(`alertPolygon${randomNumber}`)) {
+                                map.removeLayer(`alertPolygon${randomNumber}`)
+                            }
+                            if (map.getSource(`alertPolygon${randomNumber}`)) {
+                                map.removeSource(`alertPolygon${randomNumber}`)
                             }
                             map.addLayer({
-                                'id': `alertPolygon${r}`,
+                                'id': `alertPolygon${randomNumber}`,
                                 'type': 'fill',
                                 'source': {
                                     'type': 'geojson',
@@ -1026,17 +1041,17 @@
                                     'fill-opacity': 0.5
                                 }
                             });
-                            drawnPolygonArr.push(`alertPolygon${r}`)
+                            drawnPolygonArr.push(`alertPolygon${randomNumber}`)
                             map.addLayer({
-                                'id': `outlinePolygon${r}`,
+                                'id': `outlinePolygon${randomNumber}`,
                                 'type': 'line',
-                                'source': `alertPolygon${r}`,
+                                'source': `alertPolygon${randomNumber}`,
                                 'paint': {
                                     'line-color': '#5e5e5e',
                                     'line-width': 3
                                 }
                             });
-                            drawnPolygonArr.push(`outlinePolygon${r}`)
+                            drawnPolygonSourceArr.push(`outlinePolygon${randomNumber}`)
                         }
                     };
                     xhttpALERT.open("GET", data.properties.affectedZones[r], true);
@@ -1049,6 +1064,13 @@
         clearPolygonBtn.addEventListener('click', function handleClick() {
             console.log('cleerd')
             for (var u = 0; u < drawnPolygonArr.length; u++) {
+                if (map.getLayer(drawnPolygonSourceArr[u])) {
+                    map.removeLayer(drawnPolygonSourceArr[u])
+                }
+                if (map.getSource(drawnPolygonSourceArr[u])) {
+                    map.removeSource(drawnPolygonSourceArr[u])
+                }
+
                 if (map.getLayer(drawnPolygonArr[u])) {
                     map.removeLayer(drawnPolygonArr[u])
                 }
@@ -1363,6 +1385,29 @@
                         for (var u = 0; u < sourceArr.length; u++) {
                             if (map.getSource(sourceArr[u])) {
                                 map.removeSource(sourceArr[u])
+                            }
+                        }
+                        for (var u = 0; u < alertDotsArr.length; u++) {
+                            if (map.getLayer(alertDotsArr[u])) {
+                                map.removeLayer(alertDotsArr[u])
+                            }
+                            if (map.getSource(alertDotsArr[u])) {
+                                map.removeSource(alertDotsArr[u])
+                            }
+                        }
+                        for (var u = 0; u < drawnPolygonArr.length; u++) {
+                            if (map.getLayer(drawnPolygonSourceArr[u])) {
+                                map.removeLayer(drawnPolygonSourceArr[u])
+                            }
+                            if (map.getSource(drawnPolygonSourceArr[u])) {
+                                map.removeSource(drawnPolygonSourceArr[u])
+                            }
+            
+                            if (map.getLayer(drawnPolygonArr[u])) {
+                                map.removeLayer(drawnPolygonArr[u])
+                            }
+                            if (map.getSource(drawnPolygonArr[u])) {
+                                map.removeSource(drawnPolygonArr[u])
                             }
                         }
                     }
