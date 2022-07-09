@@ -202,11 +202,13 @@
         }), ms)
     }
 
+    var lightStyle = 'mapbox://styles/mapbox/bright-v9';
+    var darkStyle = 'mapbox://styles/mapbox/dark-v10';
 	mapboxgl.accessToken = 'pk.eyJ1Ijoic3RlZXBhdHRpY3N0YWlycyIsImEiOiJjbDNvaGFod2EwbXluM2pwZTJiMDYzYjh5In0.J_HeH00ry0tbLmGmTy4z5w';
     const map = new mapboxgl.Map({
         container: 'map',
         //hash: true,
-        style: 'mapbox://styles/mapbox/bright-v9',
+        style: lightStyle,
         /*
         OTHER MAPBOX STYLES:
         https://docs.mapbox.com/api/maps/styles/
@@ -407,6 +409,40 @@
     }
     var theLocationControl = new locationControl
     map.addControl(theLocationControl, 'top-left');
+
+    class themeControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+            <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                    <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Current Location">
+                        <span class="fa fa-moon icon-black" id="themeThing" aria-hidden="true" title="Globe Toggle"></span>
+                    </button>
+                </div>
+            </div>`
+            this._container.addEventListener('click', function() {
+                if (!$('#themeThing').hasClass('icon-selected')) {
+                    $('#themeThing').addClass('icon-selected');
+                    $('#themeThing').removeClass('icon-black');
+                    map.setStyle(darkStyle);
+                } else if ($('#themeThing').hasClass('icon-selected')) {
+                    $('#themeThing').removeClass('icon-selected');
+                    $('#themeThing').addClass('icon-black');
+                    map.setStyle(lightStyle);
+                }
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theThemeControl = new themeControl
+    map.addControl(theThemeControl, 'top-left');
 
     class spinnerControl {
         onAdd(map) {
