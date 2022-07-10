@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <style>
+        #myChart {
+            width: 100%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+
+    <div><b>Input Zip Code:</b></div>
+    <input type="text" id="zipCodeInput">
+    <br>
+    <button id="zipCodeSubmit">Ok</button>
+    <br><br><br>
+    <div id="cityDisplay"></div>
+    <div id="currentTime"></div>
+    <div id="canvasDiv">
+        <canvas id="weatherChart"></canvas>
+    </div>
+
+    <script>
+    function printFancyTime(dateObj) {
+        return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
+    }
+
+    // https://bobbyhadz.com/blog/javascript-get-hours-and-minutes-from-date
+    function getHour(dateObject) {
+        return dateObject.toLocaleTimeString('en-US', {
+            // en-US can be set to 'default' to use user's browser settings
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    }
+
+    function getUserPosition() {
+        function showPosition(position) {
+            var posLat = position.coords.latitude;
+            var posLng = position.coords.longitude;
+            var accuracy = position.coords.accuracy;
+        }
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
+    }
+
+    var OWMkey = "dbf262da490678e53bec10704ce4032d";
+
+    document.getElementById('zipCodeSubmit').addEventListener('click', function() {
+        var geoUrl = `https://api.openweathermap.org/geo/1.0/zip?zip=${$('#zipCodeInput').val()},US&units=imperial&appid=${OWMkey}`;
+        $.getJSON(geoUrl, function(data) {
+            initChart(data.lat, data.lon);
+            //document.getElementById('cityDisplay').innerHTML = data.name;
+
+            var getWDGLocationUrl = `https://api.weather.gov/points/${data.lat},${data.lon}`;
+            $.getJSON(getWDGLocationUrl, function(data) {
+                var cityname = data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state;
+                document.getElementById('cityDisplay').innerHTML = cityname;
+                document.getElementById('currentTime').innerHTML = printFancyTime(new Date());
+            })
+        })
+    })
+
+    function initChart(lat, lng) {
+        //document.getElementById('canvasDiv').innerHTML = '<canvas id="myChart"></canvas>';
+        if (Chart.getChart("weatherChart")) {
+            Chart.getChart("weatherChart").destroy();
+        }
+
+        var ziplat = lat
+        var ziplon = lng
+
+        var tempArr = [];
+        var tsArr = [];
+        var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${OWMkey}`;
+        $.getJSON(dataUrl, function(data) {
+            for (var x = 0; x < 20; x++) {
+                var ts = data.hourly[x].dt;
+                tsArr.push(getHour(new Date(ts * 1000)));
+                //console.log(data.hourly[x].temp)
+                tempArr.push(data.hourly[x].temp)
+                //console.log(printFancyTime(new Date(ts * 1000)))
+            }
+
+            var minTemp = Math.floor(Math.min(...tempArr) / 10) * 10;
+            var maxTemp = Math.ceil(Math.max(...tempArr) / 10) * 10;
+
+            var weatherChart = new Chart("weatherChart", {
+                type: "line",
+                data: {
+                    labels: tsArr,
+                    datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "rgba(0, 0, 255, 1.0)",
+                        borderColor: "rgba(0, 0, 255, 0.1)",
+                        data: tempArr
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {display: false},
+                    }
+                }
+            });
+        })
+    }
+    </script>
+
+</body>
+</html>
