@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=0.7,maximum-scale=1,user-scalable=no"/>
+    <meta charset="UTF-8" />
+    <title>NEXRAD</title>
+    <link rel="icon" href="/logo.png">
+
+    <link rel="stylesheet" href="/dump/7css/7.css" />
+
+    <script src="/weather/nexrad/scripts/legend.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+    <!-- https://github.com/furf/jquery-ui-touch-punch -->
+    <script src="/weather/nexrad/scripts/js/jquery.ui.touch-punch.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+
+    <!-- https://github.com/mutsuyuki/Leaflet.SmoothWheelZoom -->
+    <!-- <script src="/weather/nexrad/scripts/js/SmoothWheelZoom.js"></script> -->
+    <!-- https://github.com/jbccollins/leaflet-tile-loading-progress-control -->
+    <script src="/weather/nexrad/scripts/js/Control.TileLoadingProgress.js"></script>
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/Control.TileLoadingProgress.css" />
+    <!-- https://github.com/Leaflet/Leaflet.markercluster -->
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/MarkerCluster.css" />
+	<link rel="stylesheet" href="/weather/nexrad/scripts/css/MarkerCluster.Default.css" />
+	<script src="/weather/nexrad/scripts/js/leaflet.markercluster-src.js"></script>
+    <!-- https://github.com/mapbox/geojson-vt -->
+    <script src="/weather/nexrad/scripts/js/geojson-vt.js"></script>
+    <!-- https://github.com/iamtekson/leaflet-geojson-vt -->
+    <script src="/weather/nexrad/scripts/js/leaflet-geojson-vt.js"></script>
+    <!-- https://github.com/seabre/simplify-geometry -->
+    <script src="/weather/nexrad/scripts/js/simplifygeometry-0.0.2.js"></script>
+    <!-- https://github.com/makinacorpus/Leaflet.Spin -->
+    <script src="/weather/nexrad/scripts/js/spin.js"></script>
+    <script src="/weather/nexrad/scripts/js/leaflet.spin.js"></script>
+    <!-- https://github.com/Leaflet/Leaflet.fullscreen -->
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/leaflet.fullscreen.css" />
+    <script src='/weather/nexrad/scripts/js/Leaflet.fullscreen.js'></script>
+    <!-- https://github.com/domoritz/leaflet-locatecontrol -->
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/L.Control.Locate.css" />
+    <script src='/weather/nexrad/scripts/js/L.Control.Locate.js'></script>
+    <!-- https://cdnjs.com/libraries/font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- https://github.com/CliffCloud/Leaflet.EasyButton -->
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/easy-button.css">
+    <script src="/weather/nexrad/scripts/js/easy-button.js"></script>
+    <!-- https://gitlab.com/manuel.richter95/leaflet.notifications -->
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/leaflet-notifications.css">
+    <script src="/weather/nexrad/scripts/js/leaflet-notifications.js"></script>
+    <!-- https://github.com/Eclipse1979/leaflet-slider -->
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/leaflet-slider.css">
+    <script src="/weather/nexrad/scripts/js/leaflet-slider.js"></script>
+    <!-- https://github.com/FCOO/leaflet-control-topcenter -->
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/leaflet-control-topcenter.css">
+    <script src="/weather/nexrad/scripts/js/leaflet-control-topcenter.js"></script>
+    <!-- https://github.com/foto-andreas/leaflet-control-textinput -->
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/Control.Textinput.css">
+    <script src="/weather/nexrad/scripts/js/Control.Textinput.js"></script>
+    <!-- https://github.com/unbam/Leaflet.SlideMenu -->
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/L.Control.SlideMenu.css" />
+    <script src="/weather/nexrad/scripts/js/L.Control.SlideMenu.js"></script>
+    <!-- https://github.com/nodeca/pako -->
+    <script src="/weather/nexrad/scripts/js/pako.min.js"></script>
+    <!-- https://github.com/seikichi/tiff.js/ -->
+    <script src="/weather/nexrad/scripts/js/tiff.js"></script>
+    <!-- https://docs.mapbox.com/mapbox-gl-js/guides/install/
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css"/>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+    https://github.com/mapbox/mapbox-gl-leaflet
+    <script src="/weather/nexrad/scripts/js/leaflet-mapbox-gl.js"></script> -->
+
+
+    <link rel="stylesheet" href="/weather/nexrad/nexrad.css">
+</head>
+<body>
+    <div class="window" id="content">
+        <div class="title-bar">
+            <div class="title-bar-text">Exploring - Weather Radar</div>
+            <div class="title-bar-controls">
+                <button aria-label="Minimize"></button>
+                <button aria-label="Maximize"></button>
+                <button onclick="window.location.href = '/index.html'" aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="window-body" id="windowBody">
+    <div style="float: left">
+        <form>
+            <b><label for="radstatzipList">Input Radar Station:</b></label>
+                <div>(e.g. <a id="klwx" style="cursor: pointer">KLWX</a>)</div>
+            <input name="radstatzipList" id="radstatzipList">
+            <br>
+            <button id="radstatzipSubmit">Ok</button>
+        </form>
+        <script>
+            document.getElementById('klwx').addEventListener("click", function() {
+                setRadarStation('KLWX')
+            });
+        </script>
+        <button style="display: none" id="polygon">draw</button>
+        <button style="display: none" id="clearpolygon">clear</button>
+        <div><b>Zip: </b><a id="radstatzip"></a></div>
+        <div style="display: none"><b>Stat: </b><a id="statti"></a></div>
+        <div style="display: none" id="squareBounds"></div>
+        <div style="display: none" id="curProccessingFrame"></div>
+        <div style="display: none" id="curProccessingProduct"></div>
+        <div style="display: none" id="isRPVActive">no</div>
+        <div style="display: none" id="fullWdgTimestampXml"></div>
+        <div style="display: none" id="wdgArray"></div>
+        <div style="display: none" id="clearTimeout"></div>
+        <div style="display: none" id="blobURL0"></div>
+        <div style="display: none" id="blobURL1"></div>
+        <div style="display: none" id="blobURL2"></div>
+        <div style="display: none" id="blobURL3"></div>
+        <div style="display: none" id="blobURL4"></div>
+        <div style="display: none" id="blobURL5"></div>
+        <div style="display: none"><b>bref array: </b><a id="bref_rawarr"></a></div>
+        <div style="display: none"><b>isu full array: </b><a id="isuarrfull"></a></div>
+        <div style="display: none"><b>isu full array velocity: </b><a id="isuarrfullvel"></a></div>
+        <div style="display: none"><b>isu array: </b><a id="isuarr"></a></div>
+        <div style="display: none"><b>isu year: </b><a id="isuyear"></a></div>
+        <div style="display: none"><b>isu month: </b><a id="isumonth"></a></div>
+        <div style="display: none"><b>isu day: </b><a id="isuday"></a></div>
+        <div style="display: none"><b>isu refl array: </b><a id="isureflarr"></a></div>
+        <div style="display: none"><b>isu refl year: </b><a id="isureflyear"></a></div>
+        <div style="display: none"><b>isu refl month: </b><a id="isureflmonth"></a></div>
+        <div style="display: none"><b>isu refl day: </b><a id="isureflday"></a></div>
+        <div style="display: none" id="recievedDiv"><b>GeoJSON Data: </b><a id="recieved">Waiting...</a></div>
+        <div><b>Coords: </b>
+            <br><a id="radstatcoords"></a></div>
+        <div><b>Timestamp: </b>
+            <br><a id="ts"></a></div>
+        <br>
+        <button id="modalBtn" onclick="toggleRadstatModal()">Radar <br>Status</button>
+    </div>
+
+    <div style="float: right; z-index: 15; position: relative">
+        <div class="buttons">
+            <button id="back" class="action_btn"><</button>
+            <button id="pause" class="action_btn">Pause</button>
+            <button id="play" class="action_btn">Play</button>
+            <button id="forward" class="action_btn">></button>
+        </div>
+        <br>
+        <br>
+        <a>Radar Opacity</a>
+        <br>
+        <input id="opacitySlider" type="range" min="0" max="1" step="0.1" value="1">
+        <br>
+        <a>Map Zoom</a>
+        <br>
+        <input id="zoomSlider" type="range" min="3" max="20" step="0.5" value="7">
+        <br>
+        <a>Current Frame</a>
+        <br>
+        <input id="timestampSlider" type="range" min="0" max="10" step="1" value="0">
+        <br>
+        <!-- <div id="progressbar"></div> -->
+        <br>
+        <div style="float: right;">
+            <!-- <input type="checkbox" id="labels" name="labels">
+            <label for="labels">Stations</label>
+            <br>
+            <input type="checkbox" id="lightning" name="lightning">
+            <label for="lightning">Lightning</label>
+            <br>
+            <input type="checkbox" id="alerts" name="alerts">
+            <label for="alerts">Alerts</label>
+            <br>
+            <input type="checkbox" id="velocity" name="velocity">
+            <label for="velocity">Velocity</label> -->
+
+            <div id="list1" class="dropdown-check-list" tabindex="100">
+                <span class="anchor">Layers</span>
+                <ul class="items">
+                    <!-- <li><input type="checkbox" />Apple </li> -->
+                    <br>
+                    <input type="checkbox" id="labels" name="labels">
+                    <label id="stationLabel" for="labels">Stations</label>
+                    <br>
+                    <input type="checkbox" id="lightning" name="lightning">
+                    <label for="lightning">Lightning</label>
+                    <br>
+                    <input type="checkbox" id="alerts" name="alerts">
+                    <label id="alertsLabel" for="alerts">Alerts&nbsp;&nbsp;&nbsp;<button id="modalBtn" onclick="toggleAlertModal()">?</button></label>
+                    <br>
+                    <br>
+                    <div><b>Animated</b></div>
+                    <div id="data" style="display: block">
+                        <input type="checkbox" id="datacheck" name="data">
+                        <label id="datatext" for="datacheck">Products</label>
+                    </div>
+                    <div id="prods" style="display: none">
+                        <input type="checkbox" id="reflectivity" name="reflectivity">
+                        <label for="reflectivity">Reflectivity</label>
+                        <br>
+                        <input type="checkbox" id="velocity" name="velocity">
+                        <label for="velocity">Velocity</label>
+                    </div>
+                    <div>
+                        <br>
+                        <div><u>Ref</u> <i><a id="isureflloaded">0 bytes</a></i></div>
+                        <div><u>Vel</u> <i><a id="isuloaded">0 bytes</a></i></div>
+                    </div>
+                    <br>
+                    <div><b>One Frame</b></div>
+                    <div id="singimg" style="display: block">
+                        <input type="checkbox" id="singimgcheck" name="singimgcheck">
+                        <label id="singimg" for="singimgcheck">Products</label>
+                    </div>
+                    <div id="singimgprods" style="display: none">
+                        <input type="checkbox" id="singimgreflectivity" name="singimgreflectivity">
+                        <label for="singimgreflectivity">Reflectivity</label>
+                        <br>
+                        <input type="checkbox" id="singimgvelocity" name="singimgvelocity">
+                        <label for="singimgvelocity">Velocity</label>
+                        <br>
+                        <input type="checkbox" id="singimgechotops" name="singimgechotops">
+                        <label for="singimgechotops">Echo Tops</label>
+                        <br>
+                        <input type="checkbox" id="singimgvil" name="singimgvil">
+                        <label for="singimgvil">VIL</label>
+                    </div>
+                    <br>
+                    <br>
+                    <div style="display: flex; align-items: center; justify-content: center">
+                        <button onclick="toggleForecastModal()">Forecast</button>
+                    </div>
+                    <br>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- https://github.com/SteepAtticStairs/steepatticstairs.github.io/blob/d9d7f728fc0cc04a844c8313140b5483597506c0/weather/nexrad.html#L295 -->
+    <!-- <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText">Nothing here yet</p>
+        </div>
+    </div> -->
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="window glass modal-content-xp" id="myModalBody">
+            <div class="title-bar" style="cursor: move" id="myModalBodyDrag">
+                <div class="title-bar-text">Radar Status</div>
+                <div class="title-bar-controls">
+                    <button onclick="document.getElementById('myModal').style.display = 'none'" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <p id="modalText">Nothing here yet</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModalAlert" class="modal">
+        <!-- Modal content -->
+        <div class="window glass modal-content-xp" id="myModalAlertBody">
+            <div class="title-bar" style="cursor: move" id="myModalAlertBodyDrag">
+                <div class="title-bar-text">Alerts Description</div>
+                <div class="title-bar-controls">
+                    <button onclick="document.getElementById('myModalAlert').style.display = 'none'" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body modal-content-xp-scrollable">
+                <p id="alertModalText">Nothing here yet</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModalForecast" class="modal">
+        <!-- Modal content -->
+        <div class="window glass modal-content-xp" id="myModalForecastBody">
+            <div class="title-bar" style="cursor: move" id="myModalForecastBodyDrag">
+                <div class="title-bar-text">Weather Data</div>
+                <div class="title-bar-controls">
+                    <button onclick="document.getElementById('myModalForecast').style.display = 'none'" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="window-body modal-content-xp-scrollable">
+                <iframe id="forecastIframe" src="/weather/combined.html" style="height: 70vh; width: 97%"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div id="weathermap"></div>
+
+    <script src="/weather/nexrad/nexrad.js"></script>
+    </div>
+    </div>
+</body>
+</html>

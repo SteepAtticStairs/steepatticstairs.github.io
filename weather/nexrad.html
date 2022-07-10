@@ -1,297 +1,1989 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width,initial-scale=0.7,maximum-scale=1,user-scalable=no"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
     <meta charset="UTF-8" />
     <title>NEXRAD</title>
     <link rel="icon" href="/logo.png">
 
-    <link rel="stylesheet" href="/dump/7css/7.css" />
-
-    <script src="/weather/nexrad/scripts/legend.js"></script>
-
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
-    <!-- https://github.com/furf/jquery-ui-touch-punch -->
-    <script src="/weather/nexrad/scripts/js/jquery.ui.touch-punch.js"></script>
+    <link href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
 
-    <!-- https://github.com/mutsuyuki/Leaflet.SmoothWheelZoom -->
-    <!-- <script src="/weather/nexrad/scripts/js/SmoothWheelZoom.js"></script> -->
-    <!-- https://github.com/jbccollins/leaflet-tile-loading-progress-control -->
-    <script src="/weather/nexrad/scripts/js/Control.TileLoadingProgress.js"></script>
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/Control.TileLoadingProgress.css" />
-    <!-- https://github.com/Leaflet/Leaflet.markercluster -->
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/MarkerCluster.css" />
-	<link rel="stylesheet" href="/weather/nexrad/scripts/css/MarkerCluster.Default.css" />
-	<script src="/weather/nexrad/scripts/js/leaflet.markercluster-src.js"></script>
-    <!-- https://github.com/mapbox/geojson-vt -->
-    <script src="/weather/nexrad/scripts/js/geojson-vt.js"></script>
-    <!-- https://github.com/iamtekson/leaflet-geojson-vt -->
-    <script src="/weather/nexrad/scripts/js/leaflet-geojson-vt.js"></script>
-    <!-- https://github.com/seabre/simplify-geometry -->
-    <script src="/weather/nexrad/scripts/js/simplifygeometry-0.0.2.js"></script>
-    <!-- https://github.com/makinacorpus/Leaflet.Spin -->
-    <script src="/weather/nexrad/scripts/js/spin.js"></script>
-    <script src="/weather/nexrad/scripts/js/leaflet.spin.js"></script>
-    <!-- https://github.com/Leaflet/Leaflet.fullscreen -->
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/leaflet.fullscreen.css" />
-    <script src='/weather/nexrad/scripts/js/Leaflet.fullscreen.js'></script>
-    <!-- https://github.com/domoritz/leaflet-locatecontrol -->
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/L.Control.Locate.css" />
-    <script src='/weather/nexrad/scripts/js/L.Control.Locate.js'></script>
     <!-- https://cdnjs.com/libraries/font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <!-- https://github.com/CliffCloud/Leaflet.EasyButton -->
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/easy-button.css">
-    <script src="/weather/nexrad/scripts/js/easy-button.js"></script>
-    <!-- https://gitlab.com/manuel.richter95/leaflet.notifications -->
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/leaflet-notifications.css">
-    <script src="/weather/nexrad/scripts/js/leaflet-notifications.js"></script>
-    <!-- https://github.com/Eclipse1979/leaflet-slider -->
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/leaflet-slider.css">
-    <script src="/weather/nexrad/scripts/js/leaflet-slider.js"></script>
-    <!-- https://github.com/FCOO/leaflet-control-topcenter -->
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/leaflet-control-topcenter.css">
-    <script src="/weather/nexrad/scripts/js/leaflet-control-topcenter.js"></script>
-    <!-- https://github.com/foto-andreas/leaflet-control-textinput -->
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/Control.Textinput.css">
-    <script src="/weather/nexrad/scripts/js/Control.Textinput.js"></script>
-    <!-- https://github.com/unbam/Leaflet.SlideMenu -->
-    <link rel="stylesheet" href="/weather/nexrad/scripts/css/L.Control.SlideMenu.css" />
-    <script src="/weather/nexrad/scripts/js/L.Control.SlideMenu.js"></script>
-    <!-- https://github.com/nodeca/pako -->
-    <script src="/weather/nexrad/scripts/js/pako.min.js"></script>
-    <!-- https://github.com/seikichi/tiff.js/ -->
-    <script src="/weather/nexrad/scripts/js/tiff.js"></script>
-    <!-- https://docs.mapbox.com/mapbox-gl-js/guides/install/
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css"/>
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
-    https://github.com/mapbox/mapbox-gl-leaflet
-    <script src="/weather/nexrad/scripts/js/leaflet-mapbox-gl.js"></script> -->
+    <!-- https://github.com/tobinbradley/mapbox-gl-pitch-toggle-control -->
+    <link href="/weather/nexrad/scripts/css/pitchtogglecontrol.css" rel="stylesheet">
+    <script src="/weather/nexrad/scripts/js/pitchtogglecontrol.js"></script>
 
+    <script src="/weather/nexrad/scripts/js/spin.umd.js"></script>
+    <link rel="stylesheet" href="/weather/nexrad/scripts/css/spin.css">
+    <!-- https://github.com/MazeMap/mapbox-gl-fps -->
+    <script src="/weather/nexrad/scripts/js/MapboxFPS.js"></script>
+    <!-- https://github.com/smithmicro/mapbox-gl-circle -->
+    <script src='/weather/nexrad/scripts/js/mapbox-gl-circle.min.js'></script>
 
-    <link rel="stylesheet" href="/weather/nexrad/nexrad.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+        .icon-black {
+            color:rgb(0, 0, 0);
+        }
+        .green-icon {
+            color:rgb(17, 167, 17);
+        }
+        .red-icon {
+            color:red;
+        }
+        .orange-icon {
+            color:rgb(255, 157, 0);
+        }
+        .icon-selected {
+            color:rgb(0, 132, 255);
+        }
+
+        .mapboxgl-ctrl-top-center {
+            position: relative !important;
+            left: 0;
+            right: 0;
+            top: 10px;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .mapboxgl-ctrl-bottom-center {
+            position: absolute !important;
+            left: 0;
+            right: 0;
+            bottom: 15px;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .false-anchor {
+            cursor: pointer;
+            text-decoration: underline;
+            color:rgb(0, 0, 238) !important;
+        }
+
+        .ui-dialog {
+            /*
+            * https://stackoverflow.com/a/34299947/18758797
+            */
+            background:
+                /* Shadow covers */
+                linear-gradient(white 30%, rgba(255,255,255,0)),
+                linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+                
+                /* Shadows */
+                radial-gradient(50% 0, farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)),
+                radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+            background:
+                /* Shadow covers */
+                linear-gradient(white 30%, rgba(255,255,255,0)),
+                linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+                
+                /* Shadows */
+                radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+                radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+            background-repeat: no-repeat;
+            background-color: white;
+            background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+            
+            /* Opera doesn't support this in the shorthand */
+            background-attachment: local, local, scroll, scroll;
+        }
+    </style>
 </head>
 <body>
-    <div class="window" id="content">
-        <div class="title-bar">
-            <div class="title-bar-text">Exploring - Weather Radar</div>
-            <div class="title-bar-controls">
-                <button aria-label="Minimize"></button>
-                <button aria-label="Maximize"></button>
-                <button onclick="window.location.href = '/index.html'" aria-label="Close"></button>
-            </div>
-        </div>
-        <div class="window-body" id="windowBody">
-    <div style="float: left">
-        <form>
-            <b><label for="radstatzipList">Input Radar Station:</b></label>
-                <div>(e.g. <a id="klwx" style="cursor: pointer">KLWX</a>)</div>
-            <input name="radstatzipList" id="radstatzipList">
-            <br>
-            <button id="radstatzipSubmit">Ok</button>
-        </form>
-        <script>
-            document.getElementById('klwx').addEventListener("click", function() {
-                setRadarStation('KLWX')
+
+<input id="timestampSlider" type="range" min="0" max="10" step="1" value="0" style="display: none">
+
+<button style="display: none" id="polygon">draw</button>
+<button style="display: none" id="clearpolygon">clear</button>
+
+<div id="dialog" style="display: none">
+    <div><b>Radar Status: <a id="radstat"></a></b></div>
+    <br>
+    <div><b>Radar Station: </b><a id="radstatStation"></a></div>
+    <div><b>Radar Name: </b><a id="radstatName"></a></div>
+    <div><b>Data Last Received: </b><a id="radstatLastData"></a></div>
+    <br>
+    <div><b>Message ID: </b><a id="radstatMessageID"></a></div>
+    <div><b>Message Name: </b><a id="radstatMessageName"></a></div>
+    <br>
+    <div><b>Message Time: </b><a id="radstatMessageTime"></a></div>
+    <div style="white-space: pre-wrap;"><b>Message: </b><ul><a id="radstatMessage"></a></ul></div>
+</div>
+
+<div id="proxyDialog" style="display: none">
+    <div><b>The Iowa State radar feed is not responding.</b></div>
+    <br>
+    <div>
+        It is likely you have been rate-limited because of an excessive amount of requests.
+        <br><br>
+        You can ignore this message, and continue using the app without radar, and still get functionality from 
+        other services that do not come from Iowa State - 
+        e.g. alert polygons, satellite, etc.
+        <br><br>
+        Or, you can choose to use a PHP proxy to attempt to bypass the block.
+    </div>
+    <br>
+    <button id="proxyButton">Proxy</button>
+    <input type="hidden" autofocus="true" />
+    <br><br>
+</div>
+
+<div id="rpvDialog" style="display: none">
+    <div><b>Base Reflectivity</b></div>
+    <button id="bref_raw">BREF_RAW</button>
+    <br><br>
+    <div><b>Base Velocity</b></div>
+    <button id="bvel_raw">BVEL_RAW</button>
+</div>
+
+<div id="tsDialog" style="display: none">
+    <div><b>Input Date and Time:</b></div>
+    <!-- <input id="theUnixTs" value="1650288960"> -->
+    <br>
+    <input type="datetime-local" id="tsDateTime">
+    <br><br>
+    <button id="unixTsSubmit">Ok</button>
+    <br><br>
+    <button id="unixTsReset">Reset</button>
+</div>
+<script>
+    // 1650288960 (4.18.2022)
+    var currentTs = Math.floor(Date.now() / 1000);
+
+    // https://stackoverflow.com/a/28149561/18758797
+    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    var localISOTime = (new Date(Date.now() - tzoffset)).toISOString();
+    var currentDateTime = localISOTime.slice(0, -8);
+    $('#tsDateTime').val(currentDateTime);
+
+    document.getElementById('unixTsReset').addEventListener('click', function() {
+        $('#tsDateTime').val(currentDateTime);
+        document.getElementById('timestampDisplay').innerHTML = printFancyTime(new Date($('#tsDateTime').val()))
+    })
+</script>
+
+<div id="isDown" style="display: none">undecided</div>
+<div id="isDotPopupOpen" style="display: none">no</div>
+
+<div id="map"></div>
+
+<script>
+    function getTimeStamp(dateObje) {
+        return Math.round(dateObje.getTime() / 1000);
+    }
+    var currentTime = new Date();
+    var currentTimeStamp = getTimeStamp(currentTime);
+
+    var phpProxy;
+    function useProxy(trufals) {
+        if (trufals) {
+            phpProxy = 'https://php-cors-proxy.herokuapp.com/?';
+        } else if (!trufals) {
+            phpProxy = '';
+        }
+    }
+    useProxy(true);
+
+    //var allFrames = 20;
+    //var minutesToSubtract = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+    //minutesToSubtract.reverse();
+
+    var allFrames;
+    var minutesToSubtract = [];
+    function numberOfFrames(numofframes) {
+        allFrames = numofframes;
+        for (var w = 0; w < numofframes + 1; w++) {
+            minutesToSubtract.push(w * 5);
+        }
+        minutesToSubtract.reverse();
+    }
+    numberOfFrames(15);
+    // radar loop time is in ms
+    var radarLoopTime = 500;
+
+    var parser = document.createElement('a');
+    parser.href = window.location.href;
+    console.log(parser.hash);
+
+    function printFancyTime(dateObj) {
+        return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
+    }
+
+    function testISUDown(ms) {
+        // https://mesonet.agron.iastate.edu/images/rss.gif
+        $.get('https://mesonet.agron.iastate.edu/json/example.php', function(data) {
+            console.log(data)
+            document.getElementById('isDown').innerHTML = 'up';
+        })
+        setTimeout((function() {
+            if (document.getElementById('isDown').innerHTML == 'undecided') {
+                document.getElementById('isDown').innerHTML = 'down';
+                console.log('down')
+
+                if (parser.hash == "#proxy") {
+                    $('#proxyButton').click();
+                } else if (parser.hash == "#ignore") {
+                    return;
+                } else if (parser.hash != "#proxy") {
+                    $("#proxyDialog").dialog({
+                        modal: true,
+                        // https://stackoverflow.com/a/30624445/18758797
+                        open: function () {
+                            $(this).parent().css({
+                                position: 'relative',
+                                top: 10,
+                                maxHeight: '70vh',
+                                overflow: 'scroll'
+                            });
+                        }
+                    });
+                }
+            } else if (document.getElementById('isDown').innerHTML == 'up') {
+                console.log('up')
+            }
+        }), ms)
+    }
+
+    var lightStyle = 'mapbox://styles/mapbox/bright-v9';
+    var darkStyle = 'mapbox://styles/mapbox/dark-v10';
+	mapboxgl.accessToken = 'pk.eyJ1Ijoic3RlZXBhdHRpY3N0YWlycyIsImEiOiJjbDNvaGFod2EwbXluM2pwZTJiMDYzYjh5In0.J_HeH00ry0tbLmGmTy4z5w';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        //hash: true,
+        style: lightStyle,
+        /*
+        OTHER MAPBOX STYLES:
+        https://docs.mapbox.com/api/maps/styles/
+        mapbox://styles/mapbox/bright-v9
+        mapbox://styles/mapbox/streets-v11
+        mapbox://styles/mapbox/light-v10
+        mapbox://styles/mapbox/dark-v10
+        mapbox://styles/mapbox/navigation-night-v1
+        */
+        //36.8281576, -98.5606744, 4
+        //1.5, [30, 50]
+        zoom: 3,
+        center: [-98.5606744, 36.8281576],
+        projection: 'equirectangular'
+    });
+    map.addControl(new mapboxgl.NavigationControl({visualizePitch: true}), "top-left");
+    map.addControl(new PitchToggle({ minpitchzoom: 11 }), "top-left");
+
+    map.addControl(new MapboxFPS.FPSControl(), 'bottom-left');
+
+    var locationMarkerArray = []
+    function getLocation(trfa) {
+        if (trfa) {
+            function showPosition(position) {
+                var posLat = position.coords.latitude;
+                var posLng = position.coords.longitude;
+                var accuracy = position.coords.accuracy;
+
+                var locationMarker = new mapboxgl.Marker({
+                    color: "#03d3fc",
+                }).setLngLat([posLng, posLat])
+                    .setPopup(new mapboxgl.Popup().setHTML(`
+                        <div><b>Location:</b></div>
+                        <div>${posLat}<br>${posLng}</div>
+                        <br>
+                        <div><b>Accuracy:</b></div>
+                        <div>${accuracy} meters</div>
+                    `))
+                    .addTo(map)
+                locationMarkerArray.push(locationMarker)
+
+                var myCircle = new MapboxCircle({lat: posLat, lng: posLng}, accuracy, {
+                    editable: false,
+                    fillColor: '#0097fc'
+                }).addTo(map);
+                locationMarkerArray.push(myCircle)
+
+                // you need to change the zoom to initially render the circle
+                map.setZoom(map.getZoom() + 0.01)
+                map.setZoom(map.getZoom() - 0.01)
+            }
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+        } else if (!trfa) {
+            for (var w = 0; w < locationMarkerArray.length; w++) {
+                locationMarkerArray[w].remove();
+            }
+            locationMarkerArray = [];
+        }
+    }
+    //getLocation();
+
+    function setGlobe(truefalse) {
+        if (truefalse) {
+            map.setProjection('globe');
+            map.setZoom(2)
+            var center = map.getCenter();
+            // find antipode (coordiates on the other side of the earth from you)
+            // https://github.com/zeke/antipodes/blob/main/index.js
+            var centerLat = center.lat > 0 ? -center.lat : Math.abs(center.lat);
+            var centerLng = center.lng > 0 ? center.lng - 180 : center.lng + 180;
+            map.setCenter([centerLng, centerLat]);
+            map.flyTo({
+                center: center,
+                essential: true // this animation is considered essential with respect to prefers-reduced-motion
             });
-        </script>
-        <button style="display: none" id="polygon">draw</button>
-        <button style="display: none" id="clearpolygon">clear</button>
-        <div><b>Zip: </b><a id="radstatzip"></a></div>
-        <div style="display: none"><b>Stat: </b><a id="statti"></a></div>
-        <div style="display: none" id="squareBounds"></div>
-        <div style="display: none" id="curProccessingFrame"></div>
-        <div style="display: none" id="curProccessingProduct"></div>
-        <div style="display: none" id="isRPVActive">no</div>
-        <div style="display: none" id="fullWdgTimestampXml"></div>
-        <div style="display: none" id="wdgArray"></div>
-        <div style="display: none" id="clearTimeout"></div>
-        <div style="display: none" id="blobURL0"></div>
-        <div style="display: none" id="blobURL1"></div>
-        <div style="display: none" id="blobURL2"></div>
-        <div style="display: none" id="blobURL3"></div>
-        <div style="display: none" id="blobURL4"></div>
-        <div style="display: none" id="blobURL5"></div>
-        <div style="display: none"><b>bref array: </b><a id="bref_rawarr"></a></div>
-        <div style="display: none"><b>isu full array: </b><a id="isuarrfull"></a></div>
-        <div style="display: none"><b>isu full array velocity: </b><a id="isuarrfullvel"></a></div>
-        <div style="display: none"><b>isu array: </b><a id="isuarr"></a></div>
-        <div style="display: none"><b>isu year: </b><a id="isuyear"></a></div>
-        <div style="display: none"><b>isu month: </b><a id="isumonth"></a></div>
-        <div style="display: none"><b>isu day: </b><a id="isuday"></a></div>
-        <div style="display: none"><b>isu refl array: </b><a id="isureflarr"></a></div>
-        <div style="display: none"><b>isu refl year: </b><a id="isureflyear"></a></div>
-        <div style="display: none"><b>isu refl month: </b><a id="isureflmonth"></a></div>
-        <div style="display: none"><b>isu refl day: </b><a id="isureflday"></a></div>
-        <div style="display: none" id="recievedDiv"><b>GeoJSON Data: </b><a id="recieved">Waiting...</a></div>
-        <div><b>Coords: </b>
-            <br><a id="radstatcoords"></a></div>
-        <div><b>Timestamp: </b>
-            <br><a id="ts"></a></div>
-        <br>
-        <button id="modalBtn" onclick="toggleRadstatModal()">Radar <br>Status</button>
-    </div>
+        } else if (!truefalse) {
+            map.setProjection('equirectangular');
+        }
+    }
 
-    <div style="float: right; z-index: 15; position: relative">
-        <div class="buttons">
-            <button id="back" class="action_btn"><</button>
-            <button id="pause" class="action_btn">Pause</button>
-            <button id="play" class="action_btn">Play</button>
-            <button id="forward" class="action_btn">></button>
-        </div>
-        <br>
-        <br>
-        <a>Radar Opacity</a>
-        <br>
-        <input id="opacitySlider" type="range" min="0" max="1" step="0.1" value="1">
-        <br>
-        <a>Map Zoom</a>
-        <br>
-        <input id="zoomSlider" type="range" min="3" max="20" step="0.5" value="7">
-        <br>
-        <a>Current Frame</a>
-        <br>
-        <input id="timestampSlider" type="range" min="0" max="10" step="1" value="0">
-        <br>
-        <!-- <div id="progressbar"></div> -->
-        <br>
-        <div style="float: right;">
-            <!-- <input type="checkbox" id="labels" name="labels">
-            <label for="labels">Stations</label>
-            <br>
-            <input type="checkbox" id="lightning" name="lightning">
-            <label for="lightning">Lightning</label>
-            <br>
-            <input type="checkbox" id="alerts" name="alerts">
-            <label for="alerts">Alerts</label>
-            <br>
-            <input type="checkbox" id="velocity" name="velocity">
-            <label for="velocity">Velocity</label> -->
+    // https://github.com/mapbox/mapbox-gl-js/issues/3039#issuecomment-401964567
+    function registerControlPosition(map, positionName) {
+        if (map._controlPositions[positionName]) {
+            return;
+        }
+        var positionContainer = document.createElement('div');
+        positionContainer.className = `mapboxgl-ctrl-${positionName}`;
+        map._controlContainer.appendChild(positionContainer);
+        map._controlPositions[positionName] = positionContainer;
+    }
+    registerControlPosition(map, 'top-center');
+    registerControlPosition(map, 'bottom-center');
+    registerControlPosition(map, 'center');
 
-            <div id="list1" class="dropdown-check-list" tabindex="100">
-                <span class="anchor">Layers</span>
-                <ul class="items">
-                    <!-- <li><input type="checkbox" />Apple </li> -->
-                    <br>
-                    <input type="checkbox" id="labels" name="labels">
-                    <label id="stationLabel" for="labels">Stations</label>
-                    <br>
-                    <input type="checkbox" id="lightning" name="lightning">
-                    <label for="lightning">Lightning</label>
-                    <br>
-                    <input type="checkbox" id="alerts" name="alerts">
-                    <label id="alertsLabel" for="alerts">Alerts&nbsp;&nbsp;&nbsp;<button id="modalBtn" onclick="toggleAlertModal()">?</button></label>
-                    <br>
-                    <br>
-                    <div><b>Animated</b></div>
-                    <div id="data" style="display: block">
-                        <input type="checkbox" id="datacheck" name="data">
-                        <label id="datatext" for="datacheck">Products</label>
-                    </div>
-                    <div id="prods" style="display: none">
-                        <input type="checkbox" id="reflectivity" name="reflectivity">
-                        <label for="reflectivity">Reflectivity</label>
-                        <br>
-                        <input type="checkbox" id="velocity" name="velocity">
-                        <label for="velocity">Velocity</label>
-                    </div>
-                    <div>
-                        <br>
-                        <div><u>Ref</u> <i><a id="isureflloaded">0 bytes</a></i></div>
-                        <div><u>Vel</u> <i><a id="isuloaded">0 bytes</a></i></div>
-                    </div>
-                    <br>
-                    <div><b>One Frame</b></div>
-                    <div id="singimg" style="display: block">
-                        <input type="checkbox" id="singimgcheck" name="singimgcheck">
-                        <label id="singimg" for="singimgcheck">Products</label>
-                    </div>
-                    <div id="singimgprods" style="display: none">
-                        <input type="checkbox" id="singimgreflectivity" name="singimgreflectivity">
-                        <label for="singimgreflectivity">Reflectivity</label>
-                        <br>
-                        <input type="checkbox" id="singimgvelocity" name="singimgvelocity">
-                        <label for="singimgvelocity">Velocity</label>
-                        <br>
-                        <input type="checkbox" id="singimgechotops" name="singimgechotops">
-                        <label for="singimgechotops">Echo Tops</label>
-                        <br>
-                        <input type="checkbox" id="singimgvil" name="singimgvil">
-                        <label for="singimgvil">VIL</label>
-                    </div>
-                    <br>
-                    <br>
-                    <div style="display: flex; align-items: center; justify-content: center">
-                        <button onclick="toggleForecastModal()">Forecast</button>
-                    </div>
-                    <br>
-                </ul>
-            </div>
-        </div>
-    </div>
+    var btnStyle = 'style="width: 35px; height: 35px"'
+    var btnIconStyle = 'style="font-size: 16"'
 
-    <!-- https://github.com/SteepAtticStairs/steepatticstairs.github.io/blob/d9d7f728fc0cc04a844c8313140b5483597506c0/weather/nexrad.html#L295 -->
-    <!-- <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p id="modalText">Nothing here yet</p>
-        </div>
-    </div> -->
+    class infoControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+                <div id='infoContainer' style='
+                text-align: center;
+                width: auto;
+                height: auto;
+                padding: 5px 10px;
+                /* line-height: 25px; */
+                background-color: white;
+                border: 1px solid black;
+                border-radius: 5px;
+                '>
+                    <div id='tileThing'><b>Tiles: </b><a id='tilesLoadedDisplay'>Done</a></div>
+                    <div id='timestampDisplay'></div>
+                    <b><div id='stationDisplay' style='cursor: pointer' onclick='setStation()'></div></b>
+                </div>`
+            this._container.addEventListener('click', function() {
+                console.log('sus')
+            })
+            return this._container;
+        }
 
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
-        <!-- Modal content -->
-        <div class="window glass modal-content-xp" id="myModalBody">
-            <div class="title-bar" style="cursor: move" id="myModalBodyDrag">
-                <div class="title-bar-text">Radar Status</div>
-                <div class="title-bar-controls">
-                    <button onclick="document.getElementById('myModal').style.display = 'none'" aria-label="Close"></button>
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theInfoControl = new infoControl
+    map.addControl(theInfoControl, 'top-center');
+
+    class globeControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Globe Toggle">
+                                <span class="fa fa-globe icon-black" id="globeThing" aria-hidden="true" title="Globe Toggle"></span>
+                            </button>
+                        </div>
+                    </div>`
+            this._container.addEventListener('click', function() {
+                if (!$('#globeThing').hasClass('icon-selected')) {
+                    $('#globeThing').addClass('icon-selected');
+                    $('#globeThing').removeClass('icon-black');
+                    setGlobe(true);
+                } else if ($('#globeThing').hasClass('icon-selected')) {
+                    $('#globeThing').removeClass('icon-selected');
+                    $('#globeThing').addClass('icon-black');
+                    setGlobe(false);
+                }
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theGlobeControl = new globeControl;
+    map.addControl(theGlobeControl, 'top-left');
+
+    class locationControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+            <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                    <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Current Location">
+                        <span class="fa fa-location-crosshairs icon-black" id="locationThing" aria-hidden="true" title="Globe Toggle"></span>
+                    </button>
                 </div>
-            </div>
-            <div class="window-body">
-                <p id="modalText">Nothing here yet</p>
-            </div>
-        </div>
-    </div>
+            </div>`
+            this._container.addEventListener('click', function() {
+                if (!$('#locationThing').hasClass('icon-selected')) {
+                    $('#locationThing').addClass('icon-selected');
+                    $('#locationThing').removeClass('icon-black');
+                    getLocation(true);
+                } else if ($('#locationThing').hasClass('icon-selected')) {
+                    $('#locationThing').removeClass('icon-selected');
+                    $('#locationThing').addClass('icon-black');
+                    getLocation(false);
+                }
+            })
+            return this._container;
+        }
 
-    <div id="myModalAlert" class="modal">
-        <!-- Modal content -->
-        <div class="window glass modal-content-xp" id="myModalAlertBody">
-            <div class="title-bar" style="cursor: move" id="myModalAlertBodyDrag">
-                <div class="title-bar-text">Alerts Description</div>
-                <div class="title-bar-controls">
-                    <button onclick="document.getElementById('myModalAlert').style.display = 'none'" aria-label="Close"></button>
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theLocationControl = new locationControl
+    map.addControl(theLocationControl, 'top-left');
+
+    class themeControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+            <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                    <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Current Location">
+                        <span class="fa fa-moon icon-black" id="themeThing" aria-hidden="true" title="Globe Toggle"></span>
+                    </button>
                 </div>
-            </div>
-            <div class="window-body modal-content-xp-scrollable">
-                <p id="alertModalText">Nothing here yet</p>
-            </div>
-        </div>
-    </div>
+            </div>`
+            this._container.addEventListener('click', function() {
+                if (!$('#themeThing').hasClass('icon-selected')) {
+                    $('#themeThing').addClass('icon-selected');
+                    $('#themeThing').removeClass('icon-black');
+                    map.setStyle(darkStyle);
+                } else if ($('#themeThing').hasClass('icon-selected')) {
+                    $('#themeThing').removeClass('icon-selected');
+                    $('#themeThing').addClass('icon-black');
+                    map.setStyle(lightStyle);
+                }
+            })
+            return this._container;
+        }
 
-    <div id="myModalForecast" class="modal">
-        <!-- Modal content -->
-        <div class="window glass modal-content-xp" id="myModalForecastBody">
-            <div class="title-bar" style="cursor: move" id="myModalForecastBodyDrag">
-                <div class="title-bar-text">Weather Data</div>
-                <div class="title-bar-controls">
-                    <button onclick="document.getElementById('myModalForecast').style.display = 'none'" aria-label="Close"></button>
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theThemeControl = new themeControl
+    map.addControl(theThemeControl, 'top-left');
+
+    class calendarControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+            <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                    <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Current Location">
+                        <span class="fa fa-calendar-days icon-black" id="calendarThing" aria-hidden="true" title="Globe Toggle"></span>
+                    </button>
                 </div>
-            </div>
-            <div class="window-body modal-content-xp-scrollable">
-                <iframe id="forecastIframe" src="/weather/combined.html" style="height: 70vh; width: 97%"></iframe>
-            </div>
-        </div>
-    </div>
+            </div>`
+            this._container.addEventListener('click', function() {
+                if (!$('#calendarThing').hasClass('icon-selected')) {
+                    $('#calendarThing').addClass('icon-selected');
+                    $('#calendarThing').removeClass('icon-black');
+                    $("#tsDialog").dialog({
+                        modal: true,
+                        // https://stackoverflow.com/a/30624445/18758797
+                        open: function () {
+                            $(this).parent().css({
+                                position: 'relative',
+                                top: 10,
+                                maxHeight: '70vh',
+                                overflow: 'scroll'
+                            });
+                        },
+                        close: function () {
+                            $('#calendarThing').removeClass('icon-selected');
+                            $('#calendarThing').addClass('icon-black');
+                        }
+                    });
+                    document.getElementById('unixTsSubmit').addEventListener('click', function() {
+                        $("#tsDialog").dialog('close');
+                        var inputtedTs = $('#tsDateTime').val();
+                        console.log(inputtedTs)
+                        $('#calendarThing').removeClass('icon-selected');
+                        if ($('#calendarThing').hasClass('orange-icon')) {
+                            $('#calendarThing').removeClass('orange-icon');
+                        }
+                        if ($('#calendarThing').hasClass('icon-black')) {
+                            $('#calendarThing').removeClass('icon-black');
+                        }
+                        if (inputtedTs != currentDateTime) {
+                            $('#calendarThing').addClass('orange-icon');
+                        } else if (inputtedTs == currentDateTime) {
+                            $('#calendarThing').addClass('icon-black');
+                        }
+                        document.getElementById('timestampDisplay').innerHTML = printFancyTime(new Date($('#tsDateTime').val()))
+                    })
+                }
+            })
+            return this._container;
+        }
 
-    <div id="weathermap"></div>
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theCalendarControl = new calendarControl
+    map.addControl(theCalendarControl, 'top-left');
 
-    <script src="/weather/nexrad/nexrad.js"></script>
-    </div>
-    </div>
+    class spinnerControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;" id='spinner-parent'>
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Spinner">
+                                <div id='spinner'></div>
+                            </button>
+                        </div>
+                    </div>`
+            this._container.addEventListener('click', function() {
+                console.log('sus')
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theSpinnerControl = new spinnerControl
+    var spinner = new Spin.Spinner({scale: 0.5});
+    map.addControl(theSpinnerControl, 'top-left');
+    var th;
+    function toggleSpinner(tf) {
+        if (tf) {
+            if (document.getElementById('spinner-parent').style.display != 'block') {
+                th = 0;
+                document.getElementById('tileThing').style.display = 'inline';
+                map.on('data', () => {
+                    //console.log('A thingy event occurred. ' + th);
+                    document.getElementById('tilesLoadedDisplay').innerHTML = th;
+                    th++;
+                });
+            }
+            document.getElementById('spinner-parent').style.display = 'block'
+            spinner.spin(document.getElementById('spinner'));
+        } else if (!tf) {
+            spinner.stop();
+            document.getElementById('spinner-parent').style.display = 'none'
+
+            th = 0;
+            document.getElementById('tilesLoadedDisplay').innerHTML = 'Done';
+            document.getElementById('tileThing').style.display = 'none';
+            map.off('data');
+        }
+    }
+
+    map.on('dataloading', () => {
+        toggleSpinner(true);
+    });
+    map.on('idle', () => {
+        toggleSpinner(false);
+    });
+
+
+    var msPerMinute = 60000;
+    document.getElementById('timestampDisplay').innerHTML = printFancyTime(new Date($('#tsDateTime').val()))
+    var nexradTimestamps = ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m']
+    nexradTimestamps.reverse();
+    map.on('load', () => {
+        // Set the default atmosphere style
+        map.setFog({});
+
+        function setImageFromWld(worldFileArray, imageUrl) {
+            // https://gis.stackexchange.com/a/288308/206737
+            function worldFileToBoundingBox(pixelSizeX, pixelSizeY, rotationX, rotaionY, centerCoordX, centerCoordY, imagewidth, imageHeight) {
+                var minX = centerCoordX - (pixelSizeX / 2);
+                var maxY = centerCoordY - (pixelSizeY / 2);
+                var maxX = minX + (pixelSizeX * imagewidth);
+                var minY = maxY +(pixelSizeY * imageHeight);
+
+                var data = {
+                    minX: minX,
+                    minY: minY,
+                    maxX: maxX,
+                    maxY: maxY
+                };
+                return data;
+            }
+
+            var arrWorldFile = worldFileArray;
+
+            var pixelSizeX = arrWorldFile[0]; 
+            var rotationX = arrWorldFile[1];
+            var rotaionY = arrWorldFile[2];
+            var pixelSizeY = arrWorldFile[3];
+            var centerCoordX = arrWorldFile[4];
+            var centerCoordY = arrWorldFile[5];
+            var imagewidth = 1000;
+            var imageHeight = 1000;
+
+            var output = worldFileToBoundingBox(pixelSizeX, pixelSizeY, rotationX, rotaionY, centerCoordX, centerCoordY, imagewidth, imageHeight);
+
+            var coord1 = output.minY;
+            var coord2 = output.minX;
+            var coord3 = output.maxY;
+            var coord4 = output.maxX;
+
+            if (map.getLayer('radar-layer')) {
+                map.removeLayer('radar-layer');
+            }
+            if (map.getSource('radar-layer')) {
+                map.removeSource('radar-layer');
+            }
+            map.addLayer({
+                id: 'radar-layer',
+                'type': 'raster',
+                'source': {
+                    'type': 'image',
+                    'url': imageUrl,
+                    'coordinates': [
+                        [coord2, coord3],
+                        [coord4, coord3],
+                        [coord4, coord1],
+                        [coord2, coord1]
+                        /*
+                            2  3
+                            4  3
+                            4  1
+                            2  1
+                        */
+                    ]
+                },
+                'paint': {
+                    'raster-fade-duration': 0,
+                    'raster-resampling': 'nearest'
+                }
+            });
+        }
+
+        function setStaticImage(stati, prod, ind) {
+            var statio = stati;
+            var produ = prod;
+            var curYear = currentTime.getFullYear();
+            var curMonth = ("0" + (currentTime.getUTCMonth() + 1)).slice(-2);
+            var curDay = ("0" + currentTime.getUTCDate()).slice(-2);
+            var currentURL = `${phpProxy}https://mesonet.agron.iastate.edu/archive/data/${curYear}/${curMonth}/${curDay}/GIS/ridge/${statio}/${produ}/`;
+            $.get(currentURL, function(data) {
+                var div = document.createElement('div')
+                div.innerHTML = data;
+                const Elem = e => ({
+                    tagName: 
+                        e.tagName,
+                    textContent:
+                        e.textContent,
+                    attributes:
+                        Array.from(e.attributes, ({name, value}) => [name, value]),
+                    children:
+                        Array.from(e.children, Elem)
+                })
+                const html2json = e =>
+                    JSON.parse(JSON.stringify(Elem(e), null, '  '))
+
+                var htmlJson = html2json(div);
+                var amountOfFiles = Object.keys(htmlJson.children[2].children[0].children).length
+                var amountToSubtract = 2 + (ind * 2);
+                var fileName = htmlJson.children[2].children[0].children[amountOfFiles - amountToSubtract].children[1].textContent;
+                fileName = fileName.slice(0, -4);
+
+                var imgUrl = `${phpProxy}${currentURL}${fileName}.png`;
+                var wldUrl = `${phpProxy}${currentURL}${fileName}.wld`;
+                $.get(wldUrl, function(data) {
+                    // [0.010674, 0.0, 0.0, -0.010674, -82.823878, 44.312878]
+                    var wldArray = data.split(/\r?\n/);
+                    setImageFromWld(wldArray, phpProxy + imgUrl);
+                });
+            })
+        }
+        //setStaticImage("LWX", "N0B", 0);
+
+        function isuTimestamp(dateOb) {
+            return dateOb.getFullYear() + 
+            ("0" + (dateOb.getUTCMonth() + 1)).slice(-2) + 
+            ("0" + dateOb.getUTCDate()).slice(-2) + 
+            ("0" + dateOb.getUTCHours() ).slice(-2) + 
+            ("0" + dateOb.getUTCMinutes()).slice(-2);
+        }
+
+        function addNexradLayer(indexInArray, opacity) {
+            var inputtedTs = $('#tsDateTime').val();
+            var tsTime = new Date(inputtedTs);
+            var subtractedTime = new Date(tsTime - minutesToSubtract[indexInArray] * msPerMinute)
+            map.addLayer({
+                'id': `wms-test-layer${indexInArray}`,
+                'type': 'raster',
+                'source': {
+                    'type': 'raster',
+                    // use the tiles option to specify a WMS tile source URL
+                    // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
+                    'tiles': [
+                        `${phpProxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::USCOMP-N0Q-${isuTimestamp(subtractedTime)}/{z}/{x}/{y}.png`
+                        //'https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015'
+                        //'https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}'
+                        //https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox=-20037508.342789244,0,-10018754.171394622,10018754.17139462
+                    ],
+                    'tileSize': 256
+                },
+                'paint': {
+                    'raster-opacity': opacity,
+                    'raster-opacity-transition': {
+                        duration: 0,
+                        delay: 0
+                    },
+                    "raster-fade-duration": 0
+                }
+            });
+            console.log(`added layer ${indexInArray} - ${isuTimestamp(subtractedTime)}`)
+        }
+        function setNexradLayerOpacity(layerum, theopacity) {
+            for (var r = 0; r < allFrames + 1; r++) {
+                map.setPaintProperty(
+                    `wms-test-layer${r}`,
+                    'raster-opacity',
+                    0
+                );
+                //console.log(`transparent ${r}`)
+            }
+            map.setPaintProperty(
+                `wms-test-layer${layerum}`,
+                'raster-opacity',
+                theopacity
+            );
+        }
+        function initializeNexradLayer() {
+            for (var t = allFrames; t > -1; t--) {
+                if (t == allFrames) {
+                    addNexradLayer(t, 1);
+                } else {
+                    addNexradLayer(t, 0);
+                }
+            }
+            document.getElementById('timestampSlider').addEventListener("input", function() {
+                setNexradLayerOpacity(this.value, 1)
+            });
+        }
+        class mainRadarControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.innerHTML = `
+                <div class="mapboxgl-control-container" style="margin-top: 250%;">
+                    <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                        <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Main Radar Mosaic" ${btnStyle}>
+                            <span class="fa fa-cloud-showers-heavy icon-black" id="mainRadarThing" aria-hidden="true" title="Main Radar Mosaic" ${btnIconStyle}></span>
+                        </button>
+                    </div>
+                </div>`
+                this._container.addEventListener('click', function() {
+                    if (!$('#mainRadarThing').hasClass('icon-selected')) {
+                        $('#mainRadarThing').addClass('icon-selected');
+                        $('#mainRadarThing').removeClass('icon-black');
+                        //testISUDown(2000);
+                        initializeNexradLayer();
+                    } else if ($('#mainRadarThing').hasClass('icon-selected')) {
+                        $('#mainRadarThing').removeClass('icon-selected');
+                        $('#mainRadarThing').addClass('icon-black');
+                        for (var t = 0; t < 11; t++) {
+                            if (map.getLayer(`wms-test-layer${t}`)) {
+                                map.removeLayer(`wms-test-layer${t}`)
+                            }
+                            if (map.getSource(`wms-test-layer${t}`)) {
+                                map.removeSource(`wms-test-layer${t}`)
+                            }
+                        }
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theMainRadarControl = new mainRadarControl
+        map.addControl(theMainRadarControl, 'top-right');
+
+        class rpvControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Product Viewer" ${btnStyle}>
+                                <span class="fa fa-tower-cell icon-black" id="rpvThing" aria-hidden="true" title="Radar Product Viewer" ${btnIconStyle}></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    console.log('rpv')
+                    if (!$('#rpvThing').hasClass('icon-selected')) {
+                        $('#rpvThing').addClass('icon-selected');
+                        $('#rpvThing').removeClass('icon-black');
+
+                        var currentStation = document.getElementById('stationDisplay').innerHTML.toUpperCase().substring(1)
+                        /*if (map.getLayer('rpv')) {
+                            map.removeLayer('rpv')
+                        }
+                        if (map.getSource('rpv')) {
+                            map.removeSource('rpv')
+                        }*/
+                        beforeTileInit('radar-layer')
+                        //setStaticImage(currentStation, "N0S", 0);
+                        //afterTileInit()
+
+                        function setRpvLayer(pro) {
+                            var nowTime = new Date($('#tsDateTime').val());
+                            // 120 = # of minutes in 2 hours
+                            var yesterday = new Date(nowTime - 120 * 60000);
+                            // https://stackoverflow.com/a/68514256
+                            var isuCurTime = nowTime.toISOString().substr(0,nowTime.toISOString().indexOf(".")) + "Z";
+                            var isuYesterday = yesterday.toISOString().substr(0,yesterday.toISOString().indexOf(".")) + "Z";
+                            var isuTsReflUrl = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${currentStation}&product=${pro}&start=${isuYesterday}&end=${isuCurTime}`;
+                            console.log(isuTsReflUrl)
+                            $.getJSON(phpProxy + isuTsReflUrl, function(data) {
+                                var latestTs = data.scans[data.scans.length - 1].ts;
+                                //var st = 'klwx';
+                                //var pr = 'bref_raw';
+                                map.addLayer({
+                                    id: 'radar-layer',
+                                    type: "raster",
+                                    source: {
+                                        type: "raster",
+                                        tiles: [
+                                            `${phpProxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::${currentStation}-${pro}-${isuTimestamp(new Date(latestTs))}/{z}/{x}/{y}.png`
+                                            //`https://opengeo.ncep.noaa.gov/geoserver/${st}/${st}_${pr}/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=${st}_${pr}&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}`
+                                        ],
+                                        tileSize: 256
+                                    },
+                                });
+                            })
+                        }
+
+                        $("#rpvDialog").dialog({
+                            modal: true,
+                            // https://stackoverflow.com/a/30624445/18758797
+                            open: function () {
+                                $(this).parent().css({
+                                    position: 'relative',
+                                    top: 10,
+                                    maxHeight: '70vh',
+                                    overflow: 'scroll'
+                                });
+                            }
+                        });
+                        document.getElementById('bref_raw').addEventListener('click', function() {
+                            // old is N0Q, removed on 5.02.2022 (worked on 5.01.2022)
+                            // https://mesonet.agron.iastate.edu/archive/data/2022/05/01/GIS/ridge/ABC/
+                            // vs
+                            // https://mesonet.agron.iastate.edu/archive/data/2022/05/02/GIS/ridge/ABC/
+                            var maySecond2022 = 1651464000;
+                            var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
+                            if (userTimeStamp > maySecond2022) {
+                                setRpvLayer('N0B');
+                                console.log('N0B - after may 2 2022');
+                            } else if (userTimeStamp < maySecond2022) {
+                                setRpvLayer('N0Q');
+                                console.log('N0Q - before may 2 2022');
+                            }
+                            $("#rpvDialog").dialog('destroy');
+                        });
+                        document.getElementById('bvel_raw').addEventListener('click', function() {
+                            // old is N0U, removed on 6.16.2022 (worked on 6.15.2022)
+                            // https://mesonet.agron.iastate.edu/archive/data/2022/06/15/GIS/ridge/LWX/
+                            // vs
+                            // https://mesonet.agron.iastate.edu/archive/data/2022/06/16/GIS/ridge/LWX/
+                            var juneSixteenth2022 = 1655352000;
+                            var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
+                            if (userTimeStamp > juneSixteenth2022) {
+                                setRpvLayer('N0S');
+                                console.log('N0S - after june 16 2022');
+                            } else if (userTimeStamp < juneSixteenth2022) {
+                                setRpvLayer('N0U');
+                                console.log('N0U - before june 16 2022');
+                            }
+                            $("#rpvDialog").dialog('destroy');
+                        });
+                    } else if ($('#rpvThing').hasClass('icon-selected')) {
+                        $('#rpvThing').removeClass('icon-selected');
+                        $('#rpvThing').addClass('icon-black');
+
+                        if (map.getLayer('radar-layer')) {
+                            map.removeLayer('radar-layer')
+                        }
+                        if (map.getSource('radar-layer')) {
+                            map.removeSource('radar-layer')
+                        }
+                        //afterTileInit()
+                        //setNexradLayerOpacity(10, 1)
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theRPVControl = new rpvControl
+        map.addControl(theRPVControl)
+        /* map.addSource('wms-test-source', {
+            'type': 'raster',
+            // use the tiles option to specify a WMS tile source URL
+            // https://docs.mapbox.com/mapbox-gl-js/style-spec/sources/
+            'tiles': [
+                //'https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015'
+                'https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}'
+                //https://opengeo.ncep.noaa.gov/geoserver/klwx/klwx_bref_raw/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=klwx_bref_raw&width=256&height=256&srs=EPSG:3857&bbox=-20037508.342789244,0,-10018754.171394622,10018754.17139462
+            ],
+            'tileSize': 256
+        });
+        map.addLayer(
+            {
+                'id': 'wms-test-layer',
+                'type': 'raster',
+                'source': 'wms-test-source',
+                'paint': {}
+            },
+            'aeroway-line'
+        ); */
+
+        var alertArr = [];
+        var sourceArr = [];
+        var propertyArr = [];
+        var alertDotsArr = [];
+        var alertDotsCoordsArr = [];
+        var drawnPolygonArr = [];
+        var drawnPolygonSourceArr = [];
+        function showAlerts() {
+            $.getJSON('https://api.weather.gov/alerts/active', function(data) {
+                for (let n = 0; n < data.features.length; n++) {
+                    var properties = data.features[n].properties
+
+                    var alertEvent = properties.event;
+                    var alertSenderName = properties.senderName;
+                    var alertHeadline = properties.headline;
+                    var alertDescription = properties.description;
+                    var alertInstruction = properties.instruction;
+
+                    var alertID = properties.id;
+                    var alertWMOidenifier = properties.parameters.WMOidentifier[0];
+                    var alertVTEC = "No VTEC for this alert."
+                    var alertNWSheadline = "No headline for this alert."
+
+                    if (alertInstruction == null) {
+                        alertInstruction = "No instruction for this alert."
+                    }
+
+                    if (properties.parameters.hasOwnProperty('NWSheadline')) {
+                        alertNWSheadline = properties.parameters.NWSheadline;
+                    }
+                    if (properties.parameters.hasOwnProperty('VTEC')) {
+                        alertVTEC = properties.parameters.VTEC[0];
+                    }
+
+                    var alertSeverity = properties.severity;
+                    var alertUrgency = properties.urgency;
+
+                    var alertSentTime = new Date(properties.sent);
+                    var alertEffectiveTime = new Date(properties.effective);
+                    var alertOnsetTime = new Date(properties.onset);
+                    var alertExpiresTime = new Date(properties.expires);
+                    var alertEndsTime = new Date(properties.ends);
+                    var alertPopupContent = `
+                    <div style="overflow-y: scroll; height: 150px;">
+                        <div class='ughh' id='headlineExpander${n}' style='cursor: pointer'>
+                            <b>${alertEvent}<br>${alertSenderName}</b>
+                        </div>
+                        <div id='alertBody${n}'>
+                            <br><b>Send Time: </b>${printFancyTime(alertSentTime)}
+                            <br><b>Effective Time: </b>${printFancyTime(alertEffectiveTime)}
+                            <br><b>Onset Time: </b>${printFancyTime(alertOnsetTime)}
+                            <br><b>Expires Time: </b>${printFancyTime(alertExpiresTime)}
+                            <br><b>Ends Time: </b>${printFancyTime(alertEndsTime)}
+                            <br><br><b><i>${alertSeverity}</i></b>, <b><i>${alertUrgency}</i></b><br><br>
+                            <b>WMO Identifier:</b> ${alertWMOidenifier}<br>
+                            <b>VTEC:</b> ${alertVTEC}<br>
+                            <b>NWS Headline:</b> ${alertNWSheadline}<br>
+                            <b>ID:</b><div id='alertNameDiv'>${alertID}</div><br><br>
+                            <b>Headline:</b> ${alertHeadline}<br>
+                            <b>Description:</b> ${alertDescription}<br>
+                            <b>Instructions:</b> ${alertInstruction}
+                        </div>
+                    </div>`;
+                    propertyArr.push(alertPopupContent);
+
+                    if (data.features[n].geometry != null) {
+                        //L.marker([alertLat, alertLon], {icon: yellowMarkerIcon}).addTo(alertLayerGroup)
+                        //    .bindPopup(alertPopup);
+                        var allCoordinates = data.features[n].geometry.coordinates[0];
+                        var coordinateArray = [];
+
+                        for (let x = 0; x < Object.keys(allCoordinates).length; x++) {
+                            coordinateArray.push(allCoordinates[x]);
+                        }
+                        var properties = data.features[n].properties
+                        var geojson = {
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Polygon",
+                                "coordinates": [
+                                    coordinateArray
+                                ]
+                            },
+                            properties
+                        }
+                        //console.log(geojson)
+
+                        map.addSource(`alert${n}`, {
+                            'type': 'geojson',
+                            'data': geojson
+                        });
+                        sourceArr.push(`alert${n}`);
+                        // Add a new layer to visualize the polygon.
+                        map.addLayer({
+                            'id': `alert${n}`,
+                            'type': 'fill',
+                            'source': `alert${n}`, // reference the data source
+                            'layout': {},
+                            'paint': {
+                                'fill-color': '#0080ff', // blue color fill
+                                'fill-opacity': 0.5
+                            }
+                        });
+                        alertArr.push(`alert${n}`);
+                        // Add a black outline around the polygon.
+                        map.addLayer({
+                            'id': `outline${n}`,
+                            'type': 'line',
+                            'source': `alert${n}`,
+                            'layout': {},
+                            'paint': {
+                                'line-color': '#014385',
+                                'line-width': 3
+                            }
+                        });
+                        alertArr.push(`outline${n}`);
+                        //map.on('click', `alert${n}`, (e) => {
+                        //    var popup = new mapboxgl.Popup()
+                        //    .setLngLat(e.lngLat)
+                        //    .setHTML(propertyArr[n])
+                        //    .addTo(map);
+                        //});
+                    } else if (data.features[n].geometry == null) {
+                        //console.log(properties.senderName)
+                        $.getJSON(data.features[n].properties.affectedZones[0], function(data2) {
+                            var singleCoordinateLat;
+                            var singleCoordinateLon;
+                            var singleCoordinate;
+
+                            if (data2.geometry.coordinates[0]) {
+                                geometryLayers = 1;
+                                if (data2.geometry.coordinates[0][0]) {
+                                    geometryLayers = 2;
+                                    if (data2.geometry.coordinates[0][0][0]) {
+                                        geometryLayers = 3;
+                                        if (data2.geometry.coordinates[0][0][0][0]) {
+                                            geometryLayers = 4;
+                                        }
+                                    }
+                                }
+                            }
+                            //console.log(geometryLayers);
+                            if (geometryLayers == 2) {
+                                var leng = data2.geometry.coordinates.length;
+                                singleCoordinate = data2.geometry.coordinates[0];
+                            } else if (geometryLayers == 3) {
+                                var leng = data2.geometry.coordinates[0].length;
+                                singleCoordinate = data2.geometry.coordinates[0][0];
+                            } else if (geometryLayers == 4) {
+                                var leng = data2.geometry.coordinates[0][0].length;
+                                singleCoordinate = data2.geometry.coordinates[0][0][0];
+                            }
+                            if (alertDotsCoordsArr.includes(singleCoordinate[0])) {
+                                singleCoordinate = [singleCoordinate[0] - 0.1, singleCoordinate[1]]
+                                console.log('duplicate dot changed')
+                            }
+                            alertDotsCoordsArr.push(singleCoordinate[0]);
+                            //console.log(alertDotsCoordsArr)
+                            //console.log(alertDotsCoordsArr)
+                            var geojsonTemplate = {
+                                "type": "FeatureCollection",
+                                "features": []
+                            }
+                            if (!Array.isArray(singleCoordinateLat) && !Array.isArray(singleCoordinateLat)) {
+                                geojsonTemplate.features.push({
+                                    "geometry": {
+                                        "type": "Point", 
+                                        "coordinates":
+                                            singleCoordinate
+                                    }
+                                });
+                            }
+                            map.addLayer({
+                                id: `alertDots${n}`,
+                                type: 'circle',
+                                source: {
+                                    type: 'geojson',
+                                    data: geojsonTemplate,
+                                }
+                            });
+                            alertDotsArr.push(`alertDots${n}`);
+                            var drawPolygonHtml = `
+                            <a style='cursor: pointer' onclick='clickOnPolygonBtn()'>Draw Polygon</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a style='cursor: pointer' onclick='clearPolygons()'>Clear</a>
+                            `
+                            map.on('click', `alertDots${n}`, (e) => {
+                                document.getElementById('isDotPopupOpen').innerHTML = 'yes';
+                                var dotPopup = new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(drawPolygonHtml + propertyArr[n])
+                                .addTo(map);
+
+                                dotPopup.on('close', () => {
+                                    document.getElementById('isDotPopupOpen').innerHTML = 'no';
+                                });
+                            });
+                        })
+                    }
+                }
+            })
+        }
+
+        var randomNumberArr = [];
+        var drawPolygonBtn = document.getElementById('polygon');
+        drawPolygonBtn.addEventListener('click', function handleClick() {
+            console.log('drewn')
+            var alertDiv = document.getElementById('alertNameDiv');
+            $.getJSON(`https://api.weather.gov/alerts/${alertDiv.innerHTML}`, function(data) {
+                for (let r = 0; r < data.properties.affectedZones.length; r++) {
+                    var xhttpALERT = new XMLHttpRequest();
+                    xhttpALERT.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var data = JSON.parse(this.responseText);
+                            var allCoordinates2 = data.geometry.coordinates[0];
+                            var coordinateArray2 = [];
+                            for (let x = 0; x < Object.keys(allCoordinates2).length; x++) {
+                                coordinateArray2.push(allCoordinates2[x]);
+                            }
+
+                            //console.log(coordinateArray2)
+                            var geojson = {
+                                "type": "Feature",
+                                "geometry": {
+                                    "type": "Polygon",
+                                    "coordinates": [
+                                        coordinateArray2
+                                    ]
+                                }
+                            }
+
+                            var randomNumber;
+                            function generateRandomNumber() {
+                                randomNumber = Math.floor((Math.random() * 1000000) + 1);
+                                if (randomNumberArr.includes(randomNumber)) {
+                                    generateRandomNumber();
+                                }
+                                randomNumberArr.push(randomNumber);
+                            }
+                            generateRandomNumber();
+                            console.log(randomNumber);
+
+                            if (map.getLayer(`alertPolygon${randomNumber}`)) {
+                                map.removeLayer(`alertPolygon${randomNumber}`)
+                            }
+                            if (map.getSource(`alertPolygon${randomNumber}`)) {
+                                map.removeSource(`alertPolygon${randomNumber}`)
+                            }
+                            map.addLayer({
+                                'id': `alertPolygon${randomNumber}`,
+                                'type': 'fill',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': geojson
+                                },
+                                'paint': {
+                                    'fill-color': '#838383', // blue color fill
+                                    'fill-opacity': 0.5
+                                }
+                            });
+                            drawnPolygonArr.push(`alertPolygon${randomNumber}`)
+                            map.addLayer({
+                                'id': `outlinePolygon${randomNumber}`,
+                                'type': 'line',
+                                'source': `alertPolygon${randomNumber}`,
+                                'paint': {
+                                    'line-color': '#5e5e5e',
+                                    'line-width': 3
+                                }
+                            });
+                            drawnPolygonSourceArr.push(`outlinePolygon${randomNumber}`)
+                        }
+                    };
+                    xhttpALERT.open("GET", data.properties.affectedZones[r], true);
+                    xhttpALERT.send();
+                }
+            });
+        })
+
+        var clearPolygonBtn = document.getElementById('clearpolygon');
+        clearPolygonBtn.addEventListener('click', function handleClick() {
+            console.log('cleerd')
+            for (var u = 0; u < drawnPolygonArr.length; u++) {
+                if (map.getLayer(drawnPolygonSourceArr[u])) {
+                    map.removeLayer(drawnPolygonSourceArr[u])
+                }
+                if (map.getSource(drawnPolygonSourceArr[u])) {
+                    map.removeSource(drawnPolygonSourceArr[u])
+                }
+
+                if (map.getLayer(drawnPolygonArr[u])) {
+                    map.removeLayer(drawnPolygonArr[u])
+                }
+                if (map.getSource(drawnPolygonArr[u])) {
+                    map.removeSource(drawnPolygonArr[u])
+                }
+            }
+        })
+
+        //map.addSource('overlay', {
+        //    type: 'image',
+        //    url: 'https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif',
+        //    coordinates: [
+        //        [-80.425, 46.437],
+        //        [-71.516, 46.437],
+        //        [-71.516, 37.936],
+        //        [-80.425, 37.936]
+        //    ]
+        //});
+        //map.addLayer({
+        //    'id': 'overlay',
+        //    'source': 'overlay',
+        //    'type': 'raster',
+        //});
+        //map.removeLayer('overlay')
+
+        var markerArr = [];
+        function stationMarkers() {
+            $.getJSON('/weather/json/wdg_radar-stations_05042022.json', function(data) {
+                for (let n = 0; n < 208; n++) {
+                    var radarStation = data.features[n].properties.id;
+                    var latt = data.features[n].geometry.coordinates[1];
+                    var lonn = data.features[n].geometry.coordinates[0];
+                    var stationType = data.features[n].properties.stationType;
+                    
+                    if (stationType == "WSR-88D") {
+                        //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
+                        //L.marker([latt, lonn]).addTo(markerLayerGroup)
+                        //    .bindPopup(radarStation);
+
+                        var initMarker = new mapboxgl.Marker({
+                            color: "#4287f5",
+                        }).setLngLat([lonn, latt])
+                            .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>"))
+                            .addTo(map)
+                        markerArr.push(initMarker)
+                    }
+                }
+                $.getJSON('https://api.weather.gov/radar/stations', function(data) {
+                    //map.removeLayerGroup('markerLayerGroup')
+                    for (var u = 0; u < markerArr.length; u++) {
+                        markerArr[u].remove();
+                    }
+                    markerArr = []
+                    for (let n = 0; n < 208; n++) {
+                        var radarStation = data.features[n].properties.id;
+                        var latt = data.features[n].geometry.coordinates[1];
+                        var lonn = data.features[n].geometry.coordinates[0];
+                        var stationType = data.features[n].properties.stationType;
+
+                        var radstatLastReceivedData = new Date(data.features[n].properties.latency.levelTwoLastReceivedTime);
+                        var currentTimeForStatus = new Date();
+                        var timeDiff = currentTimeForStatus - radstatLastReceivedData;
+                        var formattedLastReceivedData = printFancyTime(radstatLastReceivedData);
+                        
+                        if (stationType == "WSR-88D") {
+                            //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
+                            //L.marker([latt, lonn]).addTo(markerLayerGroup)
+                            //    .bindPopup(radarStation);
+
+                            if (timeDiff >= 900000) {
+                                //$('body').append
+                                var isRadarDown = true;
+                                var down = new mapboxgl.Marker({
+                                    color: "#fc0303",
+                                }).setLngLat([lonn, latt])
+                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
+                                    .addTo(map)
+                                markerArr.push(down)
+                            } else if (timeDiff < 900000) {
+                                //$('body').append
+                                var isRadarDown = false;
+                                var up = new mapboxgl.Marker({
+                                    color: "#1bb50d",
+                                }).setLngLat([lonn, latt])
+                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
+                                    .addTo(map)
+                                markerArr.push(up)
+                            }
+                        }
+                    }
+                })
+            })
+        }
+
+        function beforeTileInit(layerName) {
+            for (var t = 0; t < 11; t++) {
+                if (map.getLayer(`wms-test-layer${t}`)) {
+                    map.removeLayer(`wms-test-layer${t}`)
+                }
+                if (map.getSource(`wms-test-layer${t}`)) {
+                    map.removeSource(`wms-test-layer${t}`)
+                }
+            }
+
+            if (map.getLayer(layerName)) {
+                map.removeLayer(layerName)
+            }
+            if (map.getSource(layerName)) {
+                map.removeSource(layerName)
+            }
+        }
+        /*function afterTileInit() {
+            if (document.getElementById('isDown').innerHTML != 'down') {
+                if (document.getElementById('isDown').innerHTML == 'proxy') {
+                    initializeNexradLayer(phpProxy);
+                } else {
+                    initializeNexradLayer();
+                }
+                console.log('not down after tile layer')
+            }
+            setLayerOrder();
+        }*/
+
+        class lightningControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 500%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Lightning Layer" ${btnStyle}>
+                                <span class="fa fa-bolt icon-black" id="lightningThing" aria-hidden="true" title="Lightning Layer" ${btnIconStyle}></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    console.log('lightning')
+                    if (!$('#lightningThing').hasClass('icon-selected')) {
+                        $('#lightningThing').addClass('icon-selected');
+                        $('#lightningThing').removeClass('icon-black');
+
+                        //beforeTileInit('lightning');
+                        map.addLayer({
+                            id: 'lightning',
+                            type: "raster",
+                            source: {
+                                type: "raster",
+                                tiles: [
+                                    `${phpProxy}https://tiles.lightningmaps.org/?x={x}&y={y}&z={z}&s=256`
+                                ],
+                                tileSize: 256
+                            },
+                        });
+                        //afterTileInit();
+                    } else if ($('#lightningThing').hasClass('icon-selected')) {
+                        $('#lightningThing').removeClass('icon-selected');
+                        $('#lightningThing').addClass('icon-black');
+
+                        if (map.getLayer('lightning')) {
+                            map.removeLayer('lightning')
+                        }
+                        if (map.getSource('lightning')) {
+                            map.removeSource('lightning')
+                        }
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theLightningControl = new lightningControl
+        map.addControl(theLightningControl)
+
+        class cloudControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Cloud Layer" ${btnStyle}>
+                                <span class="fa fa-cloud icon-black" id="cloudThing" aria-hidden="true" title="Cloud Layer" ${btnIconStyle}></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    if (!$('#cloudThing').hasClass('icon-selected')) {
+                        $('#cloudThing').addClass('icon-selected');
+                        $('#cloudThing').removeClass('icon-black');
+
+                        $.getJSON('https://api.rainviewer.com/public/weather-maps.json', function(data) {
+                            var lengthofsatellitearray = Object.keys(data.satellite.infrared).length
+                            //console.log(lengthofsatellitearray)
+                            var satTimestamp = data.satellite.infrared[lengthofsatellitearray - 1].time
+                            console.log(satTimestamp)
+                            console.log(printFancyTime(new Date(satTimestamp * 1000)))
+                            var hashForCurSat = data.satellite.infrared[lengthofsatellitearray - 1].path.toString().slice(14)
+                            console.log(hashForCurSat)
+
+                            //beforeTileInit('clouds');
+                            map.addLayer({
+                                id: 'clouds',
+                                type: "raster",
+                                source: {
+                                    type: "raster",
+                                    tiles: [
+                                    `https://tilecache.rainviewer.com/v2/satellite/${hashForCurSat}/512/{z}/{x}/{y}/0/0_0.png`
+                                    ],
+                                    tileSize: 256
+                                },
+                            });
+                            //afterTileInit();
+                        })
+                    } else if ($('#cloudThing').hasClass('icon-selected')) {
+                        $('#cloudThing').removeClass('icon-selected');
+                        $('#cloudThing').addClass('icon-black');
+
+                        if (map.getLayer('clouds')) {
+                            map.removeLayer('clouds')
+                        }
+                        if (map.getSource('clouds')) {
+                            map.removeSource('clouds')
+                        }
+                    }
+                })
+                return this._container;
+            }
+    
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theCloudControl = new cloudControl
+        map.addControl(theCloudControl)
+
+        // Control implemented as ES6 class
+        class stationControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container">
+                        <div class="mapboxgl-ctrl-top-right">
+                            <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                                <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Radar Stations" ${btnStyle}>
+                                    <span class="fa fa-satellite-dish icon-black" id="stationThing" aria-hidden="true" title="Show Radar Stations" ${btnIconStyle}></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    if (!$('#stationThing').hasClass('icon-selected')) {
+                        $('#stationThing').addClass('icon-selected');
+                        $('#stationThing').removeClass('icon-black');
+                        stationMarkers();
+                    } else if ($('#stationThing').hasClass('icon-selected')) {
+                        $('#stationThing').removeClass('icon-selected');
+                        $('#stationThing').addClass('icon-black');
+                        for (var u = 0; u < markerArr.length; u++) {
+                            markerArr[u].remove();
+                        }
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theStationControl = new stationControl
+        map.addControl(theStationControl, 'top-right')
+
+        function addMarker(e) {
+            var pointURL = `https://api.weather.gov/alerts?active=1&point=${e.lngLat.lat},${e.lngLat.lng}`
+            console.log(pointURL)
+            var alertPopupContent = `<div><b>No Alerts</b></div>`
+            $.getJSON(pointURL, function(data) {
+                console.log(data)
+                if (data.features.length != 0) {
+                    alertPopupContent = '<div id="mainPopupDiv" style="overflow-y: scroll; max-height: 150px;">';
+                    for (var n = 0; n < data.features.length; n++) {
+                        var properties = data.features[n].properties
+
+                        var alertEvent = properties.event;
+                        var alertSenderName = properties.senderName;
+                        var alertHeadline = properties.headline;
+                        var alertDescription = properties.description;
+                        var alertInstruction = properties.instruction;
+
+                        var alertID = properties.id;
+                        var alertWMOidenifier = properties.parameters.WMOidentifier[0];
+                        var alertVTEC = "No VTEC for this alert."
+                        var alertNWSheadline = "No headline for this alert."
+
+                        if (alertInstruction == null) {
+                            alertInstruction = "No instruction for this alert."
+                        }
+
+                        if (properties.parameters.hasOwnProperty('NWSheadline')) {
+                            alertNWSheadline = properties.parameters.NWSheadline;
+                        }
+                        if (properties.parameters.hasOwnProperty('VTEC')) {
+                            alertVTEC = properties.parameters.VTEC[0];
+                        }
+
+                        var alertSeverity = properties.severity;
+                        var alertUrgency = properties.urgency;
+
+                        var alertSentTime = new Date(properties.sent);
+                        var alertEffectiveTime = new Date(properties.effective);
+                        var alertOnsetTime = new Date(properties.onset);
+                        var alertExpiresTime = new Date(properties.expires);
+                        var alertEndsTime = new Date(properties.ends);
+                        alertPopupContent += `
+                        <div class='ughh' id='headlineExpander${n}' style='cursor: pointer'>
+                            <b>${alertEvent}<br>${alertSenderName}</b>
+                        </div>
+                        <div id='alertBody${n}' style='display: none'>
+                            <br><b>Send Time: </b>${printFancyTime(alertSentTime)}
+                            <br><b>Effective Time: </b>${printFancyTime(alertEffectiveTime)}
+                            <br><b>Onset Time: </b>${printFancyTime(alertOnsetTime)}
+                            <br><b>Expires Time: </b>${printFancyTime(alertExpiresTime)}
+                            <br><b>Ends Time: </b>${printFancyTime(alertEndsTime)}
+                            <br><br><b><i>${alertSeverity}</i></b>, <b><i>${alertUrgency}</i></b><br><br>
+                            <b>WMO Identifier:</b> ${alertWMOidenifier}<br>
+                            <b>VTEC:</b> ${alertVTEC}<br>
+                            <b>NWS Headline:</b> ${alertNWSheadline}<br>
+                            <b>ID:</b><div id='alertNameDiv'>${alertID}</div><br><br>
+                            <b>Headline:</b> ${alertHeadline}<br>
+                            <b>Description:</b> ${alertDescription}<br>
+                            <b>Instructions:</b> ${alertInstruction}
+                        </div>`;
+                        if (n != data.features.length - 1) {
+                            alertPopupContent += '<br>'
+                        }
+                    }
+                    alertPopupContent += '</div>'
+                }
+
+                if (document.getElementById('isDotPopupOpen').innerHTML == 'no') {
+                    var thepop = new mapboxgl.Popup()
+                        .setLngLat([e.lngLat.lng, e.lngLat.lat])
+                        .setHTML(alertPopupContent)
+                        .addTo(map);
+                    document.getElementById('mainPopupDiv').style.height = 'auto';
+
+                    function toggleDisplay(theelem) {
+                        if (document.getElementById(theelem).style.display == 'none') {
+                            document.getElementById(theelem).style.display = 'block'
+                            document.getElementById('mainPopupDiv').style.height = '150px';
+                        } else if (document.getElementById(theelem).style.display == 'block') {
+                            document.getElementById(theelem).style.display = 'none'
+                            document.getElementById('mainPopupDiv').style.height = 'auto';
+                        }
+                    }
+
+                    function addAlertListner(numbe) {
+                        console.log('headlineExpander' + numbe)
+                        document.getElementById('headlineExpander' + numbe).addEventListener('click', function() {
+                            console.log('alertBody' + numbe)
+                            toggleDisplay('alertBody' + numbe)
+                        })
+                    }
+
+                    var allHeadlines = document.getElementsByClassName('ughh')
+                    for (var f = 0; f < allHeadlines.length; f++) {
+                        addAlertListner(f)
+                    }
+                }
+            })
+        }
+
+        class alertControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container">
+                        <div class="mapboxgl-ctrl-top-right" style="margin-top: 100%;">
+                            <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                                <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Alert Polygons" ${btnStyle}>
+                                    <span class="fa fa-circle-exclamation icon-black" id="alertThing" aria-hidden="true" title="Show Alert Polygons" ${btnIconStyle}></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    if (!$('#alertThing').hasClass('icon-selected')) {
+                        $('#alertThing').addClass('icon-selected');
+                        $('#alertThing').removeClass('icon-black');
+                        map.getCanvas().style.cursor = "crosshair";
+                        map.on('click', addMarker);
+                        showAlerts();
+                    } else if ($('#alertThing').hasClass('icon-selected')) {
+                        $('#alertThing').removeClass('icon-selected');
+                        $('#alertThing').addClass('icon-black');
+                        map.off('click', addMarker);
+                        map.getCanvas().style.cursor = "";
+                        for (var u = 0; u < alertArr.length; u++) {
+                            if (map.getLayer(alertArr[u])) {
+                                map.removeLayer(alertArr[u])
+                            }
+                        }
+                        for (var u = 0; u < sourceArr.length; u++) {
+                            if (map.getSource(sourceArr[u])) {
+                                map.removeSource(sourceArr[u])
+                            }
+                        }
+                        for (var u = 0; u < alertDotsArr.length; u++) {
+                            if (map.getLayer(alertDotsArr[u])) {
+                                map.removeLayer(alertDotsArr[u])
+                            }
+                            if (map.getSource(alertDotsArr[u])) {
+                                map.removeSource(alertDotsArr[u])
+                            }
+                        }
+                        for (var u = 0; u < drawnPolygonArr.length; u++) {
+                            if (map.getLayer(drawnPolygonSourceArr[u])) {
+                                map.removeLayer(drawnPolygonSourceArr[u])
+                            }
+                            if (map.getSource(drawnPolygonSourceArr[u])) {
+                                map.removeSource(drawnPolygonSourceArr[u])
+                            }
+            
+                            if (map.getLayer(drawnPolygonArr[u])) {
+                                map.removeLayer(drawnPolygonArr[u])
+                            }
+                            if (map.getSource(drawnPolygonArr[u])) {
+                                map.removeSource(drawnPolygonArr[u])
+                            }
+                        }
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var theAlertControl = new alertControl
+        map.addControl(theAlertControl)
+
+        class pausePlayControl {
+            onAdd(map) {
+                this._map = map;
+                this._container = document.createElement('div');
+                this._container.className = 'mapboxgl-ctrl-fullscreen';
+                this._container.innerHTML = `
+                    <div class="mapboxgl-control-container" style="margin-top: 750%;">
+                        <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                            <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Toggle Radar Animation" ${btnStyle}>
+                                <span class="fa fa-play green-icon" id="pausePlayThing" aria-hidden="true" title="Toggle Radar Animation" ${btnIconStyle}></span>
+                            </button>
+                        </div>
+                    </div>`
+                this._container.addEventListener('click', function() {
+                    if ($('#pausePlayThing').hasClass('fa-play')) {
+                        $('#pausePlayThing').removeClass('fa-play');
+                        $('#pausePlayThing').removeClass('green-icon');
+
+                        $('#pausePlayThing').addClass('fa-pause');
+                        $('#pausePlayThing').addClass('red-icon');
+                        var i = 0;
+                        function myLoop() {
+                            var radarLoopTimeout = setTimeout(function() {
+                                //for (var q = 0; q < iterations.length; q++) {
+                                //    map.removeLayer(`wms-test-layer${q}`)
+                                //    map.removeSource(`wms-test-layer${q}`)
+                                //}
+                                console.log(`wms-test-layer${i}`)
+                                setNexradLayerOpacity(i, 1)
+                                var displayedRadarTime = new Date(new Date($('#tsDateTime').val()) - minutesToSubtract[i] * msPerMinute);
+                                document.getElementById('timestampDisplay').innerHTML = printFancyTime(displayedRadarTime);
+                                i++;
+                                if (!$('#pausePlayThing').hasClass('fa-play')) {
+                                    if (i < allFrames) {
+                                        myLoop();
+                                    } else if (i == allFrames) {
+                                        i = 0;
+                                        myLoop();
+                                    }
+                                } else {
+                                    clearTimeout(radarLoopTimeout)
+                                }
+                            }, radarLoopTime)
+                        }
+                        myLoop();
+                    } else if (!$('#pausePlayThing').hasClass('fa-play')) {
+                        $('#pausePlayThing').removeClass('fa-pause');
+                        $('#pausePlayThing').removeClass('red-icon');
+
+                        $('#pausePlayThing').addClass('fa-play');
+                        $('#pausePlayThing').addClass('green-icon');
+                    }
+                })
+                return this._container;
+            }
+
+            onRemove() {
+                this._container.parentNode.removeChild(this._container);
+                this._map = undefined;
+            }
+        }
+        var thePausePlayControl = new pausePlayControl
+        map.addControl(thePausePlayControl)
+    });
+
+    function setView(lat, lng, zoom) {
+        map.setCenter([lng, lat]);
+        map.setZoom(zoom);
+        if (map.getLayer('rpv')) {
+            map.removeLayer('rpv')
+        }
+        if (map.getSource('rpv')) {
+            map.removeSource('rpv')
+        }
+        $('#rpvThing').removeClass('icon-selected');
+        $('#rpvThing').addClass('icon-black');
+    }
+    function setFromStation(stat, zoo) {
+        $.getJSON('/weather/json/radarStations.json', function(data) {
+            var theLat = data[stat][1]
+            var theLng = data[stat][2]
+            console.log(theLat, theLng)
+            setView(theLat, theLng, zoo)
+            document.getElementById('stationDisplay').innerHTML = stat.toUpperCase();
+            var radstat = stat.toUpperCase();
+
+            var radstatURL = `https://api.weather.gov/radar/stations/${radstat}`;
+            $.getJSON(radstatURL, function(data) {
+
+                var radstatLastReceivedData = new Date(data.properties.latency.levelTwoLastReceivedTime);
+                var currentTime = new Date();
+                var timeDiff = currentTime - radstatLastReceivedData;
+
+                var radstatELEM = document.getElementById('radstat');
+                // if it has been 15 minutes (900000 ms) since last radar data, radar is down
+                if (timeDiff >= 900000) {
+                    var isRadarDown = true;
+                    radstatELEM.style.color = 'rgb(226, 0, 0)';
+                    document.getElementById('radstat').innerHTML = "OFFLINE";
+                } else if (timeDiff < 900000) {
+                    var isRadarDown = false;
+                    radstatELEM.style.color = 'rgb(16, 160, 10)';
+                    document.getElementById('radstat').innerHTML = "ONLINE";
+                }
+
+                document.getElementById('radstatStation').innerHTML = radstat;
+                document.getElementById('radstatName').innerHTML = data.properties.name;
+                document.getElementById('radstatLastData').innerHTML = printFancyTime(radstatLastReceivedData);
+
+
+                var radmessageURL = `https://api.weather.gov/products/types/FTM/locations/${radstat.substring(1)}`;
+                $.getJSON(radmessageURL, function(data) {
+
+                    // THIS CODE IS TO REPLACE THE @ CHARACTERS WITH "AT"
+                    // @ json to string
+                    var stringjson = JSON.stringify(data);
+                    // replace @ with AT
+                    var stringjsonwithoutat = stringjson.replace(/@/g, 'AT');
+                    // re-parse the AT json
+                    var PARSEDstringjsonwithoutat = JSON.parse(stringjsonwithoutat);
+
+                    var emptyJsonString = '{"ATcontext":{"ATversion":"1.1"},"ATgraph":[]}';
+
+                    if (JSON.stringify(PARSEDstringjsonwithoutat) === emptyJsonString) {
+                        console.log("has no message");
+                        document.getElementById('radstatMessage').innerHTML = "No active message for this radar station.";
+                        document.getElementById('radstatMessageID').innerHTML = "None";
+                        document.getElementById('radstatMessageName').innerHTML = "None";
+                        document.getElementById('radstatMessageTime').innerHTML = "None";
+                    } else {
+                        console.log("has message");
+                        var msgURL = PARSEDstringjsonwithoutat.ATgraph[0].ATid;
+                        $.getJSON(msgURL, function(data) {
+                            var radstatMessageIssuanceTime = new Date(data.issuanceTime);
+                            var radstatMessageText = data.productText;
+
+                            // extract the text in between the \n\n sequences -
+                            // that text is all we need
+                            var middle = radstatMessageText.slice(
+                                radstatMessageText.indexOf('\n\n') + 1,
+                                radstatMessageText.lastIndexOf('\n\n'),
+                            );
+
+                            radstatMessageText.replace(/\n/g, '<br>');
+
+                            document.getElementById('radstatMessageID').innerHTML = `${data.id}<br><div class='false-anchor' onclick='window.location.href = "${msgURL}"'>${msgURL}</a>`;
+                            document.getElementById('radstatMessageName').innerHTML = data.productName;
+                            document.getElementById('radstatMessage').innerHTML = radstatMessageText;
+                            document.getElementById('radstatMessageTime').innerHTML = printFancyTime(radstatMessageIssuanceTime);
+
+                            console.log(radstatMessageText);
+                        });
+                    }
+                });
+            });
+        })
+        if (document.getElementById('stationDisplay').innerHTML == '') {
+            map.addControl(new messageControl);
+        }
+    }
+
+    function initDialog() {
+        $("#dialog").dialog({
+            modal: true,
+            // https://stackoverflow.com/a/30624445/18758797
+            open: function () {
+                $(this).parent().css({
+                    position: 'relative',
+                    top: 10,
+                    maxHeight: '50vh',
+                    overflow: 'scroll'
+                });
+            }
+        });
+    }
+    $(window).on('resize', function() {
+        $('#dialog').dialog('destroy');
+        initDialog();
+    });
+
+    class messageControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.className = 'mapboxgl-ctrl-fullscreen';
+            this._container.innerHTML = `
+                <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                    <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                        <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Radar Status Message" ${btnStyle}>
+                            <span class="fa fa-envelope icon-black" id="messageThing" aria-hidden="true" title="Radar Status Message" ${btnIconStyle}></span>
+                        </button>
+                    </div>
+                </div>`
+            this._container.addEventListener('click', function() {
+                console.log('user wants to show message');
+                initDialog();
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+
+    var singleStationZoom = 7.5;
+    function getDownStation() {
+        var downStationDiv = document.getElementById('downRadarStation');
+        console.log(downStationDiv.innerHTML);
+        setFromStation(downStationDiv.innerHTML, singleStationZoom);
+    }
+    function getUpStation() {
+        var upStationDiv = document.getElementById('upRadarStation');
+        console.log(upStationDiv.innerHTML);
+        setFromStation(upStationDiv.innerHTML, singleStationZoom);
+    }
+    function getStation() {
+        var stationDiv = document.getElementById('radarStationDiv');
+        console.log(stationDiv.innerHTML);
+        setFromStation(stationDiv.innerHTML, singleStationZoom);
+    }
+    function setStation() {
+        var curStationDiv = document.getElementById('stationDisplay');
+        console.log(curStationDiv.innerHTML);
+        setFromStation(curStationDiv.innerHTML, singleStationZoom);
+    }
+    function clickOnPolygonBtn() {
+        $('#polygon').trigger('click');
+    }
+    function clearPolygons() {
+        $('#clearpolygon').trigger('click');
+    }
+
+    function setLayerOrder() {
+        for (var t = 0; t < 11; t++) {
+            if (map.getLayer(`wms-test-layer${t}`)) {
+                map.moveLayer(`wms-test-layer${t}`);
+            }
+        }
+        map.moveLayer('clouds');
+        map.moveLayer('lightning');
+    }
+</script>
+
 </body>
 </html>
