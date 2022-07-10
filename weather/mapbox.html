@@ -203,6 +203,23 @@
     }
     useProxy(true);
 
+    //var allFrames = 20;
+    //var minutesToSubtract = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+    //minutesToSubtract.reverse();
+
+    var allFrames;
+    var minutesToSubtract = [];
+    function numberOfFrames(numofframes) {
+        allFrames = numofframes;
+        for (var w = 0; w < numofframes + 1; w++) {
+            minutesToSubtract.push(w * 5);
+        }
+        minutesToSubtract.reverse();
+    }
+    numberOfFrames(15);
+    // radar loop time is in ms
+    var radarLoopTime = 500;
+
     var parser = document.createElement('a');
     parser.href = window.location.href;
     console.log(parser.hash);
@@ -613,8 +630,6 @@
     document.getElementById('timestampDisplay').innerHTML = printFancyTime(new Date($('#tsDateTime').val()))
     var nexradTimestamps = ['', '-m05m', '-m10m', '-m15m', '-m20m', '-m25m', '-m30m', '-m35m', '-m40m', '-m45m', '-m50m']
     nexradTimestamps.reverse();
-    var minutesToSubtract = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
-    minutesToSubtract.reverse();
     map.on('load', () => {
         // Set the default atmosphere style
         map.setFog({});
@@ -762,14 +777,16 @@
                     "raster-fade-duration": 0
                 }
             });
+            console.log(`added layer ${indexInArray} - ${isuTimestamp(subtractedTime)}`)
         }
         function setNexradLayerOpacity(layerum, theopacity) {
-            for (var r = 0; r < nexradTimestamps.length; r++) {
+            for (var r = 0; r < allFrames + 1; r++) {
                 map.setPaintProperty(
                     `wms-test-layer${r}`,
                     'raster-opacity',
                     0
                 );
+                //console.log(`transparent ${r}`)
             }
             map.setPaintProperty(
                 `wms-test-layer${layerum}`,
@@ -778,8 +795,8 @@
             );
         }
         function initializeNexradLayer() {
-            for (var t = 10; t > -1; t--) {
-                if (t == 10) {
+            for (var t = allFrames; t > -1; t--) {
+                if (t == allFrames) {
                     addNexradLayer(t, 1);
                 } else {
                     addNexradLayer(t, 0);
@@ -1756,16 +1773,16 @@
                                 document.getElementById('timestampDisplay').innerHTML = printFancyTime(displayedRadarTime);
                                 i++;
                                 if (!$('#pausePlayThing').hasClass('fa-play')) {
-                                    if (i < nexradTimestamps.length) {
+                                    if (i < allFrames) {
                                         myLoop();
-                                    } else if (i == nexradTimestamps.length) {
+                                    } else if (i == allFrames) {
                                         i = 0;
                                         myLoop();
                                     }
                                 } else {
                                     clearTimeout(radarLoopTimeout)
                                 }
-                            }, 700)
+                            }, radarLoopTime)
                         }
                         myLoop();
                     } else if (!$('#pausePlayThing').hasClass('fa-play')) {
