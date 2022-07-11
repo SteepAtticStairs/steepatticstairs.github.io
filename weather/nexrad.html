@@ -290,7 +290,7 @@
 
     map.addControl(new MapboxFPS.FPSControl(), 'bottom-left');
 
-    /*function getZip(e) {
+    function getZip(e) {
         $.getJSON(`https://php-cors-proxy.herokuapp.com/?http://api.geonames.org/findNearbyPostalCodesJSON?lat=${e.lngLat.lat}&lng=${e.lngLat.lng}&username=steepatticstairs`, function(data) {
             var zipCode = data.postalCodes[0].postalCode;
             new mapboxgl.Popup()
@@ -299,7 +299,7 @@
                 .addTo(map);
         })
     }
-    map.on('click', getZip)*/
+    map.on('click', getZip)
 
     var locationMarkerArray = []
     function getLocation(trfa) {
