@@ -8,6 +8,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.2.1/chartjs-plugin-zoom.js"></script>
 
     <style>
         #myChart {
@@ -97,6 +99,7 @@
         var tsArr = [];
         var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${OWMkey}`;
         $.getJSON(dataUrl, function(data) {
+            console.log(data.hourly[0])
             for (var x = 0; x < 20; x++) {
                 var ts = data.hourly[x].dt;
                 tsArr.push(getHour(new Date(ts * 1000)));
@@ -139,6 +142,21 @@
                 options: {
                     plugins: {
                         legend: {display: false},
+                        zoom: {
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                },
+                                pinch: {
+                                    enabled: true
+                                },
+                                mode: 'x',
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'x'
+                            },
+                        },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
