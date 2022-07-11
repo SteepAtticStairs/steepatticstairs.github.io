@@ -92,6 +92,8 @@
         var ziplon = lng
 
         var tempArr = [];
+        var cloudArr = [];
+        var cloudPercentArr = [];
         var tsArr = [];
         var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${OWMkey}`;
         $.getJSON(dataUrl, function(data) {
@@ -99,29 +101,60 @@
                 var ts = data.hourly[x].dt;
                 tsArr.push(getHour(new Date(ts * 1000)));
                 //console.log(data.hourly[x].temp)
-                tempArr.push(data.hourly[x].temp)
+                tempArr.push(data.hourly[x].temp);
                 //console.log(printFancyTime(new Date(ts * 1000)))
+                cloudArr.push(data.hourly[x].clouds);
+                cloudPercentArr.push(data.hourly[x].clouds);
             }
 
             var minTemp = Math.floor(Math.min(...tempArr) / 10) * 10;
             var maxTemp = Math.ceil(Math.max(...tempArr) / 10) * 10;
+
+            for (var w = 0; w < cloudArr.length; w++) {
+                // https://stackoverflow.com/questions/11107227/how-to-get-a-percentage-from-a-range#comment59972657_11107254
+                cloudArr[w] = ((cloudArr[w] / 100) * (maxTemp - minTemp)) + minTemp
+            }
 
             var weatherChart = new Chart("weatherChart", {
                 type: "line",
                 data: {
                     labels: tsArr,
                     datasets: [{
+                        label: "temp",
                         fill: false,
                         lineTension: 0,
                         backgroundColor: "rgba(0, 0, 255, 1.0)",
                         borderColor: "rgba(0, 0, 255, 0.1)",
                         data: tempArr
+                    }, {
+                        label: "clouds",
+                        fill: true,
+                        lineTension: 0,
+                        backgroundColor: "rgba(130, 130, 130, 0.2)",
+                        borderColor: "rgba(130, 130, 130, 0.5)",
+                        pointBackgroundColor: 'rgba(130, 130, 130, 1)',
+                        data: cloudArr,
                     }]
                 },
                 options: {
                     plugins: {
                         legend: {display: false},
-                    }
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.parsed.y || '';
+                                    var id = context.dataset.label;
+                                    var dataIndex = context.dataIndex;
+
+                                    if (id == 'clouds') {
+                                        return `${cloudPercentArr[dataIndex]} %`
+                                    } else if (id == 'temp') {
+                                        return label += ' F'
+                                    }
+                                }
+                            }
+                        }
+                    },
                 }
             });
         })
