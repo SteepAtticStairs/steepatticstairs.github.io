@@ -120,8 +120,8 @@ function initChart(lat, lng) {
     var ziplat = lat
     var ziplon = lng
 
-    var index = [0, 0, 0, 0, 0];
-    var prev = [0, 0, 0, 0, 0];
+    var index = [0, 0, 0, 0, 0, 0];
+    var prev = [0, 0, 0, 0, 0, 0];
 
     var tempArr = [];
     var feelsLikeArr = [];
@@ -134,6 +134,8 @@ function initChart(lat, lng) {
 
     var popArr = [];
     var popPercentArr = [];
+
+    var dewpointArr = [];
 
     var tsArr = [];
     var hourArr = [];
@@ -229,6 +231,18 @@ function initChart(lat, lng) {
                         popArr.push(prev[indexInInfoArr])
                         popPercentArr.push(prev[indexInInfoArr])
                     }
+
+                    // dew point
+                    indexInInfoArr = 5;
+                    var dewpointTime = new Date(data.properties.dewpoint.values[index[indexInInfoArr]].validTime.split('/')[0]);
+                    if (dewpointTime.toISOString() == currentDateObj.toISOString()) {
+                        var theVal = convertToF(data.properties.dewpoint.values[index[indexInInfoArr]].value);
+                        dewpointArr.push(theVal);
+                        index[indexInInfoArr]++;
+                        prev[indexInInfoArr] = theVal;
+                    } else {
+                        dewpointArr.push(prev[indexInInfoArr])
+                    }
                 }
 
                 var minArray = [];
@@ -237,13 +251,17 @@ function initChart(lat, lng) {
                 var tempArrMax = Math.ceil(Math.max(...tempArr) / 10) * 10;
                 var feelsLikeArrMin = Math.floor(Math.min(...feelsLikeArr) / 10) * 10;
                 var feelsLikeArrMax = Math.ceil(Math.max(...feelsLikeArr) / 10) * 10;
+                var dewpointArrMin = Math.floor(Math.min(...dewpointArr) / 10) * 10;
+                var dewpointArrMax = Math.ceil(Math.max(...dewpointArr) / 10) * 10;
 
                 minArray.push(tempArrMin);
                 minArray.push(feelsLikeArrMin);
+                minArray.push(dewpointArrMin);
                 minArray.sort();
 
                 maxArray.push(tempArrMax);
                 maxArray.push(feelsLikeArrMax);
+                maxArray.push(dewpointArrMax);
                 maxArray.sort();
 
                 var minTemp = minArray[0];
@@ -298,6 +316,14 @@ function initChart(lat, lng) {
                             borderColor: "rgba(0, 156, 255, 0.5)",
                             pointBackgroundColor: 'rgba(0, 156, 255, 1)',
                             data: popArr,
+                        }, {
+                            label: "dewpoint",
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0, 148, 35, 0.2)",
+                            borderColor: "rgba(0, 148, 35, 0.5)",
+                            pointBackgroundColor: 'rgba(0, 148, 35, 1)',
+                            data: dewpointArr,
                         }]
                     },
                     options: {
@@ -359,7 +385,7 @@ function initChart(lat, lng) {
                                             return `${humidityPercentArr[dataIndex]} %`
                                         } else if (id == 'pop') {
                                             return `${popPercentArr[dataIndex]} %`
-                                        } else if (id == 'temp' || id == 'feelsLike') {
+                                        } else if (id == 'temp' || id == 'feelsLike' || id == 'dewpoint') {
                                             return label += ' F'
                                         }
                                     },
