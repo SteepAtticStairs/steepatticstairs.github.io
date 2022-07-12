@@ -116,6 +116,7 @@
         var popPercentArr = [];
 
         var tsArr = [];
+        var dateArr = [];
 
         var indexInInfoArr;
         var lengthToRender = 50;
@@ -129,8 +130,11 @@
                         var ts = data.properties.validTimes.split('/')[0];
                         var currentDateObj = new Date(new Date(ts).getTime() + (60*x)*60000);
                         var curHour = getHour(currentDateObj);
+
+                        var tsMonth = currentDateObj.toLocaleString('default', { month: 'long' });
+                        dateArr.push(`${tsMonth} ${currentDateObj.getDate()}, ${currentDateObj.getFullYear()}`)
                         if (curHour == '12:00 AM') {
-                            tsArr.push(`${currentDateObj.getMonth() + 1}/${currentDateObj.getDate()} ${curHour}`);
+                            tsArr.push(`${currentDateObj.getMonth() + 1}/${currentDateObj.getDate()}`);
                         } else {
                             tsArr.push(curHour)
                         }
@@ -226,6 +230,23 @@
                         popArr[w] = ((popArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
                     }
 
+                    // https://stackoverflow.com/a/71395413/18758797
+                    Chart.register({
+                        id: 'custom_canvas_background_color',
+                        beforeDraw: (chart, args, options) => {
+                            const {
+                                ctx,
+                                chartArea: { top, right, bottom, left, width, height },
+                                scales: { x, y },
+                            } = chart;
+                            ctx.save();
+                            ctx.globalCompositeOperation = 'destination-over';
+                            ctx.fillStyle = '#E5E5E5';
+                            ctx.fillRect(left, top, width, height);
+                            ctx.restore();
+                        },
+                    });
+
                     var weatherChart = new Chart("weatherChart", {
                         type: "line",
                         data: {
@@ -271,6 +292,16 @@
                             }]
                         },
                         options: {
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        font: {
+                                            weight: (tick) => (tick?.tick?.label.includes('/') ? 'bold' : 'normal')
+                                        }
+                                    }
+                                }
+                            },
+                            custom_canvas_background_color: {},
                             responsive: true,
                             maintainAspectRatio: false,
                             plugins: {
@@ -279,7 +310,6 @@
                                     zoom: {
                                         wheel: {
                                             enabled: true,
-                                            speed: 0.1
                                         },
                                         pinch: {
                                             enabled: true
@@ -288,11 +318,13 @@
                                     },
                                     pan: {
                                         enabled: true,
-                                        mode: 'x'
+                                        mode: 'x',
                                     },
                                     limits: {
                                         x: {
-                                            minRange: 5
+                                            min: 'original',
+                                            max: 'original',
+                                            minRange: 3,
                                         },
                                     },
                                 },
@@ -312,6 +344,12 @@
                                             } else if (id == 'temp' || id == 'feelsLike') {
                                                 return label += ' F'
                                             }
+                                        }, 
+                                        beforeTitle: function(context) {
+                                            var label = context[0].label;
+                                            var dataIndex = context[0].dataIndex;
+
+                                            return dateArr[dataIndex];
                                         }
                                     }
                                 }
