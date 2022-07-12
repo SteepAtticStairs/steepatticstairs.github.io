@@ -10,357 +10,381 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.2.1/chartjs-plugin-zoom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/1.4.0/chartjs-plugin-annotation.min.js"></script>
 
     <style>
         #canvasDiv {
-            height: 70vh
+            height: calc(var(--vh, 1vh) * 100 - 200px);
+            max-height: 450px;
         }
     </style>
 </head>
 <body>
 
-    <div><b>Input Zip Code:</b></div>
-    <input type="text" id="zipCodeInput">
-    <br>
-    <button id="zipCodeSubmit">Ok</button>
-    <br><br><br>
-    <div id="cityDisplay"></div>
-    <div id="currentTime"></div>
-    <div id="canvasDiv">
-        <canvas id="weatherChart"></canvas>
-    </div>
+<div><b>Input Zip Code:</b></div>
+<input type="text" id="zipCodeInput">
+<br>
+<button id="zipCodeSubmit">Ok</button>
+<br><br><br>
+<div id="cityDisplay"></div>
+<div id="currentTime"></div>
+<div id="canvasDiv">
+    <canvas id="weatherChart"></canvas>
+</div>
 
-    <script>
-    // Execute a function when the user presses a key on the keyboard
-    document.getElementById('zipCodeInput').addEventListener("keypress", function(event) {
-        // If the user presses the "Enter" key on the keyboard
-        if (event.key == "Enter") {
-            // Cancel the default action, if needed
-            event.preventDefault();
-            // Trigger the button element with a click
-            document.getElementById("zipCodeSubmit").click();
-        }
+<script>
+function setHeight() {
+    /*
+    * https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+    */
+
+    // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+    let vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+window.addEventListener('resize', function(event) {
+    setHeight();
+}, true);
+setHeight();
+
+// Execute a function when the user presses a key on the keyboard
+document.getElementById('zipCodeInput').addEventListener("keypress", function(event) {
+    // If the user presses the "Enter" key on the keyboard
+    if (event.key == "Enter") {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("zipCodeSubmit").click();
+    }
+});
+
+function printFancyTime(dateObj) {
+    return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
+}
+
+// https://bobbyhadz.com/blog/javascript-get-hours-and-minutes-from-date
+function getHour(dateObject) {
+    return dateObject.toLocaleTimeString('en-US', {
+        // en-US can be set to 'default' to use user's browser settings
+        hour: '2-digit',
+        minute: '2-digit',
     });
+}
 
-    function printFancyTime(dateObj) {
-        return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
+function getUserPosition() {
+    function showPosition(position) {
+        var posLat = position.coords.latitude;
+        var posLng = position.coords.longitude;
+        var accuracy = position.coords.accuracy;
+    }
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    }
+}
+
+function convertToF(celsius) {
+    // make the given fahrenheit variable equal the given celsius value
+    // multiply the given celsius value by 9/5 then add 32
+    let fahrenheit = celsius * 9/5 + 32
+    // return the variable fahrenheit as the answer
+    return fahrenheit;
+}
+
+var OWMkey = "dbf262da490678e53bec10704ce4032d";
+
+document.getElementById('zipCodeSubmit').addEventListener('click', function() {
+    var geoUrl = `https://api.openweathermap.org/geo/1.0/zip?zip=${$('#zipCodeInput').val()},US&units=imperial&appid=${OWMkey}`;
+    $.getJSON(geoUrl, function(data) {
+        initChart(data.lat, data.lon);
+        //document.getElementById('cityDisplay').innerHTML = data.name;
+
+        var getWDGLocationUrl = `https://api.weather.gov/points/${data.lat},${data.lon}`;
+        $.getJSON(getWDGLocationUrl, function(data) {
+            var cityname = data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state;
+            document.getElementById('cityDisplay').innerHTML = cityname;
+            document.getElementById('currentTime').innerHTML = printFancyTime(new Date());
+        })
+    })
+})
+
+var userTime = new Date();
+var userCurrentHour = `${getHour(new Date()).slice(0, -5)}00 ${userTime >= 12 ? 'PM' : 'AM'}`;
+
+function initChart(lat, lng) {
+    //document.getElementById('canvasDiv').innerHTML = '<canvas id="myChart"></canvas>';
+    if (Chart.getChart("weatherChart")) {
+        Chart.getChart("weatherChart").destroy();
     }
 
-    // https://bobbyhadz.com/blog/javascript-get-hours-and-minutes-from-date
-    function getHour(dateObject) {
-        return dateObject.toLocaleTimeString('en-US', {
-            // en-US can be set to 'default' to use user's browser settings
-            hour: '2-digit',
-            minute: '2-digit',
-        });
-    }
+    var ziplat = lat
+    var ziplon = lng
 
-    function getUserPosition() {
-        function showPosition(position) {
-            var posLat = position.coords.latitude;
-            var posLng = position.coords.longitude;
-            var accuracy = position.coords.accuracy;
-        }
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        }
-    }
+    var index = [0, 0, 0, 0, 0];
+    var prev = [0, 0, 0, 0, 0];
 
-    function convertToF(celsius) {
-        // make the given fahrenheit variable equal the given celsius value
-        // multiply the given celsius value by 9/5 then add 32
-        let fahrenheit = celsius * 9/5 + 32
-        // return the variable fahrenheit as the answer
-        return fahrenheit;
-    }
+    var tempArr = [];
+    var feelsLikeArr = [];
 
-    var OWMkey = "dbf262da490678e53bec10704ce4032d";
+    var cloudArr = [];
+    var cloudPercentArr = [];
 
-    document.getElementById('zipCodeSubmit').addEventListener('click', function() {
-        var geoUrl = `https://api.openweathermap.org/geo/1.0/zip?zip=${$('#zipCodeInput').val()},US&units=imperial&appid=${OWMkey}`;
-        $.getJSON(geoUrl, function(data) {
-            initChart(data.lat, data.lon);
-            //document.getElementById('cityDisplay').innerHTML = data.name;
+    var humidityArr = [];
+    var humidityPercentArr = [];
 
-            var getWDGLocationUrl = `https://api.weather.gov/points/${data.lat},${data.lon}`;
-            $.getJSON(getWDGLocationUrl, function(data) {
-                var cityname = data.properties.relativeLocation.properties.city + ", " + data.properties.relativeLocation.properties.state;
-                document.getElementById('cityDisplay').innerHTML = cityname;
-                document.getElementById('currentTime').innerHTML = printFancyTime(new Date());
+    var popArr = [];
+    var popPercentArr = [];
+
+    var tsArr = [];
+    var hourArr = [];
+    var dateArr = [];
+
+    var hourMatches = [];
+    var indexInInfoArr;
+    var lengthToRender = 50;
+    var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${OWMkey}`;
+    $.getJSON(dataUrl, function(dataOWM) {
+        $.getJSON(`https://api.weather.gov/points/${ziplat},${ziplon}`, function(data) {
+            console.log(data.properties.forecastGridData)
+            $.getJSON(data.properties.forecastGridData, function(data) {
+                for (var x = 0; x < lengthToRender; x++) {
+                    // timestamps
+                    var ts = data.properties.validTimes.split('/')[0];
+                    var currentDateObj = new Date(new Date(ts).getTime() + (60*x)*60000);
+                    var curHour = getHour(currentDateObj);
+                    if (curHour == userCurrentHour) {
+                        hourMatches.push(x);
+                    }
+
+                    var tsMonth = currentDateObj.toLocaleString('default', { month: 'long' });
+                    dateArr.push(`${tsMonth} ${currentDateObj.getDate()}, ${currentDateObj.getFullYear()}`)
+                    if (curHour == '12:00 AM') {
+                        tsArr.push(`${currentDateObj.getMonth() + 1}/${currentDateObj.getDate()}`);
+                    } else {
+                        tsArr.push(curHour);
+                    }
+                    hourArr.push(curHour);
+
+                    // temperature
+                    indexInInfoArr = 0;
+                    var tempTime = new Date(data.properties.temperature.values[index[indexInInfoArr]].validTime.split('/')[0]);
+                    if (tempTime.toISOString() == currentDateObj.toISOString()) {
+                        var theVal = convertToF(data.properties.temperature.values[index[indexInInfoArr]].value);
+                        tempArr.push(theVal);
+                        index[indexInInfoArr]++;
+                        prev[indexInInfoArr] = theVal;
+                        //console.log(getHour(tempTime), theVal)
+                    } else {
+                        tempArr.push(prev[0])
+                    }
+                    indexInInfoArr = 1;
+                    var feelsLikeTime = new Date(data.properties.apparentTemperature.values[index[indexInInfoArr]].validTime.split('/')[0]);
+                    if (feelsLikeTime.toISOString() == currentDateObj.toISOString()) {
+                        var theVal = convertToF(data.properties.apparentTemperature.values[index[indexInInfoArr]].value);
+                        feelsLikeArr.push(theVal);
+                        index[indexInInfoArr]++;
+                        prev[indexInInfoArr] = theVal;
+                    } else {
+                        feelsLikeArr.push(prev[indexInInfoArr])
+                    }
+
+                    // clouds
+                    indexInInfoArr = 2;
+                    var cloudTime = new Date(data.properties.skyCover.values[index[indexInInfoArr]].validTime.split('/')[0]);
+                    if (cloudTime.toISOString() == currentDateObj.toISOString()) {
+                        var theVal = data.properties.skyCover.values[index[indexInInfoArr]].value;
+                        cloudArr.push(theVal);
+                        cloudPercentArr.push(theVal);
+                        index[indexInInfoArr]++;
+                        prev[indexInInfoArr] = theVal;
+                    } else {
+                        cloudArr.push(prev[indexInInfoArr])
+                        cloudPercentArr.push(prev[indexInInfoArr])
+                    }
+
+                    // humidity
+                    indexInInfoArr = 3;
+                    var humidityTime = new Date(data.properties.relativeHumidity.values[index[indexInInfoArr]].validTime.split('/')[0]);
+                    if (cloudTime.toISOString() == currentDateObj.toISOString()) {
+                        var theVal = data.properties.relativeHumidity.values[index[indexInInfoArr]].value;
+                        humidityArr.push(theVal);
+                        humidityPercentArr.push(theVal);
+                        index[indexInInfoArr]++;
+                        prev[indexInInfoArr] = theVal;
+                    } else {
+                        humidityArr.push(prev[indexInInfoArr])
+                        humidityPercentArr.push(prev[indexInInfoArr])
+                    }
+
+                    // percent of precipitation
+                    indexInInfoArr = 4;
+                    var popTime = new Date(data.properties.probabilityOfPrecipitation.values[index[indexInInfoArr]].validTime.split('/')[0]);
+                    if (popTime.toISOString() == currentDateObj.toISOString()) {
+                        var theVal = data.properties.probabilityOfPrecipitation.values[index[indexInInfoArr]].value;
+                        popArr.push(theVal);
+                        popPercentArr.push(theVal);
+                        index[indexInInfoArr]++;
+                        prev[indexInInfoArr] = theVal;
+                    } else {
+                        popArr.push(prev[indexInInfoArr])
+                        popPercentArr.push(prev[indexInInfoArr])
+                    }
+                }
+
+                var minArray = [];
+                var maxArray = [];
+                var tempArrMin = Math.floor(Math.min(...tempArr) / 10) * 10;
+                var tempArrMax = Math.ceil(Math.max(...tempArr) / 10) * 10;
+                var feelsLikeArrMin = Math.floor(Math.min(...feelsLikeArr) / 10) * 10;
+                var feelsLikeArrMax = Math.ceil(Math.max(...feelsLikeArr) / 10) * 10;
+
+                minArray.push(tempArrMin);
+                minArray.push(feelsLikeArrMin);
+                minArray.sort();
+
+                maxArray.push(tempArrMax);
+                maxArray.push(feelsLikeArrMax);
+                maxArray.sort();
+
+                var minTemp = minArray[0];
+                var maxTemp = maxArray[0];
+
+                for (var w = 0; w < lengthToRender; w++) {
+                    // https://stackoverflow.com/questions/11107227/how-to-get-a-percentage-from-a-range#comment59972657_11107254
+                    cloudArr[w] = ((cloudArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
+                    humidityArr[w] = ((humidityArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
+                    popArr[w] = ((popArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
+                }
+
+                var weatherChart = new Chart("weatherChart", {
+                    type: "line",
+                    data: {
+                        labels: tsArr,
+                        datasets: [{
+                            label: "temp",
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(255, 30, 0, 1.0)",
+                            borderColor: "rgba(255, 30, 0, 0.1)",
+                            data: tempArr
+                        }, {
+                            label: "feelsLike",
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(145, 17, 0, 1.0)",
+                            borderColor: "rgba(145, 17, 0, 0.1)",
+                            data: feelsLikeArr
+                        }, {
+                            label: "clouds",
+                            fill: true,
+                            lineTension: 0,
+                            backgroundColor: "rgba(130, 130, 130, 0.2)",
+                            borderColor: "rgba(130, 130, 130, 0.5)",
+                            pointBackgroundColor: 'rgba(130, 130, 130, 1)',
+                            data: cloudArr,
+                        }, {
+                            label: "humidity",
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(4, 216, 0, 0.2)",
+                            borderColor: "rgba(4, 216, 0, 0.5)",
+                            pointBackgroundColor: 'rgba(4, 216, 0, 1)',
+                            data: humidityArr,
+                        }, {
+                            label: "pop",
+                            fill: true,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0, 156, 255, 0.2)",
+                            borderColor: "rgba(0, 156, 255, 0.5)",
+                            pointBackgroundColor: 'rgba(0, 156, 255, 1)',
+                            data: popArr,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                ticks: {
+                                    font: {
+                                        weight: (tick) => (tick?.tick?.label.includes('/') ? 'bold' : 'normal')
+                                    }
+                                }
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            annotation: {
+                                annotations: {
+                                    pastTime: {
+                                        type: 'box',
+                                        xMin: 0,
+                                        xMax: hourMatches[0],
+                                        backgroundColor: 'rgba(70, 70, 70, 0.25)'
+                                    }
+                                }
+                            },
+                            legend: {display: false},
+                            zoom: {
+                                zoom: {
+                                    wheel: {
+                                        enabled: true,
+                                    },
+                                    pinch: {
+                                        enabled: true
+                                    },
+                                    mode: 'x',
+                                },
+                                pan: {
+                                    enabled: true,
+                                    mode: 'x',
+                                },
+                                limits: {
+                                    x: {
+                                        min: 'original',
+                                        max: 'original',
+                                        minRange: 3,
+                                    },
+                                },
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        var label = context.parsed.y || '';
+                                        var id = context.dataset.label;
+                                        var dataIndex = context.dataIndex;
+
+                                        if (id == 'clouds') {
+                                            return `${cloudPercentArr[dataIndex]} %`
+                                        } else if (id == 'humidity') {
+                                            return `${humidityPercentArr[dataIndex]} %`
+                                        } else if (id == 'pop') {
+                                            return `${popPercentArr[dataIndex]} %`
+                                        } else if (id == 'temp' || id == 'feelsLike') {
+                                            return label += ' F'
+                                        }
+                                    },
+                                    beforeTitle: function(context) {
+                                        var label = context[0].label;
+                                        var dataIndex = context[0].dataIndex;
+
+                                        return dateArr[dataIndex];
+                                    },
+                                    title: function(context) {
+                                        var label = context[0].label;
+                                        var dataIndex = context[0].dataIndex;
+
+                                        return hourArr[dataIndex];
+                                    }
+                                }
+                            }
+                        },
+                    }
+                });
             })
         })
     })
-
-    function initChart(lat, lng) {
-        //document.getElementById('canvasDiv').innerHTML = '<canvas id="myChart"></canvas>';
-        if (Chart.getChart("weatherChart")) {
-            Chart.getChart("weatherChart").destroy();
-        }
-
-        var ziplat = lat
-        var ziplon = lng
-
-        var index = [0, 0, 0, 0, 0];
-        var prev = [0, 0, 0, 0, 0];
-
-        var tempArr = [];
-        var feelsLikeArr = [];
-
-        var cloudArr = [];
-        var cloudPercentArr = [];
-
-        var humidityArr = [];
-        var humidityPercentArr = [];
-
-        var popArr = [];
-        var popPercentArr = [];
-
-        var tsArr = [];
-        var dateArr = [];
-
-        var indexInInfoArr;
-        var lengthToRender = 50;
-        var dataUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${ziplat}&lon=${ziplon}&units=imperial&appid=${OWMkey}`;
-        $.getJSON(dataUrl, function(dataOWM) {
-            $.getJSON(`https://api.weather.gov/points/${ziplat},${ziplon}`, function(data) {
-                console.log(data.properties.forecastGridData)
-                $.getJSON(data.properties.forecastGridData, function(data) {
-                    for (var x = 0; x < lengthToRender; x++) {
-                        // timestamps
-                        var ts = data.properties.validTimes.split('/')[0];
-                        var currentDateObj = new Date(new Date(ts).getTime() + (60*x)*60000);
-                        var curHour = getHour(currentDateObj);
-
-                        var tsMonth = currentDateObj.toLocaleString('default', { month: 'long' });
-                        dateArr.push(`${tsMonth} ${currentDateObj.getDate()}, ${currentDateObj.getFullYear()}`)
-                        if (curHour == '12:00 AM') {
-                            tsArr.push(`${currentDateObj.getMonth() + 1}/${currentDateObj.getDate()}`);
-                        } else {
-                            tsArr.push(curHour)
-                        }
-
-                        // temperature
-                        indexInInfoArr = 0;
-                        var tempTime = new Date(data.properties.temperature.values[index[indexInInfoArr]].validTime.split('/')[0]);
-                        if (tempTime.toISOString() == currentDateObj.toISOString()) {
-                            var theVal = convertToF(data.properties.temperature.values[index[indexInInfoArr]].value);
-                            tempArr.push(theVal);
-                            index[indexInInfoArr]++;
-                            prev[indexInInfoArr] = theVal;
-                            //console.log(getHour(tempTime), theVal)
-                        } else {
-                            tempArr.push(prev[0])
-                        }
-                        indexInInfoArr = 1;
-                        var feelsLikeTime = new Date(data.properties.apparentTemperature.values[index[indexInInfoArr]].validTime.split('/')[0]);
-                        if (feelsLikeTime.toISOString() == currentDateObj.toISOString()) {
-                            var theVal = convertToF(data.properties.apparentTemperature.values[index[indexInInfoArr]].value);
-                            feelsLikeArr.push(theVal);
-                            index[indexInInfoArr]++;
-                            prev[indexInInfoArr] = theVal;
-                        } else {
-                            feelsLikeArr.push(prev[indexInInfoArr])
-                        }
-
-                        // clouds
-                        indexInInfoArr = 2;
-                        var cloudTime = new Date(data.properties.skyCover.values[index[indexInInfoArr]].validTime.split('/')[0]);
-                        if (cloudTime.toISOString() == currentDateObj.toISOString()) {
-                            var theVal = data.properties.skyCover.values[index[indexInInfoArr]].value;
-                            cloudArr.push(theVal);
-                            cloudPercentArr.push(theVal);
-                            index[indexInInfoArr]++;
-                            prev[indexInInfoArr] = theVal;
-                        } else {
-                            cloudArr.push(prev[indexInInfoArr])
-                            cloudPercentArr.push(prev[indexInInfoArr])
-                        }
-
-                        // humidity
-                        indexInInfoArr = 3;
-                        var humidityTime = new Date(data.properties.relativeHumidity.values[index[indexInInfoArr]].validTime.split('/')[0]);
-                        if (cloudTime.toISOString() == currentDateObj.toISOString()) {
-                            var theVal = data.properties.relativeHumidity.values[index[indexInInfoArr]].value;
-                            humidityArr.push(theVal);
-                            humidityPercentArr.push(theVal);
-                            index[indexInInfoArr]++;
-                            prev[indexInInfoArr] = theVal;
-                        } else {
-                            humidityArr.push(prev[indexInInfoArr])
-                            humidityPercentArr.push(prev[indexInInfoArr])
-                        }
-
-                        // percent of precipitation
-                        indexInInfoArr = 4;
-                        var popTime = new Date(data.properties.probabilityOfPrecipitation.values[index[indexInInfoArr]].validTime.split('/')[0]);
-                        if (popTime.toISOString() == currentDateObj.toISOString()) {
-                            var theVal = data.properties.probabilityOfPrecipitation.values[index[indexInInfoArr]].value;
-                            popArr.push(theVal);
-                            popPercentArr.push(theVal);
-                            index[indexInInfoArr]++;
-                            prev[indexInInfoArr] = theVal;
-                        } else {
-                            popArr.push(prev[indexInInfoArr])
-                            popPercentArr.push(prev[indexInInfoArr])
-                        }
-                    }
-
-                    var minArray = [];
-                    var maxArray = [];
-                    var tempArrMin = Math.floor(Math.min(...tempArr) / 10) * 10;
-                    var tempArrMax = Math.ceil(Math.max(...tempArr) / 10) * 10;
-                    var feelsLikeArrMin = Math.floor(Math.min(...feelsLikeArr) / 10) * 10;
-                    var feelsLikeArrMax = Math.ceil(Math.max(...feelsLikeArr) / 10) * 10;
-
-                    minArray.push(tempArrMin);
-                    minArray.push(feelsLikeArrMin);
-                    minArray.sort();
-
-                    maxArray.push(tempArrMax);
-                    maxArray.push(feelsLikeArrMax);
-                    maxArray.sort();
-
-                    var minTemp = minArray[0];
-                    var maxTemp = maxArray[0];
-
-                    for (var w = 0; w < lengthToRender; w++) {
-                        // https://stackoverflow.com/questions/11107227/how-to-get-a-percentage-from-a-range#comment59972657_11107254
-                        cloudArr[w] = ((cloudArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
-                        humidityArr[w] = ((humidityArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
-                        popArr[w] = ((popArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
-                    }
-
-                    // https://stackoverflow.com/a/71395413/18758797
-                    Chart.register({
-                        id: 'custom_canvas_background_color',
-                        beforeDraw: (chart, args, options) => {
-                            const {
-                                ctx,
-                                chartArea: { top, right, bottom, left, width, height },
-                                scales: { x, y },
-                            } = chart;
-                            ctx.save();
-                            ctx.globalCompositeOperation = 'destination-over';
-                            ctx.fillStyle = '#E5E5E5';
-                            ctx.fillRect(left, top, width, height);
-                            ctx.restore();
-                        },
-                    });
-
-                    var weatherChart = new Chart("weatherChart", {
-                        type: "line",
-                        data: {
-                            labels: tsArr,
-                            datasets: [{
-                                label: "temp",
-                                fill: false,
-                                lineTension: 0,
-                                backgroundColor: "rgba(255, 30, 0, 1.0)",
-                                borderColor: "rgba(255, 30, 0, 0.1)",
-                                data: tempArr
-                            }, {
-                                label: "feelsLike",
-                                fill: false,
-                                lineTension: 0,
-                                backgroundColor: "rgba(145, 17, 0, 1.0)",
-                                borderColor: "rgba(145, 17, 0, 0.1)",
-                                data: feelsLikeArr
-                            }, {
-                                label: "clouds",
-                                fill: true,
-                                lineTension: 0,
-                                backgroundColor: "rgba(130, 130, 130, 0.2)",
-                                borderColor: "rgba(130, 130, 130, 0.5)",
-                                pointBackgroundColor: 'rgba(130, 130, 130, 1)',
-                                data: cloudArr,
-                            }, {
-                                label: "humidity",
-                                fill: false,
-                                lineTension: 0,
-                                backgroundColor: "rgba(4, 216, 0, 0.2)",
-                                borderColor: "rgba(4, 216, 0, 0.5)",
-                                pointBackgroundColor: 'rgba(4, 216, 0, 1)',
-                                data: humidityArr,
-                            }, {
-                                label: "pop",
-                                fill: true,
-                                lineTension: 0,
-                                backgroundColor: "rgba(0, 156, 255, 0.2)",
-                                borderColor: "rgba(0, 156, 255, 0.5)",
-                                pointBackgroundColor: 'rgba(0, 156, 255, 1)',
-                                data: popArr,
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                x: {
-                                    ticks: {
-                                        font: {
-                                            weight: (tick) => (tick?.tick?.label.includes('/') ? 'bold' : 'normal')
-                                        }
-                                    }
-                                }
-                            },
-                            custom_canvas_background_color: {},
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {display: false},
-                                zoom: {
-                                    zoom: {
-                                        wheel: {
-                                            enabled: true,
-                                        },
-                                        pinch: {
-                                            enabled: true
-                                        },
-                                        mode: 'x',
-                                    },
-                                    pan: {
-                                        enabled: true,
-                                        mode: 'x',
-                                    },
-                                    limits: {
-                                        x: {
-                                            min: 'original',
-                                            max: 'original',
-                                            minRange: 3,
-                                        },
-                                    },
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            var label = context.parsed.y || '';
-                                            var id = context.dataset.label;
-                                            var dataIndex = context.dataIndex;
-
-                                            if (id == 'clouds') {
-                                                return `${cloudPercentArr[dataIndex]} %`
-                                            } else if (id == 'humidity') {
-                                                return `${humidityPercentArr[dataIndex]} %`
-                                            } else if (id == 'pop') {
-                                                return `${popPercentArr[dataIndex]} %`
-                                            } else if (id == 'temp' || id == 'feelsLike') {
-                                                return label += ' F'
-                                            }
-                                        }, 
-                                        beforeTitle: function(context) {
-                                            var label = context[0].label;
-                                            var dataIndex = context[0].dataIndex;
-
-                                            return dateArr[dataIndex];
-                                        }
-                                    }
-                                }
-                            },
-                        }
-                    });
-                })
-            })
-        })
-    }
-    </script>
+}
+</script>
 
 </body>
 </html>
