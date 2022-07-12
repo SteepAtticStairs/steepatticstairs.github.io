@@ -299,7 +299,14 @@
                 .addTo(map);
         })
     }
-    map.on('click', getZip)
+    function allowZipFinder(trueefalsee) {
+        if (trueefalsee) {
+            map.on('click', getZip);
+        } else if (!trueefalsee) {
+            map.off('click', getZip);
+        }
+    }
+    allowZipFinder(true);
 
     var locationMarkerArray = []
     function getLocation(trfa) {
@@ -1699,6 +1706,7 @@
                         $('#alertThing').removeClass('icon-black');
                         map.getCanvas().style.cursor = "crosshair";
                         map.on('click', addMarker);
+                        allowZipFinder(false);
                         showAlerts();
                     } else if ($('#alertThing').hasClass('icon-selected')) {
                         $('#alertThing').removeClass('icon-selected');
@@ -1738,6 +1746,7 @@
                                 map.removeSource(drawnPolygonArr[u])
                             }
                         }
+                        allowZipFinder(true);
                     }
                 })
                 return this._container;
