@@ -84,11 +84,12 @@ function getUserPosition() {
 }
 
 function convertToF(celsius) {
-    // make the given fahrenheit variable equal the given celsius value
-    // multiply the given celsius value by 9/5 then add 32
-    let fahrenheit = celsius * 9/5 + 32
-    // return the variable fahrenheit as the answer
-    return fahrenheit;
+    return celsius * 9/5 + 32;
+}
+
+function convertToMph(kph) {
+    // https://stackoverflow.com/a/11832950
+    return Math.round((kph / 1.609344 + Number.EPSILON) * 100) / 100;
 }
 
 var OWMkey = "dbf262da490678e53bec10704ce4032d";
@@ -120,8 +121,8 @@ function initChart(lat, lng) {
     var ziplat = lat
     var ziplon = lng
 
-    var index = [0, 0, 0, 0, 0, 0];
-    var prev = [0, 0, 0, 0, 0, 0];
+    var index = [0, 0, 0, 0, 0, 0, 0];
+    var prev = [0, 0, 0, 0, 0, 0, 0];
 
     var tempArr = [];
     var feelsLikeArr = [];
@@ -136,6 +137,9 @@ function initChart(lat, lng) {
     var popPercentArr = [];
 
     var dewpointArr = [];
+
+    var windSpeedArr = [];
+    var windSpeedPercentArr = [];
 
     var tsArr = [];
     var hourArr = [];
@@ -243,6 +247,20 @@ function initChart(lat, lng) {
                     } else {
                         dewpointArr.push(prev[indexInInfoArr])
                     }
+
+                    // dew point
+                    indexInInfoArr = 6;
+                    var windSpeedTime = new Date(data.properties.windSpeed.values[index[indexInInfoArr]].validTime.split('/')[0]);
+                    if (windSpeedTime.toISOString() == currentDateObj.toISOString()) {
+                        var theVal = convertToMph(data.properties.windSpeed.values[index[indexInInfoArr]].value);
+                        windSpeedArr.push(theVal);
+                        windSpeedPercentArr.push(theVal);
+                        index[indexInInfoArr]++;
+                        prev[indexInInfoArr] = theVal;
+                    } else {
+                        windSpeedArr.push(prev[indexInInfoArr])
+                        windSpeedPercentArr.push(prev[indexInInfoArr])
+                    }
                 }
 
                 var minArray = [];
@@ -272,6 +290,7 @@ function initChart(lat, lng) {
                     cloudArr[w] = ((cloudArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
                     humidityArr[w] = ((humidityArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
                     popArr[w] = ((popArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
+                    windSpeedArr[w] = ((windSpeedArr[w] / 100) * (maxTemp - minTemp)) + minTemp;
                 }
 
                 var weatherChart = new Chart("weatherChart", {
@@ -324,6 +343,14 @@ function initChart(lat, lng) {
                             borderColor: "rgba(0, 148, 35, 0.5)",
                             pointBackgroundColor: 'rgba(0, 148, 35, 1)',
                             data: dewpointArr,
+                        }, {
+                            label: "windspeed",
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(255, 230, 0, 0.2)",
+                            borderColor: "rgba(255, 230, 0, 0.5)",
+                            pointBackgroundColor: 'rgba(255, 230, 0, 1)',
+                            data: windSpeedArr,
                         }]
                     },
                     options: {
@@ -385,6 +412,8 @@ function initChart(lat, lng) {
                                             return `${humidityPercentArr[dataIndex]} %`
                                         } else if (id == 'pop') {
                                             return `${popPercentArr[dataIndex]} %`
+                                        } else if (id == 'windspeed') {
+                                            return `${windSpeedPercentArr[dataIndex]} mph`
                                         } else if (id == 'temp' || id == 'feelsLike' || id == 'dewpoint') {
                                             return label += ' F'
                                         }
