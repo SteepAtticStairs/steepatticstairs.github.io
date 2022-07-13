@@ -165,7 +165,7 @@
     <br><br>
     <button id="unixTsReset">Reset</button>
     <br><br><br>
-    <div>Frame Count:</div>
+    <div>Frame Count: (<b><a id="curFrameCount"></a></b>)</div>
     <input id="frameCount">
     <button id="frameCountBtn">Ok</button>
     <br><br>
@@ -221,6 +221,7 @@
     var minutesToSubtract = [];
     function numberOfFrames(numofframes) {
         $('#frameCount').val(numofframes);
+        $('#curFrameCount').text(numofframes);
         allFrames = numofframes;
         for (var w = 0; w < numofframes + 1; w++) {
             minutesToSubtract.push(w * 5);
@@ -828,9 +829,9 @@
                 theopacity
             );
         }
-        function initializeNexradLayer() {
-            for (var t = allFrames; t > -1; t--) {
-                if (t == allFrames) {
+        function initializeNexradLayer(fram) {
+            for (var t = fram; t > -1; t--) {
+                if (t == fram) {
                     addNexradLayer(t, 1);
                 } else {
                     addNexradLayer(t, 0);
@@ -839,6 +840,16 @@
             document.getElementById('timestampSlider').addEventListener("input", function() {
                 setNexradLayerOpacity(this.value, 1)
             });
+        }
+        function removeNexradLayer(frames) {
+            for (var t = 0; t < frames; t++) {
+                if (map.getLayer(`wms-test-layer${t}`)) {
+                    map.removeLayer(`wms-test-layer${t}`)
+                }
+                if (map.getSource(`wms-test-layer${t}`)) {
+                    map.removeSource(`wms-test-layer${t}`)
+                }
+            }
         }
         class mainRadarControl {
             onAdd(map) {
@@ -852,23 +863,17 @@
                         </button>
                     </div>
                 </div>`
+                $(this._container).addClass('mainRadarButton');
                 this._container.addEventListener('click', function() {
                     if (!$('#mainRadarThing').hasClass('icon-selected')) {
                         $('#mainRadarThing').addClass('icon-selected');
                         $('#mainRadarThing').removeClass('icon-black');
                         //testISUDown(2000);
-                        initializeNexradLayer();
+                        initializeNexradLayer(allFrames);
                     } else if ($('#mainRadarThing').hasClass('icon-selected')) {
                         $('#mainRadarThing').removeClass('icon-selected');
                         $('#mainRadarThing').addClass('icon-black');
-                        for (var t = 0; t < 11; t++) {
-                            if (map.getLayer(`wms-test-layer${t}`)) {
-                                map.removeLayer(`wms-test-layer${t}`)
-                            }
-                            if (map.getSource(`wms-test-layer${t}`)) {
-                                map.removeSource(`wms-test-layer${t}`)
-                            }
-                        }
+                        removeNexradLayer(allFrames + 1);
                     }
                 })
                 return this._container;
@@ -886,7 +891,14 @@
             loopSpeed($('#loopSpeed').val());
         });
         document.getElementById('frameCountBtn').addEventListener('click', function() {
-            console.log($('#frameCount').val());
+            if (!$('#pausePlayThing').hasClass('fa-play')) {
+                $('.pausePlayButton').trigger('click');
+            }
+            if ($('#mainRadarThing').hasClass('icon-selected')) {
+                $('.mainRadarButton').trigger('click');
+            }
+            numberOfFrames(parseInt($('#frameCount').val()));
+            console.log(minutesToSubtract)
         })
 
         class rpvControl {
@@ -1796,6 +1808,7 @@
                             </button>
                         </div>
                     </div>`
+                $(this._container).addClass('pausePlayButton');
                 this._container.addEventListener('click', function() {
                     if ($('#pausePlayThing').hasClass('fa-play')) {
                         $('#pausePlayThing').removeClass('fa-play');
