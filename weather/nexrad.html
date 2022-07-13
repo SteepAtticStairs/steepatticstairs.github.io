@@ -164,6 +164,15 @@
     <button id="unixTsSubmit">Ok</button>
     <br><br>
     <button id="unixTsReset">Reset</button>
+    <br><br><br>
+    <div>Frame Count:</div>
+    <input id="frameCount">
+    <button id="frameCountBtn">Ok</button>
+    <br><br>
+    <div>Loop Speed:</div>
+    <input id="loopSpeed">
+    <button id="loopSpeedBtn">Ok</button>
+    <br><br>
 </div>
 <script>
     // 1650288960 (4.18.2022)
@@ -208,17 +217,23 @@
     //minutesToSubtract.reverse();
 
     var allFrames;
+    var radarLoopTime;
     var minutesToSubtract = [];
     function numberOfFrames(numofframes) {
+        $('#frameCount').val(numofframes);
         allFrames = numofframes;
         for (var w = 0; w < numofframes + 1; w++) {
             minutesToSubtract.push(w * 5);
         }
         minutesToSubtract.reverse();
     }
+    function loopSpeed(mils) {
+        $('#loopSpeed').val(mils);
+        // radar loop time is in ms
+        radarLoopTime = mils;
+    }
     numberOfFrames(15);
-    // radar loop time is in ms
-    var radarLoopTime = 500;
+    loopSpeed(500);
 
     var parser = document.createElement('a');
     parser.href = window.location.href;
@@ -865,6 +880,10 @@
         }
         var theMainRadarControl = new mainRadarControl
         map.addControl(theMainRadarControl, 'top-right');
+
+        document.getElementById('frameCountBtn').addEventListener('click', function() {
+            console.log($('#frameCount').val());
+        })
 
         class rpvControl {
             onAdd(map) {
