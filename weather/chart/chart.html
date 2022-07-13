@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta charset="UTF-8" />
+    <title>Weather Chart</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.2.1/chartjs-plugin-zoom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/1.4.0/chartjs-plugin-annotation.min.js"></script>
+
+    <link href="chart.css" rel="stylesheet">
+</head>
+<body>
+
+<div><b>Input Zip Code:</b></div>
+<input type="text" id="zipCodeInput">
+<br>
+<button id="zipCodeSubmit">Ok</button>
+<br><br><br>
+<div id="cityDisplay"></div>
+<div id="currentTime"></div>
+<div id="canvasDiv">
+    <canvas id="weatherChart"></canvas>
+</div>
+
+<script type="module" src="./js/fetchData.mjs"></script>
+
+</body>
+</html>
