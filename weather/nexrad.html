@@ -169,7 +169,7 @@
     <input id="frameCount">
     <button id="frameCountBtn">Ok</button>
     <br><br>
-    <div>Loop Speed:</div>
+    <div>Loop Speed: (<b><a id="curLoopSpeed"></a></b>)</div>
     <input id="loopSpeed">
     <button id="loopSpeedBtn">Ok</button>
     <br><br>
@@ -229,6 +229,7 @@
     }
     function loopSpeed(mils) {
         $('#loopSpeed').val(mils);
+        $('#curLoopSpeed').text(mils);
         // radar loop time is in ms
         radarLoopTime = mils;
     }
@@ -881,6 +882,9 @@
         var theMainRadarControl = new mainRadarControl
         map.addControl(theMainRadarControl, 'top-right');
 
+        document.getElementById('loopSpeedBtn').addEventListener('click', function() {
+            loopSpeed($('#loopSpeed').val());
+        });
         document.getElementById('frameCountBtn').addEventListener('click', function() {
             console.log($('#frameCount').val());
         })
