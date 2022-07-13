@@ -914,50 +914,20 @@
                             </button>
                         </div>
                     </div>`
+                $(this._container).addClass('rpvButton');
                 this._container.addEventListener('click', function() {
                     console.log('rpv')
                     if (!$('#rpvThing').hasClass('icon-selected')) {
                         $('#rpvThing').addClass('icon-selected');
                         $('#rpvThing').removeClass('icon-black');
-
-                        var currentStation = document.getElementById('stationDisplay').innerHTML.toUpperCase().substring(1)
                         /*if (map.getLayer('rpv')) {
                             map.removeLayer('rpv')
                         }
                         if (map.getSource('rpv')) {
                             map.removeSource('rpv')
                         }*/
-                        beforeTileInit('radar-layer')
                         //setStaticImage(currentStation, "N0S", 0);
                         //afterTileInit()
-
-                        function setRpvLayer(pro) {
-                            var nowTime = new Date($('#tsDateTime').val());
-                            // 120 = # of minutes in 2 hours
-                            var yesterday = new Date(nowTime - 120 * 60000);
-                            // https://stackoverflow.com/a/68514256
-                            var isuCurTime = nowTime.toISOString().substr(0,nowTime.toISOString().indexOf(".")) + "Z";
-                            var isuYesterday = yesterday.toISOString().substr(0,yesterday.toISOString().indexOf(".")) + "Z";
-                            var isuTsReflUrl = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${currentStation}&product=${pro}&start=${isuYesterday}&end=${isuCurTime}`;
-                            console.log(isuTsReflUrl)
-                            $.getJSON(phpProxy + isuTsReflUrl, function(data) {
-                                var latestTs = data.scans[data.scans.length - 1].ts;
-                                //var st = 'klwx';
-                                //var pr = 'bref_raw';
-                                map.addLayer({
-                                    id: 'radar-layer',
-                                    type: "raster",
-                                    source: {
-                                        type: "raster",
-                                        tiles: [
-                                            `${phpProxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::${currentStation}-${pro}-${isuTimestamp(new Date(latestTs))}/{z}/{x}/{y}.png`
-                                            //`https://opengeo.ncep.noaa.gov/geoserver/${st}/${st}_${pr}/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=${st}_${pr}&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}`
-                                        ],
-                                        tileSize: 256
-                                    },
-                                });
-                            })
-                        }
 
                         $("#rpvDialog").dialog({
                             modal: true,
@@ -971,47 +941,15 @@
                                 });
                             }
                         });
-                        document.getElementById('bref_raw').addEventListener('click', function() {
-                            // old is N0Q, removed on 5.02.2022 (worked on 5.01.2022)
-                            // https://mesonet.agron.iastate.edu/archive/data/2022/05/01/GIS/ridge/ABC/
-                            // vs
-                            // https://mesonet.agron.iastate.edu/archive/data/2022/05/02/GIS/ridge/ABC/
-                            var maySecond2022 = 1651464000;
-                            var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
-                            if (userTimeStamp > maySecond2022) {
-                                setRpvLayer('N0B');
-                                console.log('N0B - after may 2 2022');
-                            } else if (userTimeStamp < maySecond2022) {
-                                setRpvLayer('N0Q');
-                                console.log('N0Q - before may 2 2022');
-                            }
-                            $("#rpvDialog").dialog('destroy');
-                        });
-                        document.getElementById('bvel_raw').addEventListener('click', function() {
-                            // old is N0U, removed on 6.16.2022 (worked on 6.15.2022)
-                            // https://mesonet.agron.iastate.edu/archive/data/2022/06/15/GIS/ridge/LWX/
-                            // vs
-                            // https://mesonet.agron.iastate.edu/archive/data/2022/06/16/GIS/ridge/LWX/
-                            var juneSixteenth2022 = 1655352000;
-                            var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
-                            if (userTimeStamp > juneSixteenth2022) {
-                                setRpvLayer('N0S');
-                                console.log('N0S - after june 16 2022');
-                            } else if (userTimeStamp < juneSixteenth2022) {
-                                setRpvLayer('N0U');
-                                console.log('N0U - before june 16 2022');
-                            }
-                            $("#rpvDialog").dialog('destroy');
-                        });
                     } else if ($('#rpvThing').hasClass('icon-selected')) {
                         $('#rpvThing').removeClass('icon-selected');
                         $('#rpvThing').addClass('icon-black');
 
-                        if (map.getLayer('radar-layer')) {
-                            map.removeLayer('radar-layer')
+                        if (map.getLayer('rpvLayer')) {
+                            map.removeLayer('rpvLayer')
                         }
-                        if (map.getSource('radar-layer')) {
-                            map.removeSource('radar-layer')
+                        if (map.getSource('rpvLayer')) {
+                            map.removeSource('rpvLayer')
                         }
                         //afterTileInit()
                         //setNexradLayerOpacity(10, 1)
@@ -1027,6 +965,75 @@
         }
         var theRPVControl = new rpvControl
         map.addControl(theRPVControl)
+
+        function setRpvLayer(pro) {
+            var currentStation = document.getElementById('stationDisplay').innerHTML.toUpperCase().substring(1)
+            if (map.getLayer('rpvLayer')) {
+                map.removeLayer('rpvLayer')
+            }
+            if (map.getSource('rpvLayer')) {
+                map.removeSource('rpvLayer')
+            }
+            var nowTime = new Date($('#tsDateTime').val());
+            // 120 = # of minutes in 2 hours
+            var yesterday = new Date(nowTime - 120 * 60000);
+            // https://stackoverflow.com/a/68514256
+            var isuCurTime = nowTime.toISOString().substr(0,nowTime.toISOString().indexOf(".")) + "Z";
+            var isuYesterday = yesterday.toISOString().substr(0,yesterday.toISOString().indexOf(".")) + "Z";
+            var isuTsReflUrl = `https://mesonet.agron.iastate.edu/json/radar?operation=list&radar=${currentStation}&product=${pro}&start=${isuYesterday}&end=${isuCurTime}`;
+            console.log(isuTsReflUrl)
+            $.getJSON(phpProxy + isuTsReflUrl, function(data) {
+                console.log(data)
+                var latestTs = data.scans[data.scans.length - 1].ts;
+                //var st = 'klwx';
+                //var pr = 'bref_raw';
+                map.addLayer({
+                    id: 'rpvLayer',
+                    type: "raster",
+                    source: {
+                        type: "raster",
+                        tiles: [
+                            `${phpProxy}https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/ridge::${currentStation}-${pro}-${isuTimestamp(new Date(latestTs))}/{z}/{x}/{y}.png`
+                            //`https://opengeo.ncep.noaa.gov/geoserver/${st}/${st}_${pr}/ows?&service=WMS&request=GetMap&layers=&styles=&format=image/png&transparent=true&version=1.1.1&SERVICE=WMS&LAYERS=${st}_${pr}&width=256&height=256&srs=EPSG:3857&bbox={bbox-epsg-3857}`
+                        ],
+                        tileSize: 256
+                    },
+                });
+                console.log(`${currentStation}-${pro}-${isuTimestamp(new Date(latestTs))}`)
+            })
+        }
+        document.getElementById('bref_raw').addEventListener('click', function() {
+            // old is N0Q, removed on 5.02.2022 (worked on 5.01.2022)
+            // https://mesonet.agron.iastate.edu/archive/data/2022/05/01/GIS/ridge/ABC/
+            // vs
+            // https://mesonet.agron.iastate.edu/archive/data/2022/05/02/GIS/ridge/ABC/
+            var maySecond2022 = 1651464000;
+            var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
+            if (userTimeStamp > maySecond2022) {
+                setRpvLayer('N0B');
+                console.log('N0B - after may 2 2022');
+            } else if (userTimeStamp < maySecond2022) {
+                setRpvLayer('N0Q');
+                console.log('N0Q - before may 2 2022');
+            }
+            $("#rpvDialog").dialog('destroy');
+        });
+        document.getElementById('bvel_raw').addEventListener('click', function() {
+            // old is N0U, removed on 6.16.2022 (worked on 6.15.2022)
+            // https://mesonet.agron.iastate.edu/archive/data/2022/06/15/GIS/ridge/LWX/
+            // vs
+            // https://mesonet.agron.iastate.edu/archive/data/2022/06/16/GIS/ridge/LWX/
+            var juneSixteenth2022 = 1655352000;
+            var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
+            if (userTimeStamp > juneSixteenth2022) {
+                setRpvLayer('N0S');
+                console.log('N0S - after june 16 2022');
+            } else if (userTimeStamp < juneSixteenth2022) {
+                setRpvLayer('N0U');
+                console.log('N0U - before june 16 2022');
+            }
+            $("#rpvDialog").dialog('destroy');
+        });
         /* map.addSource('wms-test-source', {
             'type': 'raster',
             // use the tiles option to specify a WMS tile source URL
@@ -1600,6 +1607,7 @@
                     if (!$('#stationThing').hasClass('icon-selected')) {
                         $('#stationThing').addClass('icon-selected');
                         $('#stationThing').removeClass('icon-black');
+                        allowZipFinder(false);
                         stationMarkers();
                     } else if ($('#stationThing').hasClass('icon-selected')) {
                         $('#stationThing').removeClass('icon-selected');
@@ -1607,6 +1615,7 @@
                         for (var u = 0; u < markerArr.length; u++) {
                             markerArr[u].remove();
                         }
+                        allowZipFinder(true);
                     }
                 })
                 return this._container;
@@ -1864,14 +1873,9 @@
     function setView(lat, lng, zoom) {
         map.setCenter([lng, lat]);
         map.setZoom(zoom);
-        if (map.getLayer('rpv')) {
-            map.removeLayer('rpv')
+        if ($('#rpvThing').hasClass('icon-selected')) {
+            $('.rpvButton').trigger('click');
         }
-        if (map.getSource('rpv')) {
-            map.removeSource('rpv')
-        }
-        $('#rpvThing').removeClass('icon-selected');
-        $('#rpvThing').addClass('icon-black');
     }
     function setFromStation(stat, zoo) {
         $.getJSON('/weather/json/radarStations.json', function(data) {
