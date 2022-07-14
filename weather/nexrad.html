@@ -279,6 +279,18 @@
         return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
     }
 
+    function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+    
+        var k = 1024;
+        var dm = decimals < 0 ? 0 : decimals;
+        var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
     function testISUDown(ms) {
         // https://mesonet.agron.iastate.edu/images/rss.gif
         $.get('https://mesonet.agron.iastate.edu/json/example.php', function(data) {
@@ -453,6 +465,8 @@
                 border: 1px solid black;
                 border-radius: 5px;
                 '>
+                    <div id='alertDownloadedThing' style='display: none'><b>Fetched: </b><a id='alertDownloaded'>0 Bytes</a></div>
+                    <div></div>
                     <div id='tileThing'><b>Tiles: </b><a id='tilesLoadedDisplay'>Done</a></div>
                     <div id='timestampDisplay'></div>
                     <b><div id='stationDisplay' style='cursor: pointer' onclick='setStation()'></div></b>
@@ -1371,6 +1385,52 @@
                 }
             })
         }
+        function removeAlerts(oldnew) {
+            if (oldnew == 'old') {
+                for (var u = 0; u < alertArr.length; u++) {
+                    if (map.getLayer(alertArr[u])) {
+                        map.removeLayer(alertArr[u])
+                    }
+                }
+                for (var u = 0; u < sourceArr.length; u++) {
+                    if (map.getSource(sourceArr[u])) {
+                        map.removeSource(sourceArr[u])
+                    }
+                }
+                for (var u = 0; u < alertDotsArr.length; u++) {
+                    if (map.getLayer(alertDotsArr[u])) {
+                        map.removeLayer(alertDotsArr[u])
+                    }
+                    if (map.getSource(alertDotsArr[u])) {
+                        map.removeSource(alertDotsArr[u])
+                    }
+                }
+                for (var u = 0; u < drawnPolygonArr.length; u++) {
+                    if (map.getLayer(drawnPolygonSourceArr[u])) {
+                        map.removeLayer(drawnPolygonSourceArr[u])
+                    }
+                    if (map.getSource(drawnPolygonSourceArr[u])) {
+                        map.removeSource(drawnPolygonSourceArr[u])
+                    }
+
+                    if (map.getLayer(drawnPolygonArr[u])) {
+                        map.removeLayer(drawnPolygonArr[u])
+                    }
+                    if (map.getSource(drawnPolygonArr[u])) {
+                        map.removeSource(drawnPolygonArr[u])
+                    }
+                }
+            } else if (oldnew == 'new') {
+                for (var u = 0; u < newAlertsArr.length; u++) {
+                    if (map.getLayer(newAlertsArr[u])) {
+                        map.removeLayer(newAlertsArr[u])
+                    }
+                    if (map.getSource(newAlertsArr[u])) {
+                        map.removeSource(newAlertsArr[u])
+                    }
+                }
+            }
+        }
 
         var randomNumberArr = [];
         var drawPolygonBtn = document.getElementById('polygon');
@@ -1874,6 +1934,59 @@
             })
         }
 
+        var newAlertsArr = [];
+        function newAlerts(urll) {
+            document.getElementById('alertDownloadedThing').style.display = 'inline';
+            // https://preview.weather.gov/edd/
+            for (var y = 0; y < urll.length; y++) {
+                toggleSpinner(true);
+                var alertsXHTTP = new XMLHttpRequest();
+                alertsXHTTP.onprogress = (event) => {
+                    // event.loaded returns how many bytes are downloaded
+                    // event.total returns the total number of bytes
+                    // event.total is only available if server sends `Content-Length` header
+                    //console.log(`%c Downloaded ${formatBytes(event.loaded)} of ${formatBytes(event.total)}`, 'color: #bada55');
+                    //var complete = (event.loaded / event.total * 50 | 0);
+                    //document.getElementById('timestampProgress').innerHTML = formatBytes(event.loaded)
+                    document.getElementById('alertDownloaded').innerHTML = formatBytes(event.loaded);
+                }
+                alertsXHTTP.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        map.addLayer({
+                            'id': `newAlertsLayer${y}`,
+                            'type': 'fill',
+                            'source': {
+                                type: 'geojson',
+                                data: data
+                            },
+                            paint: {
+                                //#0080ff blue
+                                //#ff7d7d red
+                                'fill-color': '#0080ff',
+                                'fill-opacity': 0.5
+                            }
+                        });
+                        map.addLayer({
+                            'id': `newAlertsLayerOutline${y}`,
+                            'type': 'line',
+                            'source': `newAlertsLayer${y}`,
+                            'paint': {
+                                //#014385 blue
+                                //#850101 red
+                                'line-color': '#014385',
+                                'line-width': 3
+                            }
+                        });
+                        newAlertsArr.push(`newAlertsLayerOutline${y}`);
+                        newAlertsArr.push(`newAlertsLayer${y}`);
+                    }
+                };
+                alertsXHTTP.open("GET", urll[y], true);
+                alertsXHTTP.send();
+            }
+        }
+
         class alertControl {
             onAdd(map) {
                 this._map = map;
@@ -1896,45 +2009,28 @@
                         map.getCanvas().style.cursor = "crosshair";
                         map.on('click', addMarker);
                         allowZipFinder(false);
-                        showAlerts();
+                        //showAlerts();
+                        var newAlertsURL = `${phpProxy}https://preview.weather.gov/edd/resource/edd/hazards/getShortFusedHazards.php?all=true`;
+                        var swsAlertsURL = `${phpProxy}https://preview.weather.gov/edd/resource/edd/hazards/getSps.php`;
+                        // https://realearth.ssec.wisc.edu/products/?app=_ALL_
+                        var allAlertsURL = `https://realearth.ssec.wisc.edu/api/shapes?products=NWS-Alerts-All`;
+                        newAlerts([allAlertsURL]);
                     } else if ($('#alertThing').hasClass('icon-selected')) {
                         $('#alertThing').removeClass('icon-selected');
                         $('#alertThing').addClass('icon-black');
                         map.off('click', addMarker);
                         map.getCanvas().style.cursor = "";
-                        for (var u = 0; u < alertArr.length; u++) {
-                            if (map.getLayer(alertArr[u])) {
-                                map.removeLayer(alertArr[u])
+                        document.getElementById('alertDownloadedThing').style.display = 'none';
+                        document.getElementById('alertDownloaded').innerHTML = '0 Bytes';
+                        for (var u = 0; u < newAlertsArr.length; u++) {
+                            if (map.getLayer(newAlertsArr[u])) {
+                                map.removeLayer(newAlertsArr[u])
+                            }
+                            if (map.getSource(newAlertsArr[u])) {
+                                map.removeSource(newAlertsArr[u])
                             }
                         }
-                        for (var u = 0; u < sourceArr.length; u++) {
-                            if (map.getSource(sourceArr[u])) {
-                                map.removeSource(sourceArr[u])
-                            }
-                        }
-                        for (var u = 0; u < alertDotsArr.length; u++) {
-                            if (map.getLayer(alertDotsArr[u])) {
-                                map.removeLayer(alertDotsArr[u])
-                            }
-                            if (map.getSource(alertDotsArr[u])) {
-                                map.removeSource(alertDotsArr[u])
-                            }
-                        }
-                        for (var u = 0; u < drawnPolygonArr.length; u++) {
-                            if (map.getLayer(drawnPolygonSourceArr[u])) {
-                                map.removeLayer(drawnPolygonSourceArr[u])
-                            }
-                            if (map.getSource(drawnPolygonSourceArr[u])) {
-                                map.removeSource(drawnPolygonSourceArr[u])
-                            }
-            
-                            if (map.getLayer(drawnPolygonArr[u])) {
-                                map.removeLayer(drawnPolygonArr[u])
-                            }
-                            if (map.getSource(drawnPolygonArr[u])) {
-                                map.removeSource(drawnPolygonArr[u])
-                            }
-                        }
+                        removeAlerts('new');
                         allowZipFinder(true);
                     }
                 })
