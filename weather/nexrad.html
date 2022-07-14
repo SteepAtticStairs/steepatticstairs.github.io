@@ -166,7 +166,10 @@
     <button id="unixTsSubmit">Ok</button>
     <br><br>
     <button id="unixTsReset">Reset</button>
-    <br><br><br>
+    <br><br>
+</div>
+
+<div id="settingsDialog" style="display: none">
     <div>Frame Count: (<b><a id="curFrameCount"></a></b>)</div>
     <input id="frameCount">
     <button id="frameCountBtn">Ok</button>
@@ -612,6 +615,55 @@
     }
     var theCalendarControl = new calendarControl
     map.addControl(theCalendarControl, 'top-left');
+
+    class settingsControl {
+        onAdd(map) {
+            this._map = map;
+            this._container = document.createElement('div');
+            this._container.innerHTML = `
+            <div class="mapboxgl-control-container" style="margin-top: 100%;">
+                <div class="mapboxgl-ctrl mapboxgl-ctrl-group">
+                    <button class="mapboxgl-ctrl-fullscreen" type="button" aria-label="Show Current Location">
+                        <span class="fa fa-gear icon-black" id="settingsThing" aria-hidden="true" title="Globe Toggle"></span>
+                    </button>
+                </div>
+            </div>`
+            this._container.addEventListener('click', function() {
+                if (!$('#settingsThing').hasClass('icon-selected')) {
+                    $('#settingsThing').addClass('icon-selected');
+                    $('#settingsThing').removeClass('icon-black');
+                    $("#settingsDialog").dialog({
+                        modal: true,
+                        // https://stackoverflow.com/a/30624445/18758797
+                        open: function () {
+                            $(this).parent().css({
+                                position: 'relative',
+                                top: 10,
+                                maxHeight: '70vh',
+                                overflow: 'scroll'
+                            });
+                        },
+                        close: function () {
+                            $('#settingsThing').removeClass('icon-selected');
+                            $('#settingsThing').addClass('icon-black');
+                        }
+                    });
+                } else if ($('#settingsThing').hasClass('icon-selected')) {
+                    $('#settingsThing').removeClass('icon-selected');
+                    $('#settingsThing').addClass('icon-black');
+                    //map.setStyle(lightStyle);
+                }
+            })
+            return this._container;
+        }
+
+        onRemove() {
+            this._container.parentNode.removeChild(this._container);
+            this._map = undefined;
+        }
+    }
+    var theSettingsControl = new settingsControl
+    map.addControl(theSettingsControl, 'top-left');
 
     class spinnerControl {
         onAdd(map) {
