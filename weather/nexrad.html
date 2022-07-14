@@ -178,6 +178,10 @@
     <input id="loopSpeed">
     <button id="loopSpeedBtn">Ok</button>
     <br><br>
+    <div>Show TDWRs:</div>
+    <input id="displayTDWR" type="checkbox">
+    <label for="displayTDRW">Yes / No</label>
+    <br><br>
 </div>
 <script>
     // 1650288960 (4.18.2022)
@@ -250,10 +254,26 @@
     function toggleTDWR(ttruffal) {
         shouldTDWR = ttruffal;
     }
-    toggleTDWR(true);
-    if (parser.hash == "#noTDWR") {
-        toggleTDWR(false);
-    }
+    toggleTDWR(false);
+    var stationMarkersActive = false;
+    $('#displayTDWR').change(function() {
+        if ($('#stationThing').hasClass('icon-selected')) {
+            $('.stationButton').trigger('click');
+            stationMarkersActive = true;
+        }
+        if (this.checked) {
+            toggleTDWR(true);
+        } else if (!this.checked) {
+            toggleTDWR(false);
+        }
+        if (stationMarkersActive) {
+            $('.stationButton').trigger('click');
+            stationMarkersActive = false;
+        }
+    });
+    // if (parser.hash == "#noTDWR") {
+    //     toggleTDWR(false);
+    // }
 
     function printFancyTime(dateObj) {
         return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
@@ -1727,6 +1747,7 @@
                             </div>
                         </div>
                     </div>`
+                $(this._container).addClass('stationButton');
                 this._container.addEventListener('click', function() {
                     if (!$('#stationThing').hasClass('icon-selected')) {
                         $('#stationThing').addClass('icon-selected');
