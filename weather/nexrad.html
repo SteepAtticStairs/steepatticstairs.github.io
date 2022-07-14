@@ -243,6 +243,15 @@
     parser.href = window.location.href;
     console.log(parser.hash);
 
+    var shouldTDWR;
+    function toggleTDWR(ttruffal) {
+        shouldTDWR = ttruffal;
+    }
+    toggleTDWR(true);
+    if (parser.hash == "#noTDWR") {
+        toggleTDWR(false);
+    }
+
     function printFancyTime(dateObj) {
         return dateObj.toLocaleDateString() + " " + dateObj.toLocaleTimeString();
     }
@@ -1427,12 +1436,14 @@
                             .addTo(map)
                         markerArr.push(initMarker)
                     } else if (stationType == "TDWR") {
-                        var initTDWRMarker = new mapboxgl.Marker({
-                            color: "#4287f5",
-                        }).setLngLat([lonn, latt])
-                            .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>" + tdwr_DIV))
-                            .addTo(map)
-                        markerArr.push(initTDWRMarker);
+                        if (shouldTDWR) {
+                            var initTDWRMarker = new mapboxgl.Marker({
+                                color: "#4287f5",
+                            }).setLngLat([lonn, latt])
+                                .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>" + tdwr_DIV))
+                                .addTo(map)
+                            markerArr.push(initTDWRMarker);
+                        }
                     }
                 }
                 $.getJSON('https://api.weather.gov/radar/stations', function(data) {
@@ -1473,24 +1484,26 @@
                                 markerArr.push(up)
                             }
                         } else if (stationType == "TDWR") {
-                            if (timeDiff >= 900000) {
-                                //$('body').append
-                                var isRadarDown = true;
-                                var down = new mapboxgl.Marker({
-                                    color: "#ad0000",
-                                }).setLngLat([lonn, latt])
-                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div>" + tdwr_DIV + "</div>"))
-                                    .addTo(map)
-                                markerArr.push(down)
-                            } else if (timeDiff < 900000) {
-                                //$('body').append
-                                var isRadarDown = false;
-                                var up = new mapboxgl.Marker({
-                                    color: "#086300",
-                                }).setLngLat([lonn, latt])
-                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div>" + tdwr_DIV + "</div>"))
-                                    .addTo(map)
-                                markerArr.push(up)
+                            if (shouldTDWR) {
+                                if (timeDiff >= 900000) {
+                                    //$('body').append
+                                    var isRadarDown = true;
+                                    var down = new mapboxgl.Marker({
+                                        color: "#ad0000",
+                                    }).setLngLat([lonn, latt])
+                                        .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div>" + tdwr_DIV + "</div>"))
+                                        .addTo(map)
+                                    markerArr.push(down)
+                                } else if (timeDiff < 900000) {
+                                    //$('body').append
+                                    var isRadarDown = false;
+                                    var up = new mapboxgl.Marker({
+                                        color: "#086300",
+                                    }).setLngLat([lonn, latt])
+                                        .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div>" + tdwr_DIV + "</div>"))
+                                        .addTo(map)
+                                    markerArr.push(up)
+                                }
                             }
                         }
                     }
