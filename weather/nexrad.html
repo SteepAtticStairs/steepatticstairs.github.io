@@ -1004,42 +1004,64 @@
                 console.log(`${currentStation}-${pro}-${isuTimestamp(new Date(latestTs))}`)
             })
         }
+        function getProductURL() {
+            var nowTime = new Date($('#tsDateTime').val());
+            // https://stackoverflow.com/a/68514256
+            var isuCurTime = nowTime.toISOString().substr(0,nowTime.toISOString().indexOf(".")) + "Z";
+            var shtation = document.getElementById('stationDisplay').innerHTML.toUpperCase().substring(1);
+            var productListUrl = `https://mesonet.agron.iastate.edu/json/radar?operation=products&radar=${shtation}&start=${isuCurTime}`;
+            return productListUrl;
+        }
         document.getElementById('bref_raw').addEventListener('click', function() {
             if (document.getElementById('typeOfRadar').innerHTML == 'WSR-88D') {
-                // old is N0Q, removed on 5.02.2022 (worked on 5.01.2022)
-                // https://mesonet.agron.iastate.edu/archive/data/2022/05/01/GIS/ridge/ABC/
-                // vs
-                // https://mesonet.agron.iastate.edu/archive/data/2022/05/02/GIS/ridge/ABC/
-                var maySecond2022 = 1651464000;
-                var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
-                if (userTimeStamp > maySecond2022) {
-                    setRpvLayer('N0B');
-                    console.log('N0B - after may 2 2022');
-                } else if (userTimeStamp < maySecond2022) {
-                    setRpvLayer('N0Q');
-                    console.log('N0Q - before may 2 2022');
-                }
+                $.getJSON(getProductURL(), function (data) {
+                    var prodArr = [];
+                    for (var e = 0; e < data.products.length; e++) {
+                        prodArr.push(data.products[e].id);
+                    }
+                    if (prodArr.includes('N0B')) {
+                        setRpvLayer('N0B');
+                        console.log('array had N0B');
+                    } else if (!prodArr.includes('N0B')) {
+                        console.log(prodArr)
+                        setRpvLayer('N0Q');
+                        console.log('array did not have N0B, set to N0Q');
+                    }
+                })
             } else if (document.getElementById('typeOfRadar').innerHTML == 'TDWR') {
-                setRpvLayer('TZL');
-                console.log('TZL - tdwr');
+                $.getJSON(getProductURL(), function (data) {
+                    var prodArr = [];
+                    for (var e = 0; e < data.products.length; e++) {
+                        prodArr.push(data.products[e].id);
+                    }
+                    if (prodArr.includes('TZL')) {
+                        setRpvLayer('TZL');
+                        console.log('array had TZL');
+                    } else if (!prodArr.includes('TZL')) {
+                        console.log(prodArr)
+                        setRpvLayer('TR0');
+                        console.log('array did not have TZL, set to TR0');
+                    }
+                })
             }
             $("#rpvDialog").dialog('destroy');
         });
         document.getElementById('bvel_raw').addEventListener('click', function() {
-                if (document.getElementById('typeOfRadar').innerHTML == 'WSR-88D') {
-                    // old is N0U, removed on 6.16.2022 (worked on 6.15.2022)
-                // https://mesonet.agron.iastate.edu/archive/data/2022/06/15/GIS/ridge/LWX/
-                // vs
-                // https://mesonet.agron.iastate.edu/archive/data/2022/06/16/GIS/ridge/LWX/
-                var juneSixteenth2022 = 1655352000;
-                var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
-                if (userTimeStamp > juneSixteenth2022) {
-                    setRpvLayer('N0S');
-                    console.log('N0S - after june 16 2022');
-                } else if (userTimeStamp < juneSixteenth2022) {
-                    setRpvLayer('N0U');
-                    console.log('N0U - before june 16 2022');
-                }
+            if (document.getElementById('typeOfRadar').innerHTML == 'WSR-88D') {
+                $.getJSON(getProductURL(), function (data) {
+                    var prodArr = [];
+                    for (var e = 0; e < data.products.length; e++) {
+                        prodArr.push(data.products[e].id);
+                    }
+                    if (prodArr.includes('N0U')) {
+                        setRpvLayer('N0U');
+                        console.log('array had N0U');
+                    } else if (!prodArr.includes('N0U')) {
+                        console.log(prodArr)
+                        setRpvLayer('N0S');
+                        console.log('array did not have N0U, set to N0S');
+                    }
+                })
             } else if (document.getElementById('typeOfRadar').innerHTML == 'TDWR') {
                 setRpvLayer('TV0');
                 console.log('TV0 - tdwr');
