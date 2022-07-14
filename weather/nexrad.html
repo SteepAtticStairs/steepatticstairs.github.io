@@ -115,6 +115,8 @@
 <button style="display: none" id="polygon">draw</button>
 <button style="display: none" id="clearpolygon">clear</button>
 
+<div id="typeOfRadar"></div>
+
 <div id="dialog" style="display: none">
     <div><b>Radar Status: <a id="radstat"></a></b></div>
     <br>
@@ -1003,34 +1005,44 @@
             })
         }
         document.getElementById('bref_raw').addEventListener('click', function() {
-            // old is N0Q, removed on 5.02.2022 (worked on 5.01.2022)
-            // https://mesonet.agron.iastate.edu/archive/data/2022/05/01/GIS/ridge/ABC/
-            // vs
-            // https://mesonet.agron.iastate.edu/archive/data/2022/05/02/GIS/ridge/ABC/
-            var maySecond2022 = 1651464000;
-            var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
-            if (userTimeStamp > maySecond2022) {
-                setRpvLayer('N0B');
-                console.log('N0B - after may 2 2022');
-            } else if (userTimeStamp < maySecond2022) {
-                setRpvLayer('N0Q');
-                console.log('N0Q - before may 2 2022');
+            if (document.getElementById('typeOfRadar').innerHTML == 'WSR-88D') {
+                // old is N0Q, removed on 5.02.2022 (worked on 5.01.2022)
+                // https://mesonet.agron.iastate.edu/archive/data/2022/05/01/GIS/ridge/ABC/
+                // vs
+                // https://mesonet.agron.iastate.edu/archive/data/2022/05/02/GIS/ridge/ABC/
+                var maySecond2022 = 1651464000;
+                var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
+                if (userTimeStamp > maySecond2022) {
+                    setRpvLayer('N0B');
+                    console.log('N0B - after may 2 2022');
+                } else if (userTimeStamp < maySecond2022) {
+                    setRpvLayer('N0Q');
+                    console.log('N0Q - before may 2 2022');
+                }
+            } else if (document.getElementById('typeOfRadar').innerHTML == 'TDWR') {
+                setRpvLayer('TZL');
+                console.log('TZL - tdwr');
             }
             $("#rpvDialog").dialog('destroy');
         });
         document.getElementById('bvel_raw').addEventListener('click', function() {
-            // old is N0U, removed on 6.16.2022 (worked on 6.15.2022)
-            // https://mesonet.agron.iastate.edu/archive/data/2022/06/15/GIS/ridge/LWX/
-            // vs
-            // https://mesonet.agron.iastate.edu/archive/data/2022/06/16/GIS/ridge/LWX/
-            var juneSixteenth2022 = 1655352000;
-            var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
-            if (userTimeStamp > juneSixteenth2022) {
-                setRpvLayer('N0S');
-                console.log('N0S - after june 16 2022');
-            } else if (userTimeStamp < juneSixteenth2022) {
-                setRpvLayer('N0U');
-                console.log('N0U - before june 16 2022');
+                if (document.getElementById('typeOfRadar').innerHTML == 'WSR-88D') {
+                    // old is N0U, removed on 6.16.2022 (worked on 6.15.2022)
+                // https://mesonet.agron.iastate.edu/archive/data/2022/06/15/GIS/ridge/LWX/
+                // vs
+                // https://mesonet.agron.iastate.edu/archive/data/2022/06/16/GIS/ridge/LWX/
+                var juneSixteenth2022 = 1655352000;
+                var userTimeStamp = getTimeStamp(new Date($('#tsDateTime').val()))
+                if (userTimeStamp > juneSixteenth2022) {
+                    setRpvLayer('N0S');
+                    console.log('N0S - after june 16 2022');
+                } else if (userTimeStamp < juneSixteenth2022) {
+                    setRpvLayer('N0U');
+                    console.log('N0U - before june 16 2022');
+                }
+            } else if (document.getElementById('typeOfRadar').innerHTML == 'TDWR') {
+                setRpvLayer('TV0');
+                console.log('TV0 - tdwr');
             }
             $("#rpvDialog").dialog('destroy');
         });
@@ -1372,6 +1384,8 @@
 
         var markerArr = [];
         function stationMarkers() {
+            var wsr88d_DIV = '<div id="radarType"><u>(WSR-88D)</u></div>'
+            var tdwr_DIV = '<div id="radarType"><u>(TDWR)</u></div>'
             $.getJSON('/weather/json/wdg_radar-stations_05042022.json', function(data) {
                 for (let n = 0; n < 208; n++) {
                     var radarStation = data.features[n].properties.id;
@@ -1387,9 +1401,16 @@
                         var initMarker = new mapboxgl.Marker({
                             color: "#4287f5",
                         }).setLngLat([lonn, latt])
-                            .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>"))
+                            .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>" + wsr88d_DIV))
                             .addTo(map)
                         markerArr.push(initMarker)
+                    } else if (stationType == "TDWR") {
+                        var initTDWRMarker = new mapboxgl.Marker({
+                            color: "#4287f5",
+                        }).setLngLat([lonn, latt])
+                            .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='radarStationDiv' onclick='getStation()'>" + radarStation + "</div></b><i>Still loading station data...</i></div>" + tdwr_DIV))
+                            .addTo(map)
+                        markerArr.push(initTDWRMarker);
                     }
                 }
                 $.getJSON('https://api.weather.gov/radar/stations', function(data) {
@@ -1410,17 +1431,13 @@
                         var formattedLastReceivedData = printFancyTime(radstatLastReceivedData);
                         
                         if (stationType == "WSR-88D") {
-                            //L.marker([latt, lonn], {icon: radarIcon}).addTo(markerLayerGroup)
-                            //L.marker([latt, lonn]).addTo(markerLayerGroup)
-                            //    .bindPopup(radarStation);
-
                             if (timeDiff >= 900000) {
                                 //$('body').append
                                 var isRadarDown = true;
                                 var down = new mapboxgl.Marker({
                                     color: "#fc0303",
                                 }).setLngLat([lonn, latt])
-                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
+                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div>" + wsr88d_DIV + "</div>"))
                                     .addTo(map)
                                 markerArr.push(down)
                             } else if (timeDiff < 900000) {
@@ -1429,7 +1446,27 @@
                                 var up = new mapboxgl.Marker({
                                     color: "#1bb50d",
                                 }).setLngLat([lonn, latt])
-                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div></div>"))
+                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div><u>(WSR-88D)</u></div>"))
+                                    .addTo(map)
+                                markerArr.push(up)
+                            }
+                        } else if (stationType == "TDWR") {
+                            if (timeDiff >= 900000) {
+                                //$('body').append
+                                var isRadarDown = true;
+                                var down = new mapboxgl.Marker({
+                                    color: "#ad0000",
+                                }).setLngLat([lonn, latt])
+                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='downRadarStation' onclick='getDownStation()'>" + radarStation + "</div></b><div style='color: rgb(226, 0, 0)'>OFFLINE</div><div>" + formattedLastReceivedData + "</div>" + tdwr_DIV + "</div>"))
+                                    .addTo(map)
+                                markerArr.push(down)
+                            } else if (timeDiff < 900000) {
+                                //$('body').append
+                                var isRadarDown = false;
+                                var up = new mapboxgl.Marker({
+                                    color: "#086300",
+                                }).setLngLat([lonn, latt])
+                                    .setPopup(new mapboxgl.Popup().setHTML("<div><b><div style='cursor: pointer' id='upRadarStation' onclick='getUpStation()'>" + radarStation + "</div></b><div style='color: rgb(16, 160, 10)'>ONLINE</div><div>" + formattedLastReceivedData + "</div>" + tdwr_DIV + "</div>"))
                                     .addTo(map)
                                 markerArr.push(up)
                             }
@@ -1888,6 +1925,7 @@
 
             var radstatURL = `https://api.weather.gov/radar/stations/${radstat}`;
             $.getJSON(radstatURL, function(data) {
+                document.getElementById('typeOfRadar').innerHTML = data.properties.stationType;
 
                 var radstatLastReceivedData = new Date(data.properties.latency.levelTwoLastReceivedTime);
                 var currentTime = new Date();
