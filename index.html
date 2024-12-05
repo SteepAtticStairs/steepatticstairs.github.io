@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Photos by E.A. Lawlor</title>
+    <meta name="description" content="Photos by E.A. Lawlor">
+    <link rel="icon" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap-grid.min.css" integrity="sha512-i1b/nzkVo97VN5WbEtaPebBG8REvjWeqNclJ6AItj7msdVcaveKrlIIByDpvjk5nwHjXkIqGZscVxOrTb9tsMA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        :root {
+            --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --bs-body-font-family: var(--bs-font-sans-serif);
+            --bs-body-font-size: 1rem;
+            --bs-body-font-weight: 400;
+            --bs-body-line-height: 1.5;
+            --bs-body-color: #212529;
+            --bs-gutter-x: 1.5rem;
+            --bs-gutter-y: 0;
+        }
+
+        body {
+            font-family: var(--bs-body-font-family);
+            font-size: var(--bs-body-font-size);
+            font-weight: var(--bs-body-font-weight);
+            /* line-height: var(--bs-body-line-height); */
+            color: var(--bs-body-color);
+
+            background-color: rgb(25, 25, 25);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        table {
+            table-layout: fixed;
+            padding-left: 20px;
+            padding-right: 20px;
+            width: 100%;
+            max-width: 800px;
+
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .title {
+            width: 100%;
+        }
+        .text {
+            color: rgb(150, 150, 150);
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .image_title {
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .image_title_lesser {
+            font-size: 23px;
+            font-weight: normal;
+        }
+        .metadata, .description {
+            font-size: 17px;
+            padding-left: 60px;
+            padding-right: 60px;
+        }
+        .metadata_bold {
+            color: rgb(103, 103, 103);
+        }
+        .body_header {
+            padding-left: 40px;
+            padding-right: 40px;
+            font-size: 23px;
+            font-weight: bold;
+            color: rgb(229, 78, 78);
+            text-align: center;
+        }
+
+        .main_image_container {
+            padding: 10px;
+            display: grid;
+            height: 100%;
+        }
+        .main_image {
+            max-width: calc(100% - 0px); /* border radius * 2 */
+            /* max-height: 100vh; */
+            margin: auto;
+
+            border-radius: 10px;
+        }
+        .image_caption {
+            text-align: center;
+            font-size: 15px;
+            color: #53a2e0;
+            text-decoration: underline;
+            padding-bottom: 20px;
+        }
+        @media screen and (max-width: 500px) {
+            .image_caption {
+                font-size: 10px;
+            }
+        }
+
+        /* https://stackoverflow.com/a/8014032 */
+        a, a:visited, a:hover, a:active {
+            /* color: inherit; */
+            color: #53a2e0;
+            cursor: pointer;
+        }
+        #title {
+            font-size: 50px;
+            text-align: center;
+            font-weight: bold;
+            padding-top: 20px;
+        }
+        #title_lesser {
+            font-size: 30px;
+            text-align: center;
+            font-weight: normal;
+        }
+        #title_least {
+            font-size: 30px;
+            text-align: center;
+            font-weight: lighter;
+            padding-bottom: 20px;
+        }
+        @media screen and (max-width: 500px) {
+            #title {
+                font-size: 30px;
+            }
+            #title_lesser {
+                font-size: 20px;
+            }
+            #title_least {
+                font-size: 20px;
+            }
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            /* padding: 20px; */
+            width: 100%;
+            height: auto;
+            background-color: rgb(25, 25, 25);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="title" class="text">Photos by E.A. Lawlor</div>
+    <!-- <div id="title_lesser" class="text">Total Solar Eclipse of 8 April 2024</div> -->
+    <div id="title_least" class="text">steepatticstairs.net</div>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/composite_horizontal_diamondring.html"><img class="main_image" src="./photos/img/composite_horizontal_diamondring.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/composite_horizontal_diamondring.html">Horizontal Composite with Diamond Rings</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><br><br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="body_header text">Totality</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/totality.html"><img class="main_image" src="./photos/img/totality.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/totality.html">Totality</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/totality_earthshine.html"><img class="main_image" src="./photos/img/totality_earthshine.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/totality_earthshine.html">Totality with Earthshine</a></div>
+                </td>
+                <!-- <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/totality_earthshine_bright.html"><img class="main_image" src="./photos/img/totality_earthshine_bright.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/totality_earthshine_bright.html">Totality with Earthshine (Bright)</a></div>
+                </td> -->
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/zoomed_out_corona_better.html"><img class="main_image" src="./photos/img/zoomed_out_corona_better.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/zoomed_out_corona_V2.html">Zoomed Out Corona</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/totality_raw.html"><img class="main_image" src="./photos/img/totality_raw.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/totality_raw.html">Totality Raw</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/prominences.html"><img class="main_image" src="./photos/img/prominences.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/prominences.html">Solar Prominences</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/totality_inverted.html"><img class="main_image" src="./photos/img/totality_inverted.png"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/totality_inverted.html">Solar Corona</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><br><br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="body_header text">Full Eclipse Composites</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/composite_horizontal.html"><img class="main_image" src="./photos/img/composite_horizontal.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/composite_horizontal.html">Horizontal Eclipse Composite</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/composite_horizontal_diamondring.html"><img class="main_image" src="./photos/img/composite_horizontal_diamondring.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/composite_horizontal_diamondring.html">Horizontal Composite with Diamond Rings</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/composite_diagonal.html"><img class="main_image" src="./photos/img/composite_diagonal.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/composite_diagonal.html">Diagonal Eclipse Composite</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/composite_horizontal_B&W.html"><img class="main_image" src="./photos/img/composite_horizontal_B&W.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/composite_horizontal_B&W.html">Horizontal Eclipse Composite - Black & White</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/composite_horizontal_diamondring_B&W.html"><img class="main_image" src="./photos/img/composite_horizontal_diamondring_B&W.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/composite_horizontal_diamondring_B&W.html">Horizontal Composite with Diamond Rings - Black & White</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/composite_diagonal_B&W.html"><img class="main_image" src="./photos/img/composite_diagonal_B&W.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/composite_diagonal_B&W.html">Diagonal Eclipse Composite - Black & White</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/full_eclipse_animation.html"><img class="main_image" src="./photos/img/videos/thumb/full_eclipse_animation_thumbnail.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/full_eclipse_animation.html">Full Eclipse Animation</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><br><br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="body_header text">Bailey's Beads & Diamond Rings</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/beads_composite_realistic.html"><img class="main_image" src="./photos/img/beads_composite_realistic.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/beads_composite_realistic.html">Bailey's Beads Realistic Composite</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/beads_composite_horizontal.html"><img class="main_image" src="./photos/img/beads_composite_horizontal.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/beads_composite_horizontal.html">Bailey's Beads Horizontal Composite</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/diamond_ring_diagonal_composite.html"><img class="main_image" src="./photos/img/diamond_ring_diagonal_composite.png"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/diamond_ring_diagonal_composite.html">Diamond Ring Diagonal Composite</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><br><br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="body_header text">Lunar Eclipses</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/penumbral_eclipse_animation_slower.html"><img class="main_image" src="./photos/img/videos/thumb/penumbral_eclipse_animation_thumbnail.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/penumbral_eclipse_animation_slower.html">Penumbral Lunar Eclipse Animation - 25 Mar 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/penumbral_eclipse_comparison_3.25.2024.html"><img class="main_image" src="./photos/img/penumbral_eclipse_comparison_3.25.2024.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/penumbral_eclipse_comparison_3.25.2024.html">Penumbral Eclipse Phases Comparison - 25 Mar 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/partial_lunar_eclipse_9.17.2024.html"><img class="main_image" src="./photos/img/partial_lunar_eclipse_9.17.2024.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/partial_lunar_eclipse_9.17.2024.html">Partial Lunar Eclipse - 17 Sep 2024</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><br><br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="body_header text">Simple Moon Photos</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.14.2024_NIGHT.html"><img class="main_image" src="./photos/img/moon_7.14.2024_NIGHT.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.14.2024_NIGHT.html">First Quarter Moon - Night 14 Jul 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.19.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_7.19.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.19.2024_MORNING.html">Waxing Gibbous Moon - Morning 19 Jul 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.20.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_7.20.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.20.2024_MORNING.html">Waxing Gibbous Moon - Morning 20 Jul 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.21.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_7.21.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.21.2024_MORNING.html">Full Moon - Morning 21 Jul 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.22.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_7.22.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.22.2024_MORNING.html">Full Moon - Morning 22 Jul 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.23.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_7.23.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.23.2024_MORNING.html">Waning Gibbous Moon - Morning 23 Jul 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.28.2024_MORNING_rise.html"><img class="main_image" src="./photos/img/moon_7.28.2024_MORNING_rise.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.28.2024_MORNING_rise.html">Last Quarter Moonrise - Morning 28 Jul 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.28.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_7.28.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.28.2024_MORNING.html">Last Quarter Moon - Morning 28 Jul 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.29.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_7.29.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.29.2024_MORNING.html">Waning Crescent Moon - Morning 29 Jul 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_7.31.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_7.31.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_7.31.2024_MORNING.html">Waning Crescent Moon - Morning 31 Jul 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.8.2024_NIGHT.html"><img class="main_image" src="./photos/img/moon_8.8.2024_NIGHT.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.8.2024_NIGHT.html">Waxing Crescent Moon - Night 8 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.10.2024_NIGHT.html"><img class="main_image" src="./photos/img/moon_8.10.2024_NIGHT.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.10.2024_NIGHT.html">Waxing Crescent Moon - Night 10 Aug 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.11.2024_NIGHT.html"><img class="main_image" src="./photos/img/moon_8.11.2024_NIGHT.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.11.2024_NIGHT.html">First Quarter Moon - Night 11 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.12.2024_NIGHT.html"><img class="main_image" src="./photos/img/moon_8.12.2024_NIGHT.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.12.2024_NIGHT.html">First Quarter Moon - Night 12 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.13.2024_NIGHT.html"><img class="main_image" src="./photos/img/moon_8.13.2024_NIGHT.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.13.2024_NIGHT.html">Waxing Gibbous Moon - Night 13 Aug 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.14.2024_NIGHT.html"><img class="main_image" src="./photos/img/moon_8.14.2024_NIGHT.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.14.2024_NIGHT.html">Waxing Gibbous Moon - Night 14 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.15.2024_NIGHT.html"><img class="main_image" src="./photos/img/moon_8.15.2024_NIGHT.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.15.2024_NIGHT.html">Waxing Gibbous Moon - Night 15 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.18.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_8.18.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.18.2024_MORNING.html">Waxing Gibbous Moon - Morning 18 Aug 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.18.2024_NIGHT.html"><img class="main_image" src="./photos/img/moon_8.18.2024_NIGHT.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.18.2024_NIGHT.html">Full Moon - Night 18 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.20.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_8.20.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.20.2024_MORNING.html">Full Moon - Morning 20 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.21.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_8.21.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.21.2024_MORNING.html">Waning Gibbous Moon - Morning 21 Aug 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.22.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_8.22.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.22.2024_MORNING.html">Waning Gibbous Moon - Morning 22 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moon_8.23.2024_MORNING.html"><img class="main_image" src="./photos/img/moon_8.23.2024_MORNING.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moon_8.23.2024_MORNING.html">Waning Gibbous Moon - Morning 23 Aug 2024</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><br><br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="body_header text">Deep Sky</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/milkyway1.html"><img class="main_image" src="./photos/img/milkyway1.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/milkyway1.html">Milky Way with Beach - Night 28 Jul 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/milkyway2.html"><img class="main_image" src="./photos/img/milkyway2.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/milkyway2.html">Milky Way 2 - Night 28 Jul 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/milkyway3.html"><img class="main_image" src="./photos/img/milkyway3.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/milkyway3.html">Milky Way 3 - Night 28 Jul 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/aurora1_8.12.2024.html"><img class="main_image" src="./photos/img/aurora1_8.12.2024.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/aurora1_8.12.2024.html">Aurora with Shooting Star - Morning 12 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/aurora2_8.12.2024.html"><img class="main_image" src="./photos/img/aurora2_8.12.2024.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/aurora2_8.12.2024.html">Aurora 2 - Morning 12 Aug 2024</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/aurora3_8.12.2024.html"><img class="main_image" src="./photos/img/aurora3_8.12.2024.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/aurora3_8.12.2024.html">Aurora 3 - Morning 12 Aug 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/aurora4_8.12.2024.html"><img class="main_image" src="./photos/img/aurora4_8.12.2024.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/aurora4_8.12.2024.html">Aurora 4 - Morning 12 Aug 2024</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><br><br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="body_header text">Simple Sun Photos</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/sunspot_3664.html"><img class="main_image" src="./photos/img/sunspot_3664.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/sunspot_3664.html">Sunspot 3664</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/sunspot_3664_zoomedin.html"><img class="main_image" src="./photos/img/sunspot_3664_zoomedin.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/sunspot_3664_zoomedin.html">Sunspot 3664 Zoomed In</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/sun_7.28.2024.html"><img class="main_image" src="./photos/img/sun_7.28.2024.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/sun_7.28.2024.html">Sun - 28 Jul 2024</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/sun_8.11.2024.html"><img class="main_image" src="./photos/img/sun_8.11.2024.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/sun_8.11.2024.html">Sun - 11 Aug 2024</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br><br><br><br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="body_header text">Miscellaneous</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/moonrise_animation_24may2024.html"><img class="main_image" src="./photos/img/videos/thumb/moonrise_animation_24may2024_thumbnail.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/moonrise_animation_24may2024.html">Moonrise Animation</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/eclipse_smileyface.html"><img class="main_image" src="./photos/img/eclipse_smileyface.png"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/eclipse_smileyface.html">Eclipse Smiley Face</a></div>
+                </td>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/HDR_moon.html"><img class="main_image" src="./photos/img/HDR_moon.png"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/HDR_moon.html">HDR Crescent Moon Composite</a></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="main_image_container">
+                        <a href="./photos/static/crescentmoon_plane.html"><img class="main_image" src="./photos/img/crescentmoon_plane.jpg"></a>
+                    </div>
+                    <div class="image_caption text"><a href="./photos/static/crescentmoon_plane.html">Young Crescent Moon With Plane</a></div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br><br><br>
+
+    <div class="text metadata_bold" style="text-align: center">
+        Contact: <a href="mailto:steepatticstairs@gmail.com">steepatticstairs@gmail.com</a><br>
+        Copyright © 2024 E.A. Lawlor. All rights reserved.
+    </div>
+    <br><br>
+</body>
+
+</html>

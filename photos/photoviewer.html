@@ -1,0 +1,5 @@
+<script>
+    const search = new URL(window.location.href).search;
+    const image_name = search.split('=')[1];
+    window.location.href = `./static/${image_name}.html`;
+</script>
