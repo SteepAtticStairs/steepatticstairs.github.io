@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Link Cleaner</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 1rem;
+            font-size: 1rem;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        input {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+
+            max-width: 500px;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+        }
+
+        #output {
+            margin-top: 1rem;
+            font-size: 1rem;
+            word-break: break-all;
+        }
+
+        #copyBtn {
+            margin-top: 1rem;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="input-container">
+        <input type="url" id="linkInput" placeholder="Enter an instagram.com/share link">
+        <button id="enterBtn">Enter</button>
+    </div>
+    <div id="output">New link will appear here.</div>
+    <button id="copyBtn">Copy</button>
+
+    <script>
+        const input = document.getElementById('linkInput');
+        const enterBtn = document.getElementById('enterBtn');
+        const output = document.getElementById('output');
+        const copyBtn = document.getElementById('copyBtn');
+
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(output.textContent);
+
+            copyBtn.style.color = 'green';
+            copyBtn.textContent = 'Copied!'
+            setTimeout(() => {
+                copyBtn.style.color = '';
+                copyBtn.textContent = 'Copy'
+            }, 1000)
+        });
+
+        enterBtn.addEventListener('click', () => {
+                output.style.color = '';
+                output.innerHTML = 'Loading...';
+
+                const link = input.value.trim();
+                console.log(link);
+
+                // const proxy = 'https://corsproxy.io/?url=';
+                const proxy = 'https://api.allorigins.win/raw?url=';
+
+                fetch(proxy + encodeURIComponent(link), { redirect: 'follow' })
+                    .then(response => response.text())
+                    .then(html => {
+                        console.log('Fetched successfully')
+                        // console.log(html);
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const linkTags = doc.querySelectorAll('link');
+                        const hrefs = Array.from(linkTags).map(link => link.href);
+
+                        const patterns = ['instagram.com/p/', 'instagram.com/reel/'];
+                        const matchedLinks = hrefs.filter(href => patterns.some(pattern => href.includes(pattern)));
+
+                        var link = matchedLinks[0];
+                        if (link.includes('?')) {
+                            link = link.split('?')[0];
+                        }
+
+                        output.innerHTML = link;
+                    })
+                    .catch(err => {
+                        console.error('Error fetching page:', err);
+
+                        output.style.color = 'red';
+                        output.innerHTML = 'Error fetching the link, likely a proxy issue, check console. Try reloading the page.';
+                    });
+            });
+    </script>
+</body>
+
+</html>
