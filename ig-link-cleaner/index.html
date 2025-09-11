@@ -89,15 +89,16 @@
                         const linkTags = doc.querySelectorAll('link');
                         const hrefs = Array.from(linkTags).map(link => link.href);
 
-                        const patterns = ['instagram.com/p/', 'instagram.com/reel/'];
-                        const matchedLinks = hrefs.filter(href => patterns.some(pattern => href.includes(pattern)));
+                        const login_url = hrefs.find(u => u.includes("instagram.com/accounts/login/"));
 
-                        var link = matchedLinks[0];
-                        if (link.includes('?')) {
-                            link = link.split('?')[0];
+                        if (login_url) {
+                            const url = new URL(login_url);
+                            const next_param = url.searchParams.get("next");
+                            if (next_param) {
+                                const reel_url = decodeURIComponent(next_param).split("?")[0];
+                                output.innerHTML = reel_url;
+                            }
                         }
-
-                        output.innerHTML = link;
                     })
                     .catch(err => {
                         console.error('Error fetching page:', err);
